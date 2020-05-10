@@ -35,7 +35,6 @@ CREATE TABLE client (
     email VARCHAR(45) UNIQUE CHECK(email LIKE '%@%.%') NOT NULL,
     password VARCHAR(45) CHECK(LEN(password) > 0)  NOT NULL,
     birth_date DATE CHECK(birth_date <= GETDATE()) NOT NULL,
-    gender CHAR(1) NOT NULL
 );
 
 CREATE TABLE airline (
@@ -98,7 +97,7 @@ CREATE TABLE flight (
     departure_date DATE NOT NULL,
     arrival_time TIME NOT NULL,
     arrival_date DATE NOT NULL,
-	price DECIMAL(5,2) CHECK(price >= 0) NOT NULL,
+	price DECIMAL(7,2) CHECK(price >= 0) NOT NULL,
     
 	FOREIGN KEY (pilot_id) REFERENCES pilot(pilotID),
 	FOREIGN KEY (plane_id) REFERENCES plane(planeID),
@@ -108,7 +107,7 @@ CREATE TABLE flight (
 
 CREATE TABLE luggage (
 	luggageID INT PRIMARY KEY IDENTITY(1,1),
-	name VARCHAR(10) CHECK(LEN(name) > 0) UNIQUE,
+	name VARCHAR(20) CHECK(LEN(name) > 0) UNIQUE,
 	price DECIMAL(5,2) CHECK(price >= 0) NOT NULL,
 	height INT CHECK(height > 0) NOT NULL,
 	weight INT CHECK(weight > 0) NOT NULL,
