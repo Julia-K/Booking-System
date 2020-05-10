@@ -6,7 +6,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class DBConnection {
-    private static Connection getConnection() {
+    public static Connection getConnection() {
         Connection cn = null;
         try {
             BufferedReader br = new BufferedReader(new FileReader("databaseData.txt"));
