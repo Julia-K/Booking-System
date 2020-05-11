@@ -56,7 +56,7 @@ public class MainWindow extends JFrame {
                 if (Requests.isAdmin(DBConnection.getConnection(), email.getText(), new String(passwordField.getPassword()))) {
                     System.out.println("LogIn");
                     this.dispose();
-                    AdminWindow.main(new String[]{});
+                    ManageWindow.main(new String[]{});
                 } else {
                     System.out.println(new String(passwordField.getPassword()));
                     System.out.println("Username or Password Error");
