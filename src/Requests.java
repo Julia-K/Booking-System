@@ -183,6 +183,8 @@ public class Requests {
 
     //----------------------------- READ -----------------------------
 
+    //public static ResultSet readToTable(String table, )
+
     public static ResultSet readTable(String table) throws SQLException {
         Statement st = DBConnection.getConnection().createStatement();
         return st.executeQuery("select * from " + table);

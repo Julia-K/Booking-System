@@ -1,4 +1,5 @@
 import java.awt.*;
+import java.sql.SQLException;
 import java.util.LinkedHashMap;
 import javax.swing.*;
 import javax.swing.border.*;
@@ -6,6 +7,7 @@ import javax.swing.border.*;
 public class ManageWindow extends JFrame {
     private static ManageWindow manageWindow;
     private LinkedHashMap<Integer, String> tableCombobox;
+    private LinkedHashMap<Integer,String> tableNames;
     private JPanel topPanel;
     private JLabel manage;
     private JComboBox comboBox;
@@ -19,32 +21,45 @@ public class ManageWindow extends JFrame {
     private JButton deleteButton;
     private JButton addButton;
     private JPanel rightPanel;
-    private JScrollPane scrollTable;
-    private JTable table;
+    private JTable clientsTable;
 
-    public ManageWindow() {
+    public ManageWindow() throws SQLException {
         initComponents();
     }
 
+    private void addTableNames() {
+        tableNames.put(1, "client");
+        tableNames.put(2, "address");
+        tableNames.put(3, "airport");
+        tableNames.put(4, "plane");
+        tableNames.put(5, "airline");
+        tableNames.put(6, "pilot");
+        tableNames.put(7, "flight");
+        tableNames.put(8, "booking");
+        tableNames.put(9, "luggage");
+        tableNames.put(10, "class");
+        tableNames.put(11, "plane_airline");
+    }
+
     private void addToCombobox() {
-        tableCombobox.put(1, "client");
-        tableCombobox.put(2, "address");
-        tableCombobox.put(3, "airport");
-        tableCombobox.put(4, "plane");
-        tableCombobox.put(5, "airline");
-        tableCombobox.put(6, "pilot");
-        tableCombobox.put(7, "flight");
-        tableCombobox.put(8, "booking");
-        tableCombobox.put(9, "luggage");
-        tableCombobox.put(10, "class");
+        tableCombobox.put(1, "clients");
+        tableCombobox.put(2, "addresses");
+        tableCombobox.put(3, "airports");
+        tableCombobox.put(4, "planes");
+        tableCombobox.put(5, "airlines");
+        tableCombobox.put(6, "pilots");
+        tableCombobox.put(7, "flights");
+        tableCombobox.put(8, "bookings");
+        tableCombobox.put(9, "luggages");
+        tableCombobox.put(10, "classes");
+        tableCombobox.put(11, "airplanes in airlines");
 
-
-        for (int i = 1; i < tableCombobox.size(); i++) {
+        for (int i = 1; i <= tableCombobox.size(); i++) {
             comboBox.addItem(tableCombobox.get(i));
         }
     }
 
-    private void initComponents() {
+    private void initComponents() throws SQLException {
         topPanel = new JPanel();
         manage = new JLabel();
         comboBox = new JComboBox();
@@ -59,8 +74,7 @@ public class ManageWindow extends JFrame {
         deleteButton = new JButton();
         addButton = new JButton();
         rightPanel = new JPanel();
-        scrollTable = new JScrollPane();
-        table = new JTable();
+        clientsTable = Table.showTable("client");
 
         setResizable(false);
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
@@ -125,6 +139,13 @@ public class ManageWindow extends JFrame {
                 leftPanel.add(filterPanel);
 
                 detailsButton.setText("Display details");
+                detailsButton.addActionListener(e -> {
+                    int row = clientsTable.getSelectedRow();
+                    System.out.print("Row "+row+" ");
+                    int id = Integer.parseInt(clientsTable.getModel().getValueAt(clientsTable.convertRowIndexToModel(row), 0).toString());
+                    String name = clientsTable.getValueAt(row, 0).toString();
+                    System.out.println("Imie: " + name + ", ID: " + id);
+                });
                 detailsButton.setAlignmentX(0.5F);
                 detailsButton.setMaximumSize(new Dimension(150, 60));
                 leftPanel.add(detailsButton);
@@ -155,12 +176,7 @@ public class ManageWindow extends JFrame {
                 rightPanel.setPreferredSize(new Dimension(1000, 0));
                 rightPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
                 rightPanel.setLayout(new BorderLayout());
-
-                {
-                    table.setPreferredScrollableViewportSize(new Dimension(900, 550));
-                    scrollTable.setViewportView(table);
-                }
-                rightPanel.add(scrollTable, BorderLayout.CENTER);
+                rightPanel.add(new JScrollPane(clientsTable), BorderLayout.CENTER);
             }
             bottomPanel.add(rightPanel, BorderLayout.LINE_END);
         }
@@ -181,10 +197,5 @@ public class ManageWindow extends JFrame {
             }
         }));
     }
-
-
-
     //selectedItem - przekazać jako argument do funkcji i wyswietlać tak tabelę,
-
-
 }
