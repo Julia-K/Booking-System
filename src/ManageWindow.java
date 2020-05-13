@@ -1,10 +1,14 @@
 import java.awt.*;
+import java.awt.event.ActionListener;
 import java.sql.SQLException;
 import java.util.LinkedHashMap;
 import javax.swing.*;
 import javax.swing.border.*;
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.DefaultTableModel;
 
 public class ManageWindow extends JFrame {
+    private JTable table;
     private static ManageWindow manageWindow;
     private LinkedHashMap<Integer, String> tableCombobox;
     private LinkedHashMap<Integer,String> tableNames;
@@ -21,7 +25,6 @@ public class ManageWindow extends JFrame {
     private JButton deleteButton;
     private JButton addButton;
     private JPanel rightPanel;
-    private JTable clientsTable;
 
     public ManageWindow() throws SQLException {
         initComponents();
@@ -43,7 +46,7 @@ public class ManageWindow extends JFrame {
 
     private void addToCombobox() {
         tableCombobox.put(1, "clients");
-        tableCombobox.put(2, "addresses");
+        tableCombobox.put(2, "airport addresses");
         tableCombobox.put(3, "airports");
         tableCombobox.put(4, "planes");
         tableCombobox.put(5, "airlines");
@@ -74,7 +77,7 @@ public class ManageWindow extends JFrame {
         deleteButton = new JButton();
         addButton = new JButton();
         rightPanel = new JPanel();
-        clientsTable = Table.showTable("client");
+        table = Table.showTable("client");
 
         setResizable(false);
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
@@ -100,6 +103,97 @@ public class ManageWindow extends JFrame {
 
         comboBox.setPreferredSize(new Dimension(150, 30));
         addToCombobox();
+
+        comboBox.addActionListener(e-> {
+            System.out.println(comboBox.getSelectedIndex());
+            switch (comboBox.getSelectedIndex()) {
+                case 0:
+                    try {
+                        table = Table.showTable("client");
+                    } catch (SQLException ex) {
+                        ex.printStackTrace();
+                    }
+                    break;
+                case 1:
+                    System.out.println("XDD");
+                    try {
+                        table = Table.showTable("address");
+                    } catch (SQLException ex) {
+                        ex.printStackTrace();
+                    }
+                    break;
+                case 2:
+                    try {
+                        table = Table.showTable("airport");
+                    } catch (SQLException ex) {
+                        ex.printStackTrace();
+                    }
+                    break;
+                case 3:
+                    try {
+                        table = Table.showTable("plane");
+                    } catch (SQLException ex) {
+                        ex.printStackTrace();
+                    }
+                    break;
+                case 4:
+                    try {
+                        table = Table.showTable("airline");
+                    } catch (SQLException ex) {
+                        ex.printStackTrace();
+                    }
+                    break;
+                case 5:
+                    try {
+                        table = Table.showTable("pilot");
+                    } catch (SQLException ex) {
+                        ex.printStackTrace();
+                    }
+                    break;
+                case 6:
+                    try {
+                        table = Table.showTable("flight");
+                    } catch (SQLException ex) {
+                        ex.printStackTrace();
+                    }
+                    break;
+                case 7:
+                    try {
+                        table = Table.showTable("booking");
+                    } catch (SQLException ex) {
+                        ex.printStackTrace();
+                    }
+                    break;
+                case 8:
+                    try {
+                        table = Table.showTable("luggage");
+                    } catch (SQLException ex) {
+                        ex.printStackTrace();
+                    }
+                    break;
+                case 9:
+                    try {
+                        table = Table.showTable("class");
+                    } catch (SQLException ex) {
+                        ex.printStackTrace();
+                    }
+                    break;
+                case 10:
+                    System.out.println(comboBox.getSelectedIndex());
+                    try {
+                        table = Table.showTable("plane_airline");
+                    } catch (SQLException ex) {
+                        ex.printStackTrace();
+                    }
+                    break;
+            }
+            System.out.println(table);
+            Table.detailsButtonAction(detailsButton,table);
+            rightPanel.removeAll();
+            rightPanel.add(new JScrollPane(table), BorderLayout.CENTER);
+            rightPanel.revalidate();
+            rightPanel.repaint();
+        });
         topPanel.add(comboBox);
 
         contentPane.add(topPanel, BorderLayout.PAGE_START);
@@ -139,13 +233,13 @@ public class ManageWindow extends JFrame {
                 leftPanel.add(filterPanel);
 
                 detailsButton.setText("Display details");
-                detailsButton.addActionListener(e -> {
+                /*detailsButton.addActionListener(e -> {
                     int row = clientsTable.getSelectedRow();
                     System.out.print("Row "+row+" ");
                     int id = Integer.parseInt(clientsTable.getModel().getValueAt(clientsTable.convertRowIndexToModel(row), 0).toString());
                     String name = clientsTable.getValueAt(row, 0).toString();
                     System.out.println("Imie: " + name + ", ID: " + id);
-                });
+                }); */
                 detailsButton.setAlignmentX(0.5F);
                 detailsButton.setMaximumSize(new Dimension(150, 60));
                 leftPanel.add(detailsButton);
@@ -176,13 +270,17 @@ public class ManageWindow extends JFrame {
                 rightPanel.setPreferredSize(new Dimension(1000, 0));
                 rightPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
                 rightPanel.setLayout(new BorderLayout());
-                rightPanel.add(new JScrollPane(clientsTable), BorderLayout.CENTER);
+                rightPanel.add(new JScrollPane(table), BorderLayout.CENTER);
             }
             bottomPanel.add(rightPanel, BorderLayout.LINE_END);
         }
         contentPane.add(bottomPanel, BorderLayout.CENTER);
         pack();
         setLocationRelativeTo(getOwner());
+    }
+
+    public JTable getClientsTable() {
+        return table;
     }
 
     public static void main(String[] args) {
