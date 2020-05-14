@@ -1,4 +1,8 @@
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
 import java.sql.*;
+import java.util.Arrays;
 
 public class Requests {
 
@@ -32,11 +36,11 @@ public class Requests {
         }
     }
 
-    public static void createClient(String fisrt, String last, String email, String password, Date birth_date) throws SQLException {
+    public static void createClient(String first, String last, String email, String password, Date birth_date) throws SQLException {
         String sql = "insert into client (first_name, last_name, email, password, birth_date) values (?, ?, ?, ?, ?)";
 
         PreparedStatement statement = DBConnection.getConnection().prepareStatement(sql);
-        statement.setString(1, fisrt);
+        statement.setString(1, first);
         statement.setString(2, last);
         statement.setString(3, email);
         statement.setString(4, password);
@@ -183,9 +187,188 @@ public class Requests {
 
     //----------------------------- READ -----------------------------
 
-    //public static ResultSet readToTable(String table, )
+    public static JTable showTable(String table) throws SQLException {
+        JTable jTable = new JTable();
+        DefaultTableModel model = new DefaultTableModel();
+        ResultSet rs = Requests.readByTableName(table);
+        ResultSetMetaData rsmd = rs.getMetaData();
+        String[] cells = new String[rsmd.getColumnCount()];
 
-    public static ResultSet readTable(String table) throws SQLException {
+        for (int i = 1 ; i <= rsmd.getColumnCount(); i++) {
+            model.addColumn(rsmd.getColumnName(i));
+        }
+        while (rs.next()) {
+            for (int i =1; i <= rsmd.getColumnCount(); i++) {
+                cells[i-1] = (rs.getString(rsmd.getColumnName(i)));
+            }
+            model.addRow(cells);
+            Arrays.fill(cells,null);
+        }
+        TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
+        jTable.setRowSorter(sorter);
+        jTable.setModel(model);
+        jTable.removeColumn(jTable.getColumnModel().getColumn(0));
+
+        //jTable.getColumnModel().getColumn(0).setMinWidth(0);
+        //jTable.getColumnModel().getColumn(0).setMaxWidth(0);
+        //jTable.getColumnModel().getColumn(0).setWidth(0);
+        return jTable;
+    }
+
+    public static JTable showClientsTable() throws SQLException {
+        JTable jTable = new JTable();
+        DefaultTableModel model = new DefaultTableModel();
+        ResultSet rs = Requests.readByTableName("client");
+
+        model.addColumn("ClientID");
+        model.addColumn("First name");
+        model.addColumn("Last name");
+        model.addColumn("E-mail");
+        model.addColumn("Password");
+        model.addColumn("Birth date");
+
+        TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
+        jTable.setRowSorter(sorter);
+        jTable.setModel(addRows(rs,model));
+        jTable.removeColumn(jTable.getColumnModel().getColumn(0));
+        return jTable;
+    }
+
+    public static JTable showAddresses() throws SQLException {
+        JTable jTable = new JTable();
+        DefaultTableModel model = new DefaultTableModel();
+        ResultSet rs = Requests.readByTableName("address");
+        model.addColumn("addressID");
+        model.addColumn("Country");
+        model.addColumn("City");
+        model.addColumn("Postal code");
+        model.addColumn("Street");
+        model.addColumn("Number");
+
+        TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
+        jTable.setRowSorter(sorter);
+        jTable.setModel(addRows(rs,model));
+        jTable.removeColumn(jTable.getColumnModel().getColumn(0));
+        return jTable;
+    }
+
+    public static JTable readClassTable() throws SQLException {
+        JTable jTable = new JTable();
+        DefaultTableModel model = new DefaultTableModel();
+        ResultSet rs = Requests.readByTableName("class");
+        model.addColumn("classID");
+        model.addColumn("Name");
+        model.addColumn("Price");
+
+        TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
+        jTable.setRowSorter(sorter);
+        jTable.setModel(addRows(rs,model));
+        jTable.removeColumn(jTable.getColumnModel().getColumn(0));
+        return jTable;
+    }
+
+    public static JTable readPlaneTable() throws SQLException {
+        JTable jTable = new JTable();
+        DefaultTableModel model = new DefaultTableModel();
+        ResultSet rs = Requests.readByTableName("plane");
+        model.addColumn("planeID");
+        model.addColumn("Brand");
+        model.addColumn("Model");
+
+        TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
+        jTable.setRowSorter(sorter);
+        jTable.setModel(addRows(rs,model));
+        jTable.removeColumn(jTable.getColumnModel().getColumn(0));
+        return jTable;
+    }
+
+    public static JTable readAirlineTable() throws SQLException {
+        JTable jTable = new JTable();
+        DefaultTableModel model = new DefaultTableModel();
+        ResultSet rs = Requests.readByTableName("airline");
+        model.addColumn("airlineID");
+        model.addColumn("Name");
+        model.addColumn("Code");
+
+        TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
+        jTable.setRowSorter(sorter);
+        jTable.setModel(addRows(rs,model));
+        jTable.removeColumn(jTable.getColumnModel().getColumn(0));
+        return jTable;
+    }
+
+    public static JTable readLuggageTable() throws SQLException {
+        JTable jTable = new JTable();
+        DefaultTableModel model = new DefaultTableModel();
+        ResultSet rs = Requests.readByTableName("luggage");
+        model.addColumn("luggageID");
+        model.addColumn("Name");
+        model.addColumn("Price");
+        model.addColumn("Height");
+        model.addColumn("Weight");
+        
+        TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
+        jTable.setRowSorter(sorter);
+        jTable.setModel(addRows(rs,model));
+        jTable.removeColumn(jTable.getColumnModel().getColumn(0));
+        return jTable;
+    }
+
+    public static JTable showPlaneAirlineTable() throws SQLException {
+        JTable jTable = new JTable();
+        DefaultTableModel model = new DefaultTableModel();
+        ResultSet rs = Requests.readTableByRequest("select plane.brand, airline.name, planes_quantity from plane_airline\n" +
+                "inner join plane on plane.planeID = plane_airline.plane_id\n" +
+                "inner join airline on airline.airlineID = plane_airline.airline_id");
+        model.addColumn("PlaneAirplaneID");
+        model.addColumn("Plane brand");
+        model.addColumn("Airline name");
+        model.addColumn("Quantity of planes");
+
+        TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
+        jTable.setRowSorter(sorter);
+        jTable.setModel(addRowsForPlaneAirline(rs,model));
+        jTable.removeColumn(jTable.getColumnModel().getColumn(0));
+        return jTable;
+    }
+
+    public static DefaultTableModel addRowsForPlaneAirline(ResultSet rs, DefaultTableModel model) throws SQLException {
+        int j = 1;
+        ResultSetMetaData rsmd = rs.getMetaData();
+        String[] cells = new String[rsmd.getColumnCount()];
+        while (rs.next()) {
+            cells[0] = String.valueOf(j);
+            j++;
+            for (int i = 2; i <= rsmd.getColumnCount(); i++) {
+                cells[i - 1] = (rs.getString(rsmd.getColumnName(i)));
+            }
+            model.addRow(cells);
+            Arrays.fill(cells,null);
+        }
+        return model;
+    }
+
+
+    public static DefaultTableModel addRows(ResultSet rs, DefaultTableModel model) throws SQLException {
+        ResultSetMetaData rsmd = rs.getMetaData();
+        String[] cells = new String[rsmd.getColumnCount()];
+        while (rs.next()) {
+            for (int i = 1; i <= rsmd.getColumnCount(); i++) {
+                cells[i - 1] = (rs.getString(rsmd.getColumnName(i)));
+            }
+            model.addRow(cells);
+            Arrays.fill(cells,null);
+        }
+        return model;
+    }
+
+
+    public static ResultSet readTableByRequest(String sql) throws SQLException {
+        Statement st = DBConnection.getConnection().createStatement();
+        return st.executeQuery(sql);
+    }
+
+    public static ResultSet readByTableName(String table) throws SQLException {
         Statement st = DBConnection.getConnection().createStatement();
         return st.executeQuery("select * from " + table);
     }

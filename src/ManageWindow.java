@@ -1,20 +1,15 @@
 import java.awt.*;
-import java.awt.event.ActionListener;
 import java.sql.SQLException;
 import java.util.LinkedHashMap;
 import javax.swing.*;
 import javax.swing.border.*;
-import javax.swing.table.AbstractTableModel;
-import javax.swing.table.DefaultTableModel;
 
 public class ManageWindow extends JFrame {
-    private JTable table;
     private static ManageWindow manageWindow;
     private LinkedHashMap<Integer, String> tableCombobox;
-    private LinkedHashMap<Integer,String> tableNames;
     private JPanel topPanel;
     private JLabel manage;
-    private JComboBox comboBox;
+    private JComboBox<String> comboBox;
     private JPanel bottomPanel;
     private JPanel leftPanel;
     private JPanel filterPanel;
@@ -25,47 +20,16 @@ public class ManageWindow extends JFrame {
     private JButton deleteButton;
     private JButton addButton;
     private JPanel rightPanel;
+    private JTable table;
 
     public ManageWindow() throws SQLException {
         initComponents();
     }
 
-    private void addTableNames() {
-        tableNames.put(1, "client");
-        tableNames.put(2, "address");
-        tableNames.put(3, "airport");
-        tableNames.put(4, "plane");
-        tableNames.put(5, "airline");
-        tableNames.put(6, "pilot");
-        tableNames.put(7, "flight");
-        tableNames.put(8, "booking");
-        tableNames.put(9, "luggage");
-        tableNames.put(10, "class");
-        tableNames.put(11, "plane_airline");
-    }
-
-    private void addToCombobox() {
-        tableCombobox.put(1, "clients");
-        tableCombobox.put(2, "airport addresses");
-        tableCombobox.put(3, "airports");
-        tableCombobox.put(4, "planes");
-        tableCombobox.put(5, "airlines");
-        tableCombobox.put(6, "pilots");
-        tableCombobox.put(7, "flights");
-        tableCombobox.put(8, "bookings");
-        tableCombobox.put(9, "luggages");
-        tableCombobox.put(10, "classes");
-        tableCombobox.put(11, "airplanes in airlines");
-
-        for (int i = 1; i <= tableCombobox.size(); i++) {
-            comboBox.addItem(tableCombobox.get(i));
-        }
-    }
-
     private void initComponents() throws SQLException {
         topPanel = new JPanel();
         manage = new JLabel();
-        comboBox = new JComboBox();
+        comboBox = new JComboBox<String>();
         bottomPanel = new JPanel();
         tableCombobox = new LinkedHashMap<>();
         leftPanel = new JPanel();
@@ -77,7 +41,7 @@ public class ManageWindow extends JFrame {
         deleteButton = new JButton();
         addButton = new JButton();
         rightPanel = new JPanel();
-        table = Table.showTable("client");
+        table = Requests.showTable("client");
 
         setResizable(false);
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
@@ -103,99 +67,10 @@ public class ManageWindow extends JFrame {
 
         comboBox.setPreferredSize(new Dimension(150, 30));
         addToCombobox();
-
-        comboBox.addActionListener(e-> {
-            System.out.println(comboBox.getSelectedIndex());
-            switch (comboBox.getSelectedIndex()) {
-                case 0:
-                    try {
-                        table = Table.showTable("client");
-                    } catch (SQLException ex) {
-                        ex.printStackTrace();
-                    }
-                    break;
-                case 1:
-                    System.out.println("XDD");
-                    try {
-                        table = Table.showTable("address");
-                    } catch (SQLException ex) {
-                        ex.printStackTrace();
-                    }
-                    break;
-                case 2:
-                    try {
-                        table = Table.showTable("airport");
-                    } catch (SQLException ex) {
-                        ex.printStackTrace();
-                    }
-                    break;
-                case 3:
-                    try {
-                        table = Table.showTable("plane");
-                    } catch (SQLException ex) {
-                        ex.printStackTrace();
-                    }
-                    break;
-                case 4:
-                    try {
-                        table = Table.showTable("airline");
-                    } catch (SQLException ex) {
-                        ex.printStackTrace();
-                    }
-                    break;
-                case 5:
-                    try {
-                        table = Table.showTable("pilot");
-                    } catch (SQLException ex) {
-                        ex.printStackTrace();
-                    }
-                    break;
-                case 6:
-                    try {
-                        table = Table.showTable("flight");
-                    } catch (SQLException ex) {
-                        ex.printStackTrace();
-                    }
-                    break;
-                case 7:
-                    try {
-                        table = Table.showTable("booking");
-                    } catch (SQLException ex) {
-                        ex.printStackTrace();
-                    }
-                    break;
-                case 8:
-                    try {
-                        table = Table.showTable("luggage");
-                    } catch (SQLException ex) {
-                        ex.printStackTrace();
-                    }
-                    break;
-                case 9:
-                    try {
-                        table = Table.showTable("class");
-                    } catch (SQLException ex) {
-                        ex.printStackTrace();
-                    }
-                    break;
-                case 10:
-                    System.out.println(comboBox.getSelectedIndex());
-                    try {
-                        table = Table.showTable("plane_airline");
-                    } catch (SQLException ex) {
-                        ex.printStackTrace();
-                    }
-                    break;
-            }
-            System.out.println(table);
-            Table.detailsButtonAction(detailsButton,table);
-            rightPanel.removeAll();
-            rightPanel.add(new JScrollPane(table), BorderLayout.CENTER);
-            rightPanel.revalidate();
-            rightPanel.repaint();
-        });
+        comboBox.setSelectedIndex(0);
+        Actions.detailsButtonAction(detailsButton,table);
+        mainComboBoxAction();
         topPanel.add(comboBox);
-
         contentPane.add(topPanel, BorderLayout.PAGE_START);
 
         {
@@ -233,13 +108,6 @@ public class ManageWindow extends JFrame {
                 leftPanel.add(filterPanel);
 
                 detailsButton.setText("Display details");
-                /*detailsButton.addActionListener(e -> {
-                    int row = clientsTable.getSelectedRow();
-                    System.out.print("Row "+row+" ");
-                    int id = Integer.parseInt(clientsTable.getModel().getValueAt(clientsTable.convertRowIndexToModel(row), 0).toString());
-                    String name = clientsTable.getValueAt(row, 0).toString();
-                    System.out.println("Imie: " + name + ", ID: " + id);
-                }); */
                 detailsButton.setAlignmentX(0.5F);
                 detailsButton.setMaximumSize(new Dimension(150, 60));
                 leftPanel.add(detailsButton);
@@ -279,8 +147,114 @@ public class ManageWindow extends JFrame {
         setLocationRelativeTo(getOwner());
     }
 
-    public JTable getClientsTable() {
-        return table;
+    public void mainComboBoxAction() {
+        comboBox.addActionListener(e-> {
+            System.out.println(comboBox.getSelectedIndex());
+            switch (comboBox.getSelectedIndex()) {
+                case 0:
+                    try {
+                        table = Requests.showClientsTable();
+                    } catch (SQLException ex) {
+                        ex.printStackTrace();
+                    }
+                    break;
+                case 1:
+                    try {
+                        table = Requests.showAddresses();
+                    } catch (SQLException ex) {
+                        ex.printStackTrace();
+                    }
+                    break;
+                case 2:
+                    try {
+                        table = Requests.showTable("airport");
+                    } catch (SQLException ex) {
+                        ex.printStackTrace();
+                    }
+                    break;
+                case 3:
+                    try {
+                        table = Requests.readPlaneTable();
+                    } catch (SQLException ex) {
+                        ex.printStackTrace();
+                    }
+                    break;
+                case 4:
+                    try {
+                        table = Requests.readAirlineTable();
+                    } catch (SQLException ex) {
+                        ex.printStackTrace();
+                    }
+                    break;
+                case 5:
+                    try {
+                        table = Requests.showTable("pilot");
+                    } catch (SQLException ex) {
+                        ex.printStackTrace();
+                    }
+                    break;
+                case 6:
+                    try {
+                        table = Requests.showTable("flight");
+                    } catch (SQLException ex) {
+                        ex.printStackTrace();
+                    }
+                    break;
+                case 7:
+                    try {
+                        table = Requests.showTable("booking");
+                    } catch (SQLException ex) {
+                        ex.printStackTrace();
+                    }
+                    break;
+                case 8:
+                    try {
+                        table = Requests.readLuggageTable();
+                    } catch (SQLException ex) {
+                        ex.printStackTrace();
+                    }
+                    break;
+                case 9:
+                    try {
+                        table = Requests.readClassTable();
+                    } catch (SQLException ex) {
+                        ex.printStackTrace();
+                    }
+                    break;
+                case 10:
+                    System.out.println(comboBox.getSelectedIndex());
+                    try {
+                        table = Requests.showPlaneAirlineTable();
+                    } catch (SQLException ex) {
+                        ex.printStackTrace();
+                    }
+                    break;
+                default:
+                    return;
+            }
+            Actions.detailsButtonAction(detailsButton,table);
+            rightPanel.removeAll();
+            rightPanel.add(new JScrollPane(table), BorderLayout.CENTER);
+            rightPanel.revalidate();
+            rightPanel.repaint();
+        });
+    }
+    private void addToCombobox() {
+        tableCombobox.put(1, "clients");
+        tableCombobox.put(2, "airport addresses");
+        tableCombobox.put(3, "airports");
+        tableCombobox.put(4, "planes");
+        tableCombobox.put(5, "airlines");
+        tableCombobox.put(6, "pilots");
+        tableCombobox.put(7, "flights");
+        tableCombobox.put(8, "bookings");
+        tableCombobox.put(9, "luggages");
+        tableCombobox.put(10, "classes");
+        tableCombobox.put(11, "airplanes in airlines");
+
+        for (int i = 1; i <= tableCombobox.size(); i++) {
+            comboBox.addItem(tableCombobox.get(i));
+        }
     }
 
     public static void main(String[] args) {
@@ -295,5 +269,4 @@ public class ManageWindow extends JFrame {
             }
         }));
     }
-    //selectedItem - przekazać jako argument do funkcji i wyswietlać tak tabelę,
 }
