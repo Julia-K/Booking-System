@@ -306,12 +306,87 @@ public class Requests {
         model.addColumn("Price");
         model.addColumn("Height");
         model.addColumn("Weight");
-        
+
         TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
         jTable.setRowSorter(sorter);
         jTable.setModel(addRows(rs,model));
         jTable.removeColumn(jTable.getColumnModel().getColumn(0));
         return jTable;
+    }
+
+    public static JTable readAirports() throws SQLException {
+        JTable jTable = new JTable();
+        DefaultTableModel model = new DefaultTableModel();
+        ResultSet rs = Requests.readTableByRequest("select * from airport");
+        model.addColumn("airportID");
+        model.addColumn("Airport name");
+        model.addColumn("Code");
+        model.addColumn("Address");
+
+        TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
+        jTable.setRowSorter(sorter);
+        jTable.setModel(addRows(rs,model));
+        rs.beforeFirst();
+        while (rs.next()) {
+            String address = getStringAddress(rs.getInt(4));
+            model.setValueAt(address,rs.getRow()-1,3);
+        }
+        jTable.removeColumn(jTable.getColumnModel().getColumn(0));
+        return jTable;
+    }
+
+    public static JTable readPilots() throws SQLException {
+        JTable jTable = new JTable();
+        DefaultTableModel model = new DefaultTableModel();
+        ResultSet rs = Requests.readTableByRequest("select pilotID, first_name, last_name, employment_date, airline.name from pilot\n" +
+                "inner join airline on airline.airlineID = pilot.airline_id");
+        model.addColumn("pilotID");
+        model.addColumn("First Name");
+        model.addColumn("Last name");
+        model.addColumn("Employment date");
+        model.addColumn("Airline name");
+
+        TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
+        jTable.setRowSorter(sorter);
+        jTable.setModel(addRows(rs,model));
+        jTable.removeColumn(jTable.getColumnModel().getColumn(0));
+        return jTable;
+    }
+
+    public static JTable readFlights() throws SQLException {
+        JTable jTable = new JTable();
+        DefaultTableModel model = new DefaultTableModel();
+        ResultSet rs = Requests.readTableByRequest("select flightID, dep.name, arr.name, departure_time, departure_date, arrival_time, arrival_date, price from flight\n" +
+                "inner join airport as dep on dep.airportID = flight.departureAirport_id\n" +
+                "inner join airport as arr on arr.airportID = flight.arrivalAirport_id");
+        System.out.println("WTFFFFF");
+        model.addColumn("flightID");
+        model.addColumn("Departure Airport");
+        model.addColumn("Arrival Airport");
+        model.addColumn("Departure time");
+        model.addColumn("Departure date");
+        model.addColumn("Arrival time");
+        model.addColumn("Arrival date");
+        model.addColumn("Price");
+
+        TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
+        jTable.setRowSorter(sorter);
+        jTable.setModel(addRows(rs,model));
+        jTable.removeColumn(jTable.getColumnModel().getColumn(0));
+        return jTable;
+    }
+
+    public static String getStringAddress(int id) throws SQLException {
+        String address = null;
+        ResultSet rs = Requests.readTableByRequest("select * from address where addressID = " + id);
+        while (rs.next()) {
+            if(rs.getObject(5)==null) {
+                address = rs.getString(2) + ", " + rs.getString(4) + " " + rs.getString(3) + ", " + rs.getString(6);
+            } else {
+                address = rs.getString(2) + ", " + rs.getString(4) + " " + rs.getString(3) + ", " + rs.getString(5) +" " + rs.getString(6);
+            }
+        }
+        return address;
     }
 
     public static JTable showPlaneAirlineTable() throws SQLException {
@@ -320,7 +395,7 @@ public class Requests {
         ResultSet rs = Requests.readTableByRequest("select plane.brand, airline.name, planes_quantity from plane_airline\n" +
                 "inner join plane on plane.planeID = plane_airline.plane_id\n" +
                 "inner join airline on airline.airlineID = plane_airline.airline_id");
-        model.addColumn("PlaneAirplaneID");
+       // model.addColumn("PlaneAirlineID");
         model.addColumn("Plane brand");
         model.addColumn("Airline name");
         model.addColumn("Quantity of planes");
@@ -328,7 +403,7 @@ public class Requests {
         TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
         jTable.setRowSorter(sorter);
         jTable.setModel(addRowsForPlaneAirline(rs,model));
-        jTable.removeColumn(jTable.getColumnModel().getColumn(0));
+       // jTable.removeColumn(jTable.getColumnModel().getColumn(0));
         return jTable;
     }
 
@@ -364,7 +439,8 @@ public class Requests {
 
 
     public static ResultSet readTableByRequest(String sql) throws SQLException {
-        Statement st = DBConnection.getConnection().createStatement();
+        Statement st = DBConnection.getConnection().createStatement(ResultSet.TYPE_SCROLL_SENSITIVE,
+                ResultSet.CONCUR_UPDATABLE);
         return st.executeQuery(sql);
     }
 

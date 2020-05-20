@@ -68,7 +68,6 @@ public class ManageWindow extends JFrame {
         comboBox.setPreferredSize(new Dimension(150, 30));
         addToCombobox();
         comboBox.setSelectedIndex(0);
-        Actions.detailsButtonAction(detailsButton,table);
         mainComboBoxAction();
         topPanel.add(comboBox);
         contentPane.add(topPanel, BorderLayout.PAGE_START);
@@ -154,6 +153,7 @@ public class ManageWindow extends JFrame {
                 case 0:
                     try {
                         table = Requests.showClientsTable();
+                        Actions.detailsClientBA(detailsButton,table);
                     } catch (SQLException ex) {
                         ex.printStackTrace();
                     }
@@ -167,7 +167,7 @@ public class ManageWindow extends JFrame {
                     break;
                 case 2:
                     try {
-                        table = Requests.showTable("airport");
+                        table = Requests.readAirports();
                     } catch (SQLException ex) {
                         ex.printStackTrace();
                     }
@@ -188,14 +188,14 @@ public class ManageWindow extends JFrame {
                     break;
                 case 5:
                     try {
-                        table = Requests.showTable("pilot");
+                        table = Requests.readPilots();
                     } catch (SQLException ex) {
                         ex.printStackTrace();
                     }
                     break;
                 case 6:
                     try {
-                        table = Requests.showTable("flight");
+                        table = Requests.readFlights();
                     } catch (SQLException ex) {
                         ex.printStackTrace();
                     }
@@ -232,7 +232,7 @@ public class ManageWindow extends JFrame {
                 default:
                     return;
             }
-            Actions.detailsButtonAction(detailsButton,table);
+            Actions.detailsClientBA(detailsButton,table);
             rightPanel.removeAll();
             rightPanel.add(new JScrollPane(table), BorderLayout.CENTER);
             rightPanel.revalidate();
