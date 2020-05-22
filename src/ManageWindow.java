@@ -56,7 +56,7 @@ public class ManageWindow extends JFrame {
         topPanel.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
         topPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
 
-        manage.setText("Zarządzaj");
+        manage.setText("Manage");
         manage.setPreferredSize(new Dimension(150, 50));
         manage.setAlignmentX(0.5F);
         manage.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 20));
@@ -83,13 +83,13 @@ public class ManageWindow extends JFrame {
                 leftPanel.setMaximumSize(new Dimension(300, 700));
                 leftPanel.setPreferredSize(new Dimension(300, 700));
                 leftPanel.setMinimumSize(new Dimension(300, 700));
-                leftPanel.setBackground(Color.red);
+                leftPanel.setBackground(new Color(66, 122, 161));
                 leftPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
                 leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.PAGE_AXIS));
 
                 {
                     filterPanel.setMaximumSize(new Dimension(400, 150));
-                    filterPanel.setBackground(Color.red);
+                    filterPanel.setBackground(new Color(66, 122, 161));
                     filterPanel.setMinimumSize(null);
                     filterPanel.setBorder(new EmptyBorder(10, 5, 5, 5));
                     filterPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 20, 10));
@@ -109,13 +109,14 @@ public class ManageWindow extends JFrame {
                 detailsButton.setText("Display details");
                 detailsButton.setAlignmentX(0.5F);
                 detailsButton.setMaximumSize(new Dimension(150, 60));
+                detailsButton.setBackground(new Color(235, 242, 250));
                 leftPanel.add(detailsButton);
                 leftPanel.add(Box.createRigidArea(new Dimension(0, 30)));
 
                 updateButton.setText("Update");
                 updateButton.setAlignmentX(0.5F);
                 updateButton.setMaximumSize(new Dimension(150, 60));
-                updateButton.setBackground(Color.pink);
+                updateButton.setBackground(new Color(235, 242, 250));
                 leftPanel.add(updateButton);
                 leftPanel.add(Box.createRigidArea(new Dimension(0, 30)));
 
@@ -133,7 +134,7 @@ public class ManageWindow extends JFrame {
             bottomPanel.add(leftPanel, BorderLayout.CENTER);
 
             {
-                rightPanel.setBackground(Color.green);
+                rightPanel.setBackground(new Color(235, 242, 250));
                 rightPanel.setPreferredSize(new Dimension(1000, 0));
                 rightPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
                 rightPanel.setLayout(new BorderLayout());
@@ -146,13 +147,21 @@ public class ManageWindow extends JFrame {
         setLocationRelativeTo(getOwner());
     }
 
+    public void reloadAirline() throws SQLException {
+        table = Requests.readAirports();
+        Actions.detailsAirport(detailsButton, table);
+        Actions.addAirportAction(addButton, this);
+        update();
+    }
+
     public void mainComboBoxAction() {
         comboBox.addActionListener(e-> {
             System.out.println(comboBox.getSelectedIndex());
             switch (comboBox.getSelectedIndex()) {
                 case 0:
                     try {
-                        table = Requests.showClientsTable();
+                        table = Requests.showClientsTable(searchField);
+                        TableRowFilter.create(searchField, table);
                         Actions.detailsClientBA(detailsButton,table);
                     } catch (SQLException ex) {
                         ex.printStackTrace();
@@ -161,6 +170,9 @@ public class ManageWindow extends JFrame {
                 case 1:
                     try {
                         table = Requests.showAddresses();
+                        TableRowFilter.create(searchField, table);
+                        Actions.detailsAddresses(detailsButton,table);
+
                     } catch (SQLException ex) {
                         ex.printStackTrace();
                     }
@@ -168,6 +180,21 @@ public class ManageWindow extends JFrame {
                 case 2:
                     try {
                         table = Requests.readAirports();
+                        TableRowFilter.create(searchField, table);
+                        Actions.detailsAirport(detailsButton, table);
+                        Actions.addAirportAction(addButton, this);
+                        deleteButton.addActionListener(x-> {
+                            int row = table.getSelectedRow();
+                            if(row == -1) return;
+                            int id = Integer.parseInt((String)table.getModel().getValueAt(table.convertRowIndexToModel(row), 0));
+                            try {
+                                Requests.deleteRow(id, "airport");
+                                reloadAirline();
+                            } catch (SQLException ex) {
+                                System.out.println("Nie można usunąć czegoś połączonego");
+                                //ex.printStackTrace();
+                            }
+                        });
                     } catch (SQLException ex) {
                         ex.printStackTrace();
                     }
@@ -175,6 +202,8 @@ public class ManageWindow extends JFrame {
                 case 3:
                     try {
                         table = Requests.readPlaneTable();
+                        TableRowFilter.create(searchField, table);
+                        Actions.detailsPlane(detailsButton, table);
                     } catch (SQLException ex) {
                         ex.printStackTrace();
                     }
@@ -182,6 +211,8 @@ public class ManageWindow extends JFrame {
                 case 4:
                     try {
                         table = Requests.readAirlineTable();
+                        TableRowFilter.create(searchField, table);
+                        Actions.detailsAirline(detailsButton,table);
                     } catch (SQLException ex) {
                         ex.printStackTrace();
                     }
@@ -189,6 +220,8 @@ public class ManageWindow extends JFrame {
                 case 5:
                     try {
                         table = Requests.readPilots();
+                        TableRowFilter.create(searchField, table);
+                        Actions.detailsPilot(detailsButton,table);
                     } catch (SQLException ex) {
                         ex.printStackTrace();
                     }
@@ -196,6 +229,9 @@ public class ManageWindow extends JFrame {
                 case 6:
                     try {
                         table = Requests.readFlights();
+                        TableRowFilter.create(searchField, table);
+                        Actions.detailsFlight(detailsButton, table);
+
                     } catch (SQLException ex) {
                         ex.printStackTrace();
                     }
@@ -203,6 +239,8 @@ public class ManageWindow extends JFrame {
                 case 7:
                     try {
                         table = Requests.showTable("booking");
+                        TableRowFilter.create(searchField, table);
+
                     } catch (SQLException ex) {
                         ex.printStackTrace();
                     }
@@ -210,6 +248,7 @@ public class ManageWindow extends JFrame {
                 case 8:
                     try {
                         table = Requests.readLuggageTable();
+                        TableRowFilter.create(searchField, table);
                     } catch (SQLException ex) {
                         ex.printStackTrace();
                     }
@@ -217,14 +256,15 @@ public class ManageWindow extends JFrame {
                 case 9:
                     try {
                         table = Requests.readClassTable();
+                        TableRowFilter.create(searchField, table);
                     } catch (SQLException ex) {
                         ex.printStackTrace();
                     }
                     break;
                 case 10:
-                    System.out.println(comboBox.getSelectedIndex());
                     try {
                         table = Requests.showPlaneAirlineTable();
+                        TableRowFilter.create(searchField, table);
                     } catch (SQLException ex) {
                         ex.printStackTrace();
                     }
@@ -232,13 +272,18 @@ public class ManageWindow extends JFrame {
                 default:
                     return;
             }
-            Actions.detailsClientBA(detailsButton,table);
-            rightPanel.removeAll();
-            rightPanel.add(new JScrollPane(table), BorderLayout.CENTER);
-            rightPanel.revalidate();
-            rightPanel.repaint();
+            update();
         });
     }
+
+    private void update() {
+        TableRowFilter.create(searchField, table);
+        rightPanel.removeAll();
+        rightPanel.add(new JScrollPane(table), BorderLayout.CENTER);
+        rightPanel.revalidate();
+        rightPanel.repaint();
+    }
+
     private void addToCombobox() {
         tableCombobox.put(1, "clients");
         tableCombobox.put(2, "airport addresses");

@@ -3,6 +3,8 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 import java.sql.*;
 import java.util.Arrays;
+import java.util.Comparator;
+import java.util.LinkedHashMap;
 
 public class Requests {
 
@@ -215,7 +217,7 @@ public class Requests {
         return jTable;
     }
 
-    public static JTable showClientsTable() throws SQLException {
+    public static JTable showClientsTable(JTextField searchField) throws SQLException {
         JTable jTable = new JTable();
         DefaultTableModel model = new DefaultTableModel();
         ResultSet rs = Requests.readByTableName("client");
@@ -236,7 +238,16 @@ public class Requests {
 
     public static JTable showAddresses() throws SQLException {
         JTable jTable = new JTable();
-        DefaultTableModel model = new DefaultTableModel();
+        DefaultTableModel model = new DefaultTableModel() {
+            @Override
+            public Class getColumnClass(int column) {
+                if (column == 5) {
+                    return Integer.class;
+                } else {
+                    return String.class;
+                }
+            }
+        };
         ResultSet rs = Requests.readByTableName("address");
         model.addColumn("addressID");
         model.addColumn("Country");
@@ -244,8 +255,16 @@ public class Requests {
         model.addColumn("Postal code");
         model.addColumn("Street");
         model.addColumn("Number");
+        System.out.println(model.getColumnName(5));
 
         TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
+        sorter.setComparator(5, new Comparator<Integer>() {
+            @Override
+            public int compare(Integer o1, Integer o2) {
+                System.out.println(model.getValueAt(3,5));
+                return o1 - o2;
+            }
+        });
         jTable.setRowSorter(sorter);
         jTable.setModel(addRows(rs,model));
         jTable.removeColumn(jTable.getColumnModel().getColumn(0));
@@ -353,13 +372,14 @@ public class Requests {
         return jTable;
     }
 
+
+
     public static JTable readFlights() throws SQLException {
         JTable jTable = new JTable();
         DefaultTableModel model = new DefaultTableModel();
-        ResultSet rs = Requests.readTableByRequest("select flightID, dep.name, arr.name, departure_time, departure_date, arrival_time, arrival_date, price from flight\n" +
+        ResultSet rs = Requests.readTableByRequest("select flightID, dep.name as dname, arr.name as aname, departure_time, departure_date, arrival_time, arrival_date, price from flight\n" +
                 "inner join airport as dep on dep.airportID = flight.departureAirport_id\n" +
                 "inner join airport as arr on arr.airportID = flight.arrivalAirport_id");
-        System.out.println("WTFFFFF");
         model.addColumn("flightID");
         model.addColumn("Departure Airport");
         model.addColumn("Arrival Airport");
@@ -435,6 +455,18 @@ public class Requests {
             Arrays.fill(cells,null);
         }
         return model;
+    }
+
+    public static LinkedHashMap getAddressesWihtId() throws SQLException {
+        int i = 0;
+        LinkedHashMap<Integer, Integer> addressesWithId = new LinkedHashMap<>();
+        ResultSet rs = readTableByRequest("select addressID from address");
+        while (rs.next()) {
+            int id = rs.getInt("addressID");
+            addressesWithId.put(i,id);
+            i++;
+        }
+        return addressesWithId;
     }
 
 
@@ -578,10 +610,15 @@ public class Requests {
 
     //----------------------------- DELETE -----------------------------
 
+    public static void deleteRow(int id, String table){
+        try {
+            String sql = "delete from " + table +" WHERE "+table+"ID=" + id;
+            PreparedStatement statement = DBConnection.getConnection().prepareStatement(sql);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("Nie można usunąć czegoś połączonego");
+            //e.printStackTrace();
+        }
 
-    public static void deleteRow(int id, String table) throws SQLException {
-        String sql = "delete from " + table +" WHERE "+table+"ID=" + id;
-        PreparedStatement statement = DBConnection.getConnection().prepareStatement(sql);
-        statement.executeUpdate();
     }
 }

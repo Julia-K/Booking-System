@@ -1,0 +1,133 @@
+package tableFrames;
+
+import java.awt.*;
+import javax.swing.*;
+import javax.swing.border.*;
+
+public class AddressDetailsFrame extends JFrame {
+    private JPanel dialogPane;
+    private JPanel contentPanel;
+    private JLabel countryL;
+    private JLabel cityL;
+    private JLabel postalL;
+    private JLabel streetL;
+    private JLabel numL;
+    private JPanel buttonBar;
+    private JButton okButton;
+    private JPanel panel1;
+
+    public AddressDetailsFrame() {
+        initComponents();
+    }
+
+    public AddressDetailsFrame(String country, String city, String postal, String street, String number) {
+        initComponents();
+        countryL.setText(countryL.getText() + " " + country);
+        cityL.setText(cityL.getText()+ " " + city);
+        postalL.setText(postalL.getText()+ " " + postal);
+        streetL.setText(streetL.getText()+ " " + street);
+        numL.setText(numL.getText()+ " " + number);
+        setVisible(true);
+    }
+
+    private void initComponents() {
+        dialogPane = new JPanel();
+        contentPanel = new JPanel();
+        countryL = new JLabel();
+        cityL = new JLabel();
+        postalL = new JLabel();
+        streetL = new JLabel();
+        numL = new JLabel();
+        buttonBar = new JPanel();
+        okButton = new JButton();
+        panel1 = new JPanel();
+
+        setResizable(false);
+        setMinimumSize(new Dimension(670, 430));
+        setBackground(new Color(235, 242, 250));
+        var contentPane = getContentPane();
+        contentPane.setLayout(new BorderLayout());
+
+        {
+            dialogPane.setBorder(new EmptyBorder(12, 12, 12, 12));
+            dialogPane.setBackground(new Color(235, 242, 250));
+            dialogPane.setLayout(new BorderLayout());
+
+            {
+                contentPanel.setBackground(new Color(235, 242, 250));
+                contentPanel.setLayout(null);
+
+                countryL.setText("Country:");
+                countryL.setForeground(new Color(66, 122, 161));
+                countryL.setFont(countryL.getFont().deriveFont(countryL.getFont().getStyle() | Font.BOLD, countryL.getFont().getSize() + 17f));
+                countryL.setBorder(null);
+                contentPanel.add(countryL);
+                countryL.setBounds(20, 40, 455, 40);
+
+                cityL.setText("City:");
+                cityL.setForeground(Color.black);
+                cityL.setFont(cityL.getFont().deriveFont(cityL.getFont().getStyle() | Font.BOLD, cityL.getFont().getSize() + 17f));
+                contentPanel.add(cityL);
+                cityL.setBounds(35, 90, 455, 40);
+
+                postalL.setText("Postal code:");
+                postalL.setForeground(Color.black);
+                postalL.setFont(postalL.getFont().deriveFont(postalL.getFont().getStyle() | Font.BOLD, postalL.getFont().getSize() + 17f));
+                contentPanel.add(postalL);
+                postalL.setBounds(35, 140, 455, 40);
+
+                streetL.setText("Street:");
+                streetL.setForeground(Color.black);
+                streetL.setFont(streetL.getFont().deriveFont(streetL.getFont().getStyle() | Font.BOLD, streetL.getFont().getSize() + 17f));
+                contentPanel.add(streetL);
+                streetL.setBounds(35, 190, 455, 40);
+
+                numL.setText("Number:");
+                numL.setForeground(Color.black);
+                numL.setFont(numL.getFont().deriveFont(numL.getFont().getStyle() | Font.BOLD, numL.getFont().getSize() + 17f));
+                contentPanel.add(numL);
+                numL.setBounds(35, 240, 455, 40);
+
+                {
+                    Dimension preferredSize = new Dimension();
+                    preferredSize.width = 490;
+                    preferredSize.height = 230;
+                    contentPanel.setMinimumSize(preferredSize);
+                    contentPanel.setPreferredSize(preferredSize);
+                }
+            }
+            dialogPane.add(contentPanel, BorderLayout.EAST);
+
+            {
+                buttonBar.setBorder(new EmptyBorder(12, 0, 0, 0));
+                buttonBar.setBackground(new Color(235, 242, 250));
+                buttonBar.setLayout(new GridBagLayout());
+                ((GridBagLayout)buttonBar.getLayout()).columnWidths = new int[] {0, 80};
+                ((GridBagLayout)buttonBar.getLayout()).columnWeights = new double[] {1.0, 0.0};
+
+                okButton.setText("OK");
+                okButton.setBackground(new Color(66, 122, 161));
+                buttonBar.add(okButton, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0,
+                GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                        new Insets(0, 0, 0, 0), 0, 0));
+                okButton.addActionListener(e -> {
+                    this.dispose();
+                });
+            }
+            dialogPane.add(buttonBar, BorderLayout.SOUTH);
+
+            {
+                panel1.setPreferredSize(new Dimension(160, 200));
+                panel1.setBackground(new Color(5, 102, 141));
+                panel1.setForeground(new Color(5, 102, 141));
+                panel1.setMaximumSize(new Dimension(160, 200));
+                panel1.setMinimumSize(new Dimension(160, 200));
+                panel1.setLayout(null);
+            }
+            dialogPane.add(panel1, BorderLayout.WEST);
+        }
+        contentPane.add(dialogPane, BorderLayout.CENTER);
+        pack();
+        setLocationRelativeTo(getOwner());
+    }
+}
