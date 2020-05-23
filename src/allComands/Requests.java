@@ -551,7 +551,7 @@ public class Requests {
     }
 
     public static void updateAirport(int id, String name, String code, int addressId) throws SQLException {
-        String sql = "update airport set name=?, code=?, address_id=? WHERE planeID=?";
+        String sql = "update airport set name=?, code=?, address_id=? WHERE airportID=?";
         PreparedStatement statement = DBConnection.getConnection().prepareStatement(sql);
         statement.setString(1, name);
         statement.setString(2, code);
@@ -561,7 +561,7 @@ public class Requests {
     }
 
     public static void updatePilot(int id, String first, String last, String date, int addressId) throws SQLException {
-        String sql = "update airport set first_name=?, last_name=?, employment_date=?, airline_id=? WHERE planeID=?";
+        String sql = "update pilot set first_name=?, last_name=?, employment_date=?, airline_id=? WHERE pilotID=?";
         PreparedStatement statement = DBConnection.getConnection().prepareStatement(sql);
         statement.setString(1, first);
         statement.setString(2, last);

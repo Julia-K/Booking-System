@@ -39,25 +39,33 @@ public class AirportDetailsFrame extends JFrame {
     private JLabel numberL;
     private JTextField fillNumber;
     private int id;
+    private boolean update;
 
     public AirportDetailsFrame() throws SQLException {
-        initAddComponents();
+        this.update = false;
+        initAddUpdateComponents();
         setVisible(true);
     }
 
     public AirportDetailsFrame(Boolean update, int id, String name, String code, String address) throws SQLException {
         if(update) {
             this.id = id;
+            initAddUpdateComponents();
+            checkBox.setVisible(false);
+            fillnameL.setText(name);
+            fillCodeL.setText(code);
+            comboBox.setSelectedItem(address);
+        } else {
+            initDetailComponents();
+            String[] all = address.split(",", 2);
+            fillNameL.setText(name +" ("+code+")");
+            fillAddressL.setText("<html>"+all[0]+"<br/>"+all[1]+"</html>");
         }
-
-        initComponents();
-        String[] all = address.split(",", 2);
-        fillNameL.setText(name +" ("+code+")");
-        fillAddressL.setText("<html>"+all[0]+"<br/>"+all[1]+"</html>");
+        this.update = update;
         setVisible(true);
     }
 
-    private void initComponents() throws SQLException {
+    private void initDetailComponents() throws SQLException {
         dialogPane = new JPanel();
         contentPanel = new JPanel();
         nameL = new JLabel();
@@ -129,9 +137,7 @@ public class AirportDetailsFrame extends JFrame {
                 buttonBar.add(okButton, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0,
                         GridBagConstraints.CENTER, GridBagConstraints.BOTH,
                         new Insets(0, 0, 0, 0), 0, 0));
-                okButton.addActionListener(e -> {
-                    dispose();
-                });
+                okButton.addActionListener(e -> dispose());
             }
             dialogPane.add(buttonBar, BorderLayout.SOUTH);
 
@@ -150,7 +156,7 @@ public class AirportDetailsFrame extends JFrame {
         setLocationRelativeTo(getOwner());
     }
 
-    private void initAddComponents() throws SQLException {
+    private void initAddUpdateComponents() throws SQLException {
         addressesWithId = Requests.getAddressesWihtId();
         dialogPane = new JPanel();
         contentPanel = new JPanel();
@@ -176,7 +182,6 @@ public class AirportDetailsFrame extends JFrame {
         fillStreet = new JTextField();
         numberL = new JLabel();
         fillNumber = new JTextField();
-        setVisibility(false);
 
         setResizable(false);
         setMinimumSize(new Dimension(670, 430));
@@ -229,21 +234,24 @@ public class AirportDetailsFrame extends JFrame {
                 comboBox.setBackground(Color.white);
                 contentPanel.add(comboBox);
                 comboBox.setBounds(35, 290, 250, 40);
+                setVisibility(false);
 
-
-                checkBox.setText("create your own");
-                checkBox.setBackground(new Color(235, 242, 250));
-                checkBox.setForeground(Color.black);
-                contentPanel.add(checkBox);
-                checkBox.setBounds(35, 335, 120, 30);
-                checkBox.addItemListener(e -> {
-                    if(e.getStateChange() == ItemEvent.DESELECTED) {
-                        setVisibility(false);
-                    } else {
-                        setVisibility(true);
-                    }
-                });
-
+                if(checkBox.isVisible()) {
+                    checkBox.setText("create your own");
+                    checkBox.setBackground(new Color(235, 242, 250));
+                    checkBox.setForeground(Color.black);
+                    contentPanel.add(checkBox);
+                    checkBox.setBounds(35, 335, 120, 30);
+                    checkBox.addItemListener(e -> {
+                        if(e.getStateChange() == ItemEvent.DESELECTED) {
+                            setVisibility(false);
+                        } else {
+                            setVisibility(true);
+                        }
+                    });
+                } else {
+                    setVisibility(false);
+                }
                 {
                     panel3.setBackground(new Color(5, 102, 141));
                     panel3.setPreferredSize(new Dimension(5, 200));
@@ -345,24 +353,33 @@ public class AirportDetailsFrame extends JFrame {
             }
             dialogPane.add(panel2, BorderLayout.EAST);
             okButton.addActionListener(e -> {
-                if(!checkBox.isSelected()) {
+                if(update) {
                     try {
-                        Requests.createAirport(fillnameL.getText(),fillCodeL.getText(), (Integer) addressesWithId.get(comboBox.getSelectedIndex()));
+                        System.out.println("INDEKS ADRESU (COMBOBOX): "+ (Integer) addressesWithId.get(comboBox.getSelectedIndex()));
+                        Requests.updateAirport(id,fillnameL.getText(),fillCodeL.getText(),(Integer) addressesWithId.get(comboBox.getSelectedIndex()));
                     } catch (SQLException ex) {
                         ex.printStackTrace();
                     }
                 } else {
-                    try {
-                        Requests.createAddress(fillCountry.getText(), fillCity.getText(),fillPostal.getText(),fillStreet.getText(), Integer.parseInt(fillNumber.getText()));
-                        ResultSet rs = Requests.readTableByRequest("SELECT TOP 1 addressID FROM address ORDER BY addressID DESC");
-                        while (rs.next()) {
-                             int id = rs.getInt(1);
-                             Requests.createAirport(fillnameL.getText(),fillCodeL.getText(),id);
-                             updateContent();
+                    if(!checkBox.isSelected()) {
+                        try {
+                            Requests.createAirport(fillnameL.getText(),fillCodeL.getText(), (Integer) addressesWithId.get(comboBox.getSelectedIndex()));
+                        } catch (SQLException ex) {
+                            ex.printStackTrace();
                         }
+                    } else {
+                        try {
+                            Requests.createAddress(fillCountry.getText(), fillCity.getText(),fillPostal.getText(),fillStreet.getText(), Integer.parseInt(fillNumber.getText()));
+                            ResultSet rs = Requests.readTableByRequest("SELECT TOP 1 addressID FROM address ORDER BY addressID DESC");
+                            while (rs.next()) {
+                                int id = rs.getInt(1);
+                                Requests.createAirport(fillnameL.getText(),fillCodeL.getText(),id);
+                                updateContent();
+                            }
 
-                    } catch (SQLException ex) {
-                        ex.printStackTrace();
+                        } catch (SQLException ex) {
+                            ex.printStackTrace();
+                        }
                     }
                 }
                 dispose();

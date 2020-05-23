@@ -26,6 +26,7 @@ public class ManageWindow extends JFrame {
 
     public ManageWindow() throws SQLException {
         initComponents();
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     }
 
     private void initComponents() throws SQLException {
@@ -172,6 +173,7 @@ public class ManageWindow extends JFrame {
         table = Requests.readAirports();
         TableRowFilter.create(searchField, table);
         Actions.setDetailOrUpdateAirport(false, detailsButton, table,this);
+        Actions.setDetailOrUpdateAirport(true, updateButton, table,this);
         Actions.addAirportAction(addButton, this);
         Actions.setDeleteButtonAction(deleteButton,"airport",table,this);
         update();

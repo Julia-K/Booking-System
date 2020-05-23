@@ -74,7 +74,7 @@ public class Actions {
                     @Override
                     public void windowClosed(WindowEvent e) {
                         try {
-                            mw.reloadAddress();
+                            mw.reloadAirport();
                         } catch (SQLException ex) {
                             ex.printStackTrace();
                         }
