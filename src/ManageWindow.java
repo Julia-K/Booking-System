@@ -1,3 +1,5 @@
+import allComands.Requests;
+
 import java.awt.*;
 import java.sql.SQLException;
 import java.util.LinkedHashMap;
@@ -147,54 +149,66 @@ public class ManageWindow extends JFrame {
         setLocationRelativeTo(getOwner());
     }
 
-    public void reloadAirline() throws SQLException {
-        table = Requests.readAirports();
-        Actions.detailsAirport(detailsButton, table);
-        Actions.addAirportAction(addButton, this);
+
+
+    public void reloadPlane() throws SQLException {
+        table = Requests.readPlaneTable();
+        TableRowFilter.create(searchField, table);
+        Actions.detailsPlane(detailsButton, table);
         update();
     }
 
+    public void reloadClients() throws SQLException {
+        table = Requests.showClientsTable();
+        TableRowFilter.create(searchField, table);
+        Actions.setDetailOrUpdateClient(false,detailsButton,table,this);
+        Actions.setDetailOrUpdateClient(true,updateButton,table,this);
+        Actions.setDeleteButtonAction(deleteButton,"client",table,this);
+        Actions.addClientAction(addButton,this);
+        update();
+    }
+
+    public void reloadAirport() throws SQLException {
+        table = Requests.readAirports();
+        TableRowFilter.create(searchField, table);
+        Actions.setDetailOrUpdateAirport(false, detailsButton, table,this);
+        Actions.addAirportAction(addButton, this);
+        Actions.setDeleteButtonAction(deleteButton,"airport",table,this);
+        update();
+    }
+
+    public void reloadAddress() throws SQLException {
+        table = Requests.showAddresses();
+        TableRowFilter.create(searchField, table);
+        Actions.setDetailOrUpdateAddress(false,detailsButton,table,this);
+        Actions.setDetailOrUpdateAddress(true,updateButton,table,this);
+        Actions.setDeleteButtonAction(deleteButton, "address", table, this);
+        Actions.addAddressAction(addButton,this);
+        update();
+    }
+
+
+
     public void mainComboBoxAction() {
         comboBox.addActionListener(e-> {
-            System.out.println(comboBox.getSelectedIndex());
             switch (comboBox.getSelectedIndex()) {
                 case 0:
                     try {
-                        table = Requests.showClientsTable(searchField);
-                        TableRowFilter.create(searchField, table);
-                        Actions.detailsClientBA(detailsButton,table);
+                        reloadClients();
                     } catch (SQLException ex) {
                         ex.printStackTrace();
                     }
                     break;
                 case 1:
                     try {
-                        table = Requests.showAddresses();
-                        TableRowFilter.create(searchField, table);
-                        Actions.detailsAddresses(detailsButton,table);
-
+                        reloadAddress();
                     } catch (SQLException ex) {
                         ex.printStackTrace();
                     }
                     break;
                 case 2:
                     try {
-                        table = Requests.readAirports();
-                        TableRowFilter.create(searchField, table);
-                        Actions.detailsAirport(detailsButton, table);
-                        Actions.addAirportAction(addButton, this);
-                        deleteButton.addActionListener(x-> {
-                            int row = table.getSelectedRow();
-                            if(row == -1) return;
-                            int id = Integer.parseInt((String)table.getModel().getValueAt(table.convertRowIndexToModel(row), 0));
-                            try {
-                                Requests.deleteRow(id, "airport");
-                                reloadAirline();
-                            } catch (SQLException ex) {
-                                System.out.println("Nie można usunąć czegoś połączonego");
-                                //ex.printStackTrace();
-                            }
-                        });
+                        reloadAirport();
                     } catch (SQLException ex) {
                         ex.printStackTrace();
                     }
@@ -249,6 +263,7 @@ public class ManageWindow extends JFrame {
                     try {
                         table = Requests.readLuggageTable();
                         TableRowFilter.create(searchField, table);
+                        Actions.detailsLuggage(detailsButton,table);
                     } catch (SQLException ex) {
                         ex.printStackTrace();
                     }
@@ -257,6 +272,7 @@ public class ManageWindow extends JFrame {
                     try {
                         table = Requests.readClassTable();
                         TableRowFilter.create(searchField, table);
+                        Actions.detailsClass(detailsButton,table);
                     } catch (SQLException ex) {
                         ex.printStackTrace();
                     }
@@ -295,7 +311,6 @@ public class ManageWindow extends JFrame {
         tableCombobox.put(8, "bookings");
         tableCombobox.put(9, "luggages");
         tableCombobox.put(10, "classes");
-        tableCombobox.put(11, "airplanes in airlines");
 
         for (int i = 1; i <= tableCombobox.size(); i++) {
             comboBox.addItem(tableCombobox.get(i));

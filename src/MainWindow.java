@@ -1,3 +1,6 @@
+import allComands.DBConnection;
+import allComands.Requests;
+
 import javax.swing.*;
 import java.awt.*;
 import java.sql.*;

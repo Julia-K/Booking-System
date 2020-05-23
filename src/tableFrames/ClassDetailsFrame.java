@@ -4,39 +4,31 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
-public class FlightDetailsFrame extends JFrame {
+public class ClassDetailsFrame extends JFrame {
     private JPanel dialogPane;
     private JPanel contentPanel;
-    private JLabel fromL;
-    private JLabel toL;
-    private JLabel departureL;
-    private JLabel arrivalL;
+    private JLabel classL;
     private JLabel priceL;
     private JPanel buttonBar;
     private JButton okButton;
     private JPanel panel1;
 
-    public FlightDetailsFrame() {
+    public ClassDetailsFrame() {
         initComponents();
     }
 
-    public FlightDetailsFrame(String from, String to, String dep, String arr, String price) {
+    public ClassDetailsFrame(String name, String price) {
         initComponents();
-        fromL.setText(fromL.getText() + " " + from);
-        toL.setText(toL.getText() + " " + to);
-        departureL.setText(departureL.getText() + " " + dep);
-        arrivalL.setText(arrivalL.getText() + " " + arr);
-        priceL.setText(priceL.getText() + " " + price);
+        classL.setText(classL.getText() + " " + name);
+        priceL.setText(priceL.getText() + " " +price);
         setVisible(true);
     }
 
     private void initComponents() {
+
         dialogPane = new JPanel();
         contentPanel = new JPanel();
-        fromL = new JLabel();
-        toL = new JLabel();
-        departureL = new JLabel();
-        arrivalL = new JLabel();
+        classL = new JLabel();
         priceL = new JLabel();
         buttonBar = new JPanel();
         okButton = new JButton();
@@ -57,41 +49,23 @@ public class FlightDetailsFrame extends JFrame {
                 contentPanel.setBackground(new Color(235, 242, 250));
                 contentPanel.setLayout(null);
 
-                fromL.setText("From:");
-                fromL.setForeground(new Color(66, 122, 161));
-                fromL.setFont(fromL.getFont().deriveFont(fromL.getFont().getStyle() | Font.BOLD, fromL.getFont().getSize() + 17f));
-                fromL.setBorder(null);
-                contentPanel.add(fromL);
-                fromL.setBounds(35, 40, 455, 40);
-
-                toL.setText("To:");
-                toL.setForeground(new Color(66, 122, 161));
-                toL.setFont(toL.getFont().deriveFont(toL.getFont().getStyle() | Font.BOLD, toL.getFont().getSize() + 17f));
-                contentPanel.add(toL);
-                toL.setBounds(35, 90, 455, 40);
-
-                departureL.setText("Departure:");
-                departureL.setForeground(Color.black);
-                departureL.setFont(departureL.getFont().deriveFont(departureL.getFont().getStyle() | Font.BOLD, departureL.getFont().getSize() + 12f));
-                contentPanel.add(departureL);
-                departureL.setBounds(35, 140, 455, 40);
-
-                arrivalL.setText("Arrival:");
-                arrivalL.setForeground(Color.black);
-                arrivalL.setFont(arrivalL.getFont().deriveFont(arrivalL.getFont().getStyle() | Font.BOLD, arrivalL.getFont().getSize() + 12f));
-                contentPanel.add(arrivalL);
-                arrivalL.setBounds(35, 190, 455, 40);
+                classL.setText("Class:");
+                classL.setForeground(new Color(66, 122, 161));
+                classL.setFont(classL.getFont().deriveFont(classL.getFont().getStyle() | Font.BOLD, classL.getFont().getSize() + 20f));
+                classL.setBorder(null);
+                contentPanel.add(classL);
+                classL.setBounds(35, 85, 455, 40);
 
                 priceL.setText("Price:");
                 priceL.setForeground(Color.black);
                 priceL.setFont(priceL.getFont().deriveFont(priceL.getFont().getStyle() | Font.BOLD, priceL.getFont().getSize() + 17f));
                 contentPanel.add(priceL);
-                priceL.setBounds(35, 240, 455, 40);
+                priceL.setBounds(35, 135, 455, 40);
 
                 {
                     Dimension preferredSize = new Dimension();
                     preferredSize.width = 490;
-                    preferredSize.height = 280;
+                    preferredSize.height = 175;
                     contentPanel.setMinimumSize(preferredSize);
                     contentPanel.setPreferredSize(preferredSize);
                 }
@@ -130,4 +104,6 @@ public class FlightDetailsFrame extends JFrame {
         pack();
         setLocationRelativeTo(getOwner());
     }
+
+
 }

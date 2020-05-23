@@ -1,3 +1,4 @@
+import allComands.Requests;
 import tableFrames.*;
 
 import javax.swing.*;
@@ -11,33 +12,77 @@ import java.util.List;
 
 public class Actions {
 
-    public static void detailsClientBA ( JButton jButton, JTable jTable) {
+    public static void setDetailOrUpdateClient (Boolean update,JButton jButton, JTable jTable, ManageWindow mw) {
         removeActions(jButton);
         jButton.addActionListener(e -> {
             if (jTable.getSelectedRow() == -1) return;
             int row = jTable.getSelectedRow();
-            Object id = Integer.parseInt(jTable.getModel().getValueAt(jTable.convertRowIndexToModel(row), 0).toString());
+            int id = Integer.parseInt(jTable.getModel().getValueAt(jTable.convertRowIndexToModel(row), 0).toString());
             String name = jTable.getValueAt(row, 0).toString();
             String last = jTable.getValueAt(row, 1).toString();
             String email = jTable.getValueAt(row, 2).toString();
             String password = jTable.getValueAt(row, 3).toString();
             String birthDate = jTable.getValueAt(row, 4).toString();
-            new ClientDetailsFrame(name,last,email,password,birthDate);
+            new ClientDetailsFrame(update,id,name,last,email,password,birthDate).addWindowListener(new WindowAdapter() {
+                @Override
+                public void windowClosed(WindowEvent e) {
+                    try {
+                        mw.reloadClients();
+                    } catch (SQLException ex) {
+                        ex.printStackTrace();
+                    }
+                }
+            });
         });
     }
 
-    public static void detailsAddresses (JButton jButton, JTable jTable) {
+    public static void setDetailOrUpdateAddress (Boolean update,JButton jButton, JTable jTable, ManageWindow mw) {
         removeActions(jButton);
         jButton.addActionListener(e -> {
             if (jTable.getSelectedRow() == -1) return;
             int row = jTable.getSelectedRow();
-            Object id = Integer.parseInt(jTable.getModel().getValueAt(jTable.convertRowIndexToModel(row), 0).toString());
+            int id = Integer.parseInt(jTable.getModel().getValueAt(jTable.convertRowIndexToModel(row), 0).toString());
             String country = jTable.getValueAt(row, 0).toString();
             String city = jTable.getValueAt(row, 1).toString();
             String postal = jTable.getValueAt(row, 2).toString();
             String street = jTable.getValueAt(row, 3).toString();
             String number = jTable.getValueAt(row, 4).toString();
-            new AddressDetailsFrame(country,city,postal,street,number);
+            new AddressDetailsFrame(update,id,country,city,postal,street,number).addWindowListener(new WindowAdapter() {
+                @Override
+                public void windowClosed(WindowEvent e) {
+                    try {
+                        mw.reloadAddress();
+                    } catch (SQLException ex) {
+                        ex.printStackTrace();
+                    }
+                }
+            });
+        });
+    }
+
+    public static void setDetailOrUpdateAirport (Boolean update,JButton jButton, JTable jTable, ManageWindow mw) {
+        removeActions(jButton);
+        jButton.addActionListener(e -> {
+            if (jTable.getSelectedRow() == -1) return;
+            int row = jTable.getSelectedRow();
+            int id = Integer.parseInt(jTable.getModel().getValueAt(jTable.convertRowIndexToModel(row), 0).toString());
+            String name = jTable.getValueAt(row, 0).toString();
+            String code = jTable.getValueAt(row, 1).toString();
+            String address = jTable.getValueAt(row, 2).toString();
+            try {
+                new AirportDetailsFrame(update, id,name,code,address).addWindowListener(new WindowAdapter() {
+                    @Override
+                    public void windowClosed(WindowEvent e) {
+                        try {
+                            mw.reloadAddress();
+                        } catch (SQLException ex) {
+                            ex.printStackTrace();
+                        }
+                    }
+                });
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
         });
     }
 
@@ -55,22 +100,6 @@ public class Actions {
         });
     }
 
-    public static void detailsAirport (JButton jButton, JTable jTable) {
-        removeActions(jButton);
-        jButton.addActionListener(e -> {
-            if (jTable.getSelectedRow() == -1) return;
-            int row = jTable.getSelectedRow();
-            //Object id = Integer.parseInt(jTable.getModel().getValueAt(jTable.convertRowIndexToModel(row), 0).toString());
-            String name = jTable.getValueAt(row, 0).toString();
-            String code = jTable.getValueAt(row, 1).toString();
-            String address = jTable.getValueAt(row, 2).toString();
-            try {
-                new AirportDetailsFrame(name,code,address);
-            } catch (SQLException ex) {
-                ex.printStackTrace();
-            }
-        });
-    }
 
     public static void detailsAirline (JButton jButton, JTable jTable) {
         removeActions(jButton);
@@ -128,28 +157,127 @@ public class Actions {
         });
     }
 
+    public static void detailsClass(JButton jButton, JTable jTable) {
+        removeActions(jButton);
+        jButton.addActionListener(e-> {
+            if (jTable.getSelectedRow() == -1) return;
+            int row = jTable.getSelectedRow();
+            int id = Integer.parseInt(jTable.getModel().getValueAt(jTable.convertRowIndexToModel(row), 0).toString());
+            try {
+                ResultSet rs = Requests.readById(id,"class");
+                while (rs.next()) {
+                    String name = rs.getString(2);
+                    String price = rs.getString(3);
+                    new ClassDetailsFrame(name,price);
+                }
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        });
+    }
+
+    public static void setDeleteButtonAction(JButton jButton, String name, JTable jTable, ManageWindow mw) {
+        removeActions(jButton);
+        jButton.addActionListener(e-> {
+            if (jTable.getSelectedRow() == -1) return;
+            int row = jTable.getSelectedRow();
+            int id = Integer.parseInt(jTable.getModel().getValueAt(jTable.convertRowIndexToModel(row), 0).toString());
+            Requests.deleteRow(id, name);
+            switch (name) {
+                case "client":
+                    try {
+                        mw.reloadClients();
+                    } catch (SQLException ex) {
+                        ex.printStackTrace();
+                    }
+                    break;
+                case "address":
+                    try {
+                        mw.reloadAddress();
+                    } catch (SQLException ex) {
+                        ex.printStackTrace();
+                    } break;
+                case "airport":
+                    try {
+                        mw.reloadAirport();
+                    } catch (SQLException ex) {
+                        ex.printStackTrace();
+                    }
+                    break;
+                case "plane":
+                    try {
+                        mw.reloadPlane();
+                    } catch (SQLException ex) {
+                        ex.printStackTrace();
+                    } break;
+                case "airline":
+                    //mw.reloadAirline();
+                    break;
+                default:
+            }
+        });
+    }
+
     public static void detailsLuggage(JButton jButton, JTable jTable) {
         removeActions(jButton);
         jButton.addActionListener(e-> {
             if (jTable.getSelectedRow() == -1) return;
             int row = jTable.getSelectedRow();
-            String name = jTable.getValueAt(row, 0).toString();
-            String price = jTable.getValueAt(row, 1).toString();
-            String height = jTable.getValueAt(row, 2).toString();
-            String weight = jTable.getValueAt(row, 3).toString();
+            int id = Integer.parseInt(jTable.getModel().getValueAt(jTable.convertRowIndexToModel(row), 0).toString());
+            try {
+                ResultSet rs = Requests.readById(id,"luggage");
+                while (rs.next()) {
+                    String name = rs.getString(2);
+                    String price = rs.getString(3);
+                    String height = rs.getString(4);
+                    String weight = rs.getString(5);
+                    new LuggageDetailsFrame(name,price,height,weight);
+
+                }
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+
         });
     }
 
+    public static void addAddressAction(JButton jButton, ManageWindow mw) {
+        removeActions(jButton);
+        jButton.addActionListener(e -> new AddressDetailsFrame().addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosed(WindowEvent e) {
+                try {
+                    mw.reloadAddress();
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        }));
+    }
+
+    public static void addClientAction(JButton jButton, ManageWindow mw) {
+        removeActions(jButton);
+        jButton.addActionListener(e-> new ClientDetailsFrame().addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosed(WindowEvent e) {
+                try {
+                    mw.reloadClients();
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        }));
+    }
+
     public static void addAirportAction (JButton jButton, ManageWindow mw) {
-        for (ActionListener x : jButton.getActionListeners())
-            jButton.removeActionListener(x);
+        removeActions(jButton);
         jButton.addActionListener(e -> {
             try {
                 new AirportDetailsFrame().addWindowListener(new WindowAdapter() {
                     @Override
                     public void windowClosed(WindowEvent e) {
                         try {
-                            mw.reloadAirline();
+                            mw.reloadAirport();
                         } catch (SQLException ex) {
                             ex.printStackTrace();
                         }

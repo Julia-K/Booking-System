@@ -1,3 +1,5 @@
+package allComands;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
@@ -38,7 +40,7 @@ public class Requests {
         }
     }
 
-    public static void createClient(String first, String last, String email, String password, Date birth_date) throws SQLException {
+    public static void createClient(String first, String last, String email, String password, String birth_date) throws SQLException {
         String sql = "insert into client (first_name, last_name, email, password, birth_date) values (?, ?, ?, ?, ?)";
 
         PreparedStatement statement = DBConnection.getConnection().prepareStatement(sql);
@@ -46,7 +48,7 @@ public class Requests {
         statement.setString(2, last);
         statement.setString(3, email);
         statement.setString(4, password);
-        statement.setDate(5, birth_date);
+        statement.setString(5, birth_date);
 
         int rowsInserted = statement.executeUpdate();
         if (rowsInserted > 0) {
@@ -217,7 +219,7 @@ public class Requests {
         return jTable;
     }
 
-    public static JTable showClientsTable(JTextField searchField) throws SQLException {
+    public static JTable showClientsTable() throws SQLException {
         JTable jTable = new JTable();
         DefaultTableModel model = new DefaultTableModel();
         ResultSet rs = Requests.readByTableName("client");
@@ -490,14 +492,34 @@ public class Requests {
     //----------------------------- UPDATE -----------------------------
 
     public static void updateClient(int id, String... a) throws SQLException {
-        String sql = "update client set first_name=?, last_name=?, email=?, password=?, birth_date=? WHERE clientID=?";
+        ResultSet rs = Requests.readById(id, "client");
+        rs.next();
+        if(!a[2].equals(rs.getString(3))) {
+            String sql = "update client set email=? WHERE clientID=?";
+            PreparedStatement statement = DBConnection.getConnection().prepareStatement(sql);
+            statement.setString(1, a[2]);
+            statement.setInt(2,id);
+            statement.executeUpdate();
+        }
+        String sql = "update client set first_name=?, last_name=?, password=?, birth_date=? WHERE clientID=?";
+        PreparedStatement statement = DBConnection.getConnection().prepareStatement(sql);
+        statement.setString(1, a[0]);
+        statement.setString(2, a[1]);
+        statement.setString(3, a[3]);
+        statement.setString(4, a[4]);
+        statement.setInt(5, id);
+        statement.executeUpdate();
+    }
+
+    public static void updateAddress(int id,int i, String... a) throws SQLException {
+        String sql = "update address set country=?, city=?, postal_code=?,street=?, number=? WHERE addressID=?";
         PreparedStatement statement = DBConnection.getConnection().prepareStatement(sql);
         statement.setString(1, a[0]);
         statement.setString(2, a[1]);
         statement.setString(3, a[2]);
         statement.setString(4, a[3]);
-        statement.setString(5, a[4]);
-        statement.setInt(6, id);
+        statement.setInt(5, i);
+        statement.setInt(6,id);
         statement.executeUpdate();
     }
 

@@ -1,3 +1,7 @@
+package tableFrames;
+
+import allComands.Requests;
+
 import java.awt.*;
 import java.awt.event.ItemEvent;
 import java.sql.ResultSet;
@@ -34,13 +38,18 @@ public class AirportDetailsFrame extends JFrame {
     private JTextField fillStreet;
     private JLabel numberL;
     private JTextField fillNumber;
+    private int id;
 
     public AirportDetailsFrame() throws SQLException {
         initAddComponents();
         setVisible(true);
     }
 
-    public AirportDetailsFrame(String name, String code, String address) throws SQLException {
+    public AirportDetailsFrame(Boolean update, int id, String name, String code, String address) throws SQLException {
+        if(update) {
+            this.id = id;
+        }
+
         initComponents();
         String[] all = address.split(",", 2);
         fillNameL.setText(name +" ("+code+")");
@@ -347,8 +356,7 @@ public class AirportDetailsFrame extends JFrame {
                         Requests.createAddress(fillCountry.getText(), fillCity.getText(),fillPostal.getText(),fillStreet.getText(), Integer.parseInt(fillNumber.getText()));
                         ResultSet rs = Requests.readTableByRequest("SELECT TOP 1 addressID FROM address ORDER BY addressID DESC");
                         while (rs.next()) {
-                             int id = rs.getInt(0);
-                             System.out.println("ID: " + id);
+                             int id = rs.getInt(1);
                              Requests.createAirport(fillnameL.getText(),fillCodeL.getText(),id);
                              updateContent();
                         }
