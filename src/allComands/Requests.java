@@ -96,13 +96,13 @@ public class Requests {
         }
     }
 
-    public static void createPilot(String first, String last, Date date, int airlineId) throws SQLException {
+    public static void createPilot(String first, String last, String date, int airlineId) throws SQLException {
         String sql = "insert into pilot (first_name, last_name, employment_date, airline_id) values (?, ?, ?, ?)";
 
         PreparedStatement statement = DBConnection.getConnection().prepareStatement(sql);
         statement.setString(1, first);
         statement.setString(2, last);
-        statement.setDate(3, date);
+        statement.setString(3, date);
         statement.setInt(4, airlineId);
 
         int rowsInserted = statement.executeUpdate();
@@ -111,12 +111,12 @@ public class Requests {
         }
     }
 
-    public static void createPlaneAirplane(String planeId, String airlineId, int quantity) throws SQLException {
+    public static void createPlaneAirplane(int planeId, int airlineId, int quantity) throws SQLException {
         String sql = "insert into plane_airline (plane_id, airline_id, planes_quantity) values (?, ?, ?)";
 
         PreparedStatement statement = DBConnection.getConnection().prepareStatement(sql);
-        statement.setString(1, planeId);
-        statement.setString(2, airlineId);
+        statement.setInt(1, planeId);
+        statement.setInt(2, airlineId);
         statement.setInt(3, quantity);
 
         int rowsInserted = statement.executeUpdate();
@@ -411,6 +411,24 @@ public class Requests {
         return address;
     }
 
+    public static String getStringPlane(int id) throws SQLException {
+        String plane = null;
+        ResultSet rs = Requests.readTableByRequest("select * from plane where planeID=" + id);
+        while (rs.next()) {
+            plane = rs.getString(2) + " - " + rs.getString(3);
+        }
+        return plane;
+    }
+
+    public static String getStringAirline(int id) throws SQLException {
+        String airline = null;
+        ResultSet rs = Requests.readTableByRequest("select * from airline where airlineID=" + id);
+        while (rs.next()) {
+            airline = rs.getString(2) + " (" + rs.getString(3) + ")";
+        }
+        return airline;
+    }
+
     public static JTable showPlaneAirlineTable() throws SQLException {
         JTable jTable = new JTable();
         DefaultTableModel model = new DefaultTableModel();
@@ -471,6 +489,30 @@ public class Requests {
         return addressesWithId;
     }
 
+    public static LinkedHashMap getPlanesWithId() throws SQLException {
+        int i = 0;
+        LinkedHashMap<Integer, Integer> planesWithId = new LinkedHashMap<>();
+        ResultSet rs = readTableByRequest("select planeID from plane");
+        while (rs.next()) {
+            int id = rs.getInt("planeID");
+            planesWithId.put(i,id);
+            i++;
+        }
+        return planesWithId;
+    }
+
+    public static LinkedHashMap getAirlinesWithId() throws SQLException {
+        int i = 0;
+        LinkedHashMap<Integer, Integer> airlinesWithId = new LinkedHashMap<>();
+        ResultSet rs = readTableByRequest("select airlineID from airline");
+        while (rs.next()) {
+            int id = rs.getInt("airlineID");
+            airlinesWithId.put(i, id);
+            i++;
+        }
+        System.out.println(airlinesWithId);
+        return airlinesWithId;
+    }
 
     public static ResultSet readTableByRequest(String sql) throws SQLException {
         Statement st = DBConnection.getConnection().createStatement(ResultSet.TYPE_SCROLL_SENSITIVE,
@@ -560,13 +602,13 @@ public class Requests {
         statement.executeUpdate();
     }
 
-    public static void updatePilot(int id, String first, String last, String date, int addressId) throws SQLException {
+    public static void updatePilot(int id, String first, String last, String date, int airlineId) throws SQLException {
         String sql = "update pilot set first_name=?, last_name=?, employment_date=?, airline_id=? WHERE pilotID=?";
         PreparedStatement statement = DBConnection.getConnection().prepareStatement(sql);
         statement.setString(1, first);
         statement.setString(2, last);
         statement.setString(3, date);
-        statement.setInt(4, addressId);
+        statement.setInt(4, airlineId);
         statement.setInt(5, id);
         statement.executeUpdate();
     }
@@ -641,6 +683,16 @@ public class Requests {
             System.out.println("Nie można usunąć czegoś połączonego");
             //e.printStackTrace();
         }
+    }
 
+    public static void deleteByCondidion(String table, String condition){
+        try {
+            String sql = "delete from " + table +" WHERE "+condition;
+            PreparedStatement statement = DBConnection.getConnection().prepareStatement(sql);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("Nie można usunąć czegoś połączonego");
+            //e.printStackTrace();
+        }
     }
 }

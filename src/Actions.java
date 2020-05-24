@@ -86,6 +86,36 @@ public class Actions {
         });
     }
 
+    public static void setDetailOrUpdatePilot (Boolean update,JButton jButton, JTable jTable, ManageWindow mw) {
+        removeActions(jButton);
+        jButton.addActionListener(e -> {
+            if (jTable.getSelectedRow() == -1) return;
+            int row = jTable.getSelectedRow();
+            int id = Integer.parseInt(jTable.getModel().getValueAt(jTable.convertRowIndexToModel(row), 0).toString());
+            ResultSet rs = null;
+            try {
+                rs = Requests.readTableByRequest("select * from pilot where pilotID="+ id);
+                rs.next();
+                String first = rs.getString(2);
+                String last = rs.getString(3);
+                String date = rs.getString(4);
+                int airlineId = rs.getInt(5);
+                new PilotDetailsFrame(update,id,first,last,date,jTable.getValueAt(row,3).toString(),airlineId).addWindowListener(new WindowAdapter() {
+                    @Override
+                    public void windowClosed(WindowEvent e) {
+                        try {
+                            mw.reloadPilot();
+                        } catch (SQLException ex) {
+                            ex.printStackTrace();
+                        }
+                    }
+                });
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        });
+    }
+
     public static void detailsFlight(JButton jButton, JTable jTable) {
         removeActions(jButton);
         jButton.addActionListener(e -> {
@@ -101,7 +131,7 @@ public class Actions {
     }
 
 
-    public static void detailsAirline (JButton jButton, JTable jTable) {
+    public static void setDetailAirline (JButton jButton, JTable jTable) {
         removeActions(jButton);
         jButton.addActionListener(e -> {
             if (jTable.getSelectedRow() == -1) return;
@@ -124,14 +154,104 @@ public class Actions {
         });
     }
 
-    public static void detailsPlane (JButton jButton, JTable jTable) {
+    public static void setUpdateAirline(JButton jButton, JTable jTable, ManageWindow mw) {
         removeActions(jButton);
         jButton.addActionListener(e -> {
             if (jTable.getSelectedRow() == -1) return;
             int row = jTable.getSelectedRow();
+            int id = Integer.parseInt(jTable.getModel().getValueAt(jTable.convertRowIndexToModel(row), 0).toString());
+            String name = jTable.getValueAt(row, 0).toString();
+            String code = jTable.getValueAt(row, 1).toString();
+            new AirlineDetailsFrame(id,name,code).addWindowListener(new WindowAdapter() {
+                @Override
+                public void windowClosed(WindowEvent e) {
+                    try {
+                        mw.reloadAirline();
+                    } catch (SQLException ex) {
+                        ex.printStackTrace();
+                    }
+                }
+            });
+        });
+    }
+    public static void setDetailOrUpdatePlane (boolean update, JButton jButton, JTable jTable, ManageWindow mw) {
+        removeActions(jButton);
+        jButton.addActionListener(e -> {
+            if (jTable.getSelectedRow() == -1) return;
+            int row = jTable.getSelectedRow();
+            int id = Integer.parseInt(jTable.getModel().getValueAt(jTable.convertRowIndexToModel(row), 0).toString());
             String brand = jTable.getValueAt(row, 0).toString();
             String model = jTable.getValueAt(row, 1).toString();
-            new PlaneDetailsFrame(brand,model);
+            try {
+                new PlaneDetailsFrame(update, id,brand,model).addWindowListener(new WindowAdapter() {
+                    @Override
+                    public void windowClosed(WindowEvent e) {
+                        try {
+                            mw.reloadPlane();
+                        } catch (SQLException ex) {
+                            ex.printStackTrace();
+                        }
+                    }
+                });
+            } catch (Exception exception) {
+                exception.printStackTrace();
+            }
+        });
+    }
+
+    public static void addPilotAction(JButton jButton, ManageWindow mw) {
+        removeActions(jButton);
+        jButton.addActionListener(e -> {
+            try {
+                new PilotDetailsFrame().addWindowListener(new WindowAdapter() {
+                    @Override
+                    public void windowClosed(WindowEvent e) {
+                        try {
+                            mw.reloadPilot();
+                        } catch (SQLException ex) {
+                            ex.printStackTrace();
+                        }
+                    }
+                });
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        });
+    }
+
+    public static void addPlaneAction(JButton jButton, ManageWindow mw) {
+        removeActions(jButton);
+        jButton.addActionListener(e -> {
+            new PlaneDetailsFrame().addWindowListener(new WindowAdapter() {
+                @Override
+                public void windowClosed(WindowEvent e) {
+                    try {
+                        mw.reloadPlane();
+                    } catch (SQLException ex) {
+                        ex.printStackTrace();
+                    }
+                }
+            });
+        });
+    }
+
+    public static void addAirlineAction(JButton jButton, ManageWindow mw) {
+        removeActions(jButton);
+        jButton.addActionListener(e -> {
+            try {
+                new AirlineDetailsFrame().addWindowListener(new WindowAdapter() {
+                    @Override
+                    public void windowClosed(WindowEvent e) {
+                        try {
+                            mw.reloadAirline();
+                        } catch (SQLException ex) {
+                            ex.printStackTrace();
+                        }
+                    }
+                });
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
         });
     }
 
@@ -141,7 +261,8 @@ public class Actions {
             if (jTable.getSelectedRow() == -1) return;
             int row = jTable.getSelectedRow();
             int id = Integer.parseInt(jTable.getModel().getValueAt(jTable.convertRowIndexToModel(row), 0).toString());
-            String name = jTable.getValueAt(row, 0).toString() + " " + jTable.getValueAt(row, 1).toString();
+            String first = jTable.getValueAt(row, 0).toString();
+            String last = jTable.getValueAt(row, 1).toString();
             String date = jTable.getValueAt(row, 2).toString();
             try {
                 ResultSet rs = Requests.readTableByRequest("select airline.name, airline.code from airline\n" +
@@ -149,7 +270,7 @@ public class Actions {
                         "where pilotID=" + id);
                 while (rs.next()) {
                     String airline = rs.getString(1) + " (" + rs.getString(2) + ")";
-                    new PilotDetailsFrame(name, date, airline);
+                    //new PilotDetailsFrame(first,last, date, airline);
                 }
             } catch (SQLException ex) {
                 ex.printStackTrace();
@@ -211,8 +332,17 @@ public class Actions {
                         ex.printStackTrace();
                     } break;
                 case "airline":
-                    //mw.reloadAirline();
-                    break;
+                    try {
+                        mw.reloadAirline();
+                    } catch (SQLException throwables) {
+                        throwables.printStackTrace();
+                    } break;
+                case "pilot":
+                    try {
+                        mw.reloadPilot();
+                    } catch (SQLException throwables) {
+                        throwables.printStackTrace();
+                    } break;
                 default:
             }
         });

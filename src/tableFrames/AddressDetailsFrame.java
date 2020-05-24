@@ -229,12 +229,6 @@ public class AddressDetailsFrame extends JFrame {
                     panel3.setMinimumSize(new Dimension(5, 200));
                     panel3.setMaximumSize(new Dimension(5, 200));
                     panel3.setLayout(null);
-
-                    {
-                        Dimension preferredSize = new Dimension();
-                        panel3.setMinimumSize(preferredSize);
-                        panel3.setPreferredSize(preferredSize);
-                    }
                 }
                 contentPanel.add(panel3);
                 panel3.setBounds(345, 40, 5, 300);

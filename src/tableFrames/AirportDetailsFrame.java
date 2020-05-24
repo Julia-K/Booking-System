@@ -131,7 +131,6 @@ public class AirportDetailsFrame extends JFrame {
                 ((GridBagLayout)buttonBar.getLayout()).columnWidths = new int[] {0, 80};
                 ((GridBagLayout)buttonBar.getLayout()).columnWeights = new double[] {1.0, 0.0};
 
-                //---- okButton ----
                 okButton.setText("OK");
                 okButton.setBackground(new Color(66, 122, 161));
                 buttonBar.add(okButton, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0,
@@ -364,6 +363,7 @@ public class AirportDetailsFrame extends JFrame {
                     if(!checkBox.isSelected()) {
                         try {
                             Requests.createAirport(fillnameL.getText(),fillCodeL.getText(), (Integer) addressesWithId.get(comboBox.getSelectedIndex()));
+                            updateContent();
                         } catch (SQLException ex) {
                             ex.printStackTrace();
                         }

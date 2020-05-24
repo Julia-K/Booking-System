@@ -150,15 +150,6 @@ public class ManageWindow extends JFrame {
         setLocationRelativeTo(getOwner());
     }
 
-
-
-    public void reloadPlane() throws SQLException {
-        table = Requests.readPlaneTable();
-        TableRowFilter.create(searchField, table);
-        Actions.detailsPlane(detailsButton, table);
-        update();
-    }
-
     public void reloadClients() throws SQLException {
         table = Requests.showClientsTable();
         TableRowFilter.create(searchField, table);
@@ -166,16 +157,6 @@ public class ManageWindow extends JFrame {
         Actions.setDetailOrUpdateClient(true,updateButton,table,this);
         Actions.setDeleteButtonAction(deleteButton,"client",table,this);
         Actions.addClientAction(addButton,this);
-        update();
-    }
-
-    public void reloadAirport() throws SQLException {
-        table = Requests.readAirports();
-        TableRowFilter.create(searchField, table);
-        Actions.setDetailOrUpdateAirport(false, detailsButton, table,this);
-        Actions.setDetailOrUpdateAirport(true, updateButton, table,this);
-        Actions.addAirportAction(addButton, this);
-        Actions.setDeleteButtonAction(deleteButton,"airport",table,this);
         update();
     }
 
@@ -189,6 +170,45 @@ public class ManageWindow extends JFrame {
         update();
     }
 
+    public void reloadAirport() throws SQLException {
+        table = Requests.readAirports();
+        TableRowFilter.create(searchField, table);
+        Actions.setDetailOrUpdateAirport(false, detailsButton, table,this);
+        Actions.setDetailOrUpdateAirport(true, updateButton, table,this);
+        Actions.addAirportAction(addButton, this);
+        Actions.setDeleteButtonAction(deleteButton,"airport",table,this);
+        update();
+    }
+
+    public void reloadPlane() throws SQLException {
+        table = Requests.readPlaneTable();
+        TableRowFilter.create(searchField, table);
+        Actions.setDetailOrUpdatePlane(false,detailsButton, table, this);
+        Actions.setDetailOrUpdatePlane(true,updateButton, table, this);
+        Actions.addPlaneAction(addButton, this);
+        Actions.setDeleteButtonAction(deleteButton,"plane",table,this);
+        update();
+    }
+
+    public void reloadAirline() throws SQLException {
+        table = Requests.readAirlineTable();
+        TableRowFilter.create(searchField, table);
+        Actions.addAirlineAction(addButton,this);
+        Actions.setDetailAirline(detailsButton,table);
+        Actions.setUpdateAirline(updateButton,table,this);
+        Actions.setDeleteButtonAction(deleteButton,"airline",table,this);
+        update();
+    }
+
+    public void reloadPilot() throws SQLException {
+        table = Requests.readPilots();
+        TableRowFilter.create(searchField, table);
+        Actions.setDetailOrUpdatePilot(false,detailsButton, table, this);
+        Actions.setDetailOrUpdatePilot(true,updateButton, table, this);
+        Actions.addPilotAction(addButton, this);
+        Actions.setDeleteButtonAction(deleteButton,"pilot",table,this);
+        update();
+    }
 
 
     public void mainComboBoxAction() {
@@ -217,27 +237,21 @@ public class ManageWindow extends JFrame {
                     break;
                 case 3:
                     try {
-                        table = Requests.readPlaneTable();
-                        TableRowFilter.create(searchField, table);
-                        Actions.detailsPlane(detailsButton, table);
+                        reloadPlane();
                     } catch (SQLException ex) {
                         ex.printStackTrace();
                     }
                     break;
                 case 4:
                     try {
-                        table = Requests.readAirlineTable();
-                        TableRowFilter.create(searchField, table);
-                        Actions.detailsAirline(detailsButton,table);
+                        reloadAirline();
                     } catch (SQLException ex) {
                         ex.printStackTrace();
                     }
                     break;
                 case 5:
                     try {
-                        table = Requests.readPilots();
-                        TableRowFilter.create(searchField, table);
-                        Actions.detailsPilot(detailsButton,table);
+                        reloadPilot();
                     } catch (SQLException ex) {
                         ex.printStackTrace();
                     }
