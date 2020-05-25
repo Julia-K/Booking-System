@@ -52,13 +52,14 @@ public class PilotDetailsFrame extends JFrame {
             yearBox.setSelectedItem(dateArray[0]);
             monthBox.setSelectedItem(dateArray[1]);
             dayBox.setSelectedItem(dateArray[2]);
-            for (Map.Entry<Integer, Integer> entry : airlinesWithId.entrySet()) {
+            for (Map.Entry<Integer, Integer> entry : airlinesWithId.entrySet()) { //set comboBox
                 Integer key = entry.getKey();
                 Integer value = entry.getValue();
                 if (value == airlineid) {
                     comboBox.setSelectedIndex(key);
                 }
             }
+
         } else {
             initDetailComponents();
             nameL.setText(nameL.getText() + " "+first+ " "+last);

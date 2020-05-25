@@ -6,6 +6,7 @@ import javax.swing.table.TableRowSorter;
 import java.sql.*;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.LinkedHashMap;
 
 public class Requests {
@@ -162,9 +163,9 @@ public class Requests {
         statement.setInt(3, pilotId);
         statement.setInt(4, planeId);
         statement.setString(5, depTime);
-        statement.setDate(6, Date.valueOf(depDate));
-        statement.setTime(7, Time.valueOf(arrTime));
-        statement.setDate(8, Date.valueOf(arrDate));
+        statement.setString(6, depDate);
+        statement.setString(7, arrTime);
+        statement.setString(8, arrDate);
         statement.setInt(9, price);
 
         int rowsInserted = statement.executeUpdate();
@@ -257,13 +258,11 @@ public class Requests {
         model.addColumn("Postal code");
         model.addColumn("Street");
         model.addColumn("Number");
-        System.out.println(model.getColumnName(5));
 
         TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
         sorter.setComparator(5, new Comparator<Integer>() {
             @Override
             public int compare(Integer o1, Integer o2) {
-                System.out.println(model.getValueAt(3,5));
                 return o1 - o2;
             }
         });
@@ -489,12 +488,48 @@ public class Requests {
         return addressesWithId;
     }
 
+    public static LinkedHashMap getAirportsWithId() throws SQLException {
+        int i = 0;
+        LinkedHashMap<Integer, Integer> airportsWithID = new LinkedHashMap<>();
+        ResultSet rs = readTableByRequest("select airportID from airport");
+        while (rs.next()) {
+            int id = rs.getInt("airportID");
+            airportsWithID.put(i,id);
+            i++;
+        }
+        return airportsWithID;
+    }
+
+    public static LinkedHashMap getPilotsWithId() throws SQLException {
+        int i = 0;
+        LinkedHashMap<Integer, Integer> pilotsWithId = new LinkedHashMap<>();
+        ResultSet rs = readTableByRequest("select pilotID from pilot");
+        while (rs.next()) {
+            int id = rs.getInt("pilotID");
+            pilotsWithId.put(i,id);
+            i++;
+        }
+        return pilotsWithId;
+    }
+
     public static LinkedHashMap getPlanesWithId() throws SQLException {
         int i = 0;
         LinkedHashMap<Integer, Integer> planesWithId = new LinkedHashMap<>();
         ResultSet rs = readTableByRequest("select planeID from plane");
         while (rs.next()) {
             int id = rs.getInt("planeID");
+            planesWithId.put(i,id);
+            i++;
+        }
+        return planesWithId;
+    }
+
+    public static LinkedHashMap getPlanesByAirlineID(int airlineId) throws SQLException {
+        int i = 0;
+        LinkedHashMap<Integer, Integer> planesWithId = new LinkedHashMap<>();
+        ResultSet rs = readTableByRequest("select plane_id from plane_airline where airline_id="+airlineId);
+        while (rs.next()) {
+            int id = rs.getInt("plane_id");
             planesWithId.put(i,id);
             i++;
         }
@@ -510,7 +545,6 @@ public class Requests {
             airlinesWithId.put(i, id);
             i++;
         }
-        System.out.println(airlinesWithId);
         return airlinesWithId;
     }
 
@@ -526,7 +560,6 @@ public class Requests {
     }
 
     public static ResultSet readById(int id, String table) throws SQLException {
-        System.out.println("select * from " + table + " where " + table + "ID = " + id);
         Statement st = DBConnection.getConnection().createStatement();
         return st.executeQuery("select * from " + table +" where "+table+"ID = " + id);
     }
@@ -642,7 +675,7 @@ public class Requests {
         statement.executeUpdate();
     }
 
-    public static void updateFlight(int id, int dAId, int aAId, int pilotId,int planeId, String dTime, String dDate, String aTime, String aDate, int price) throws SQLException {
+    public static void updateFlight(int id, int dAId, int aAId, int pilotId, int planeId, String dTime, String dDate, String aTime, String aDate, int price) throws SQLException {
         String sql = "update flight set departureAirport_id=?, arrivalAirport_id=?, pilot_id=?, plane_id=?, departure_time=?, departure_date=?, arrival_time=?, arrival_date=?, price=? WHERE flightID=?";
         PreparedStatement statement = DBConnection.getConnection().prepareStatement(sql);
         statement.setInt(1, dAId);
@@ -650,12 +683,15 @@ public class Requests {
         statement.setInt(3, pilotId);
         statement.setInt(4, planeId);
         statement.setString(5, dTime);
-        statement.setDate(6, Date.valueOf(dDate));
+        statement.setString(6, dDate);
         statement.setString(7, aTime);
-        statement.setDate(8, Date.valueOf(aDate));
+        statement.setString(8, aDate);
         statement.setInt(9, price);
         statement.setInt(10, id);
-        statement.executeUpdate();
+        int rowsInserted = statement.executeUpdate();
+        if (rowsInserted > 0) {
+            System.out.println("A new flight was updated successfully!");
+        }
 
     }
 

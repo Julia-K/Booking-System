@@ -7,11 +7,12 @@ import java.awt.event.ItemEvent;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.LinkedHashMap;
+import java.util.Map;
 import javax.swing.*;
 import javax.swing.border.*;
 
 public class AirportDetailsFrame extends JFrame {
-    private LinkedHashMap addressesWithId;
+    private LinkedHashMap<Integer,Integer> addressesWithId;
     private JPanel dialogPane;
     private JPanel contentPanel;
     private JLabel nameL;
@@ -54,7 +55,17 @@ public class AirportDetailsFrame extends JFrame {
             checkBox.setVisible(false);
             fillnameL.setText(name);
             fillCodeL.setText(code);
-            comboBox.setSelectedItem(address);
+            ResultSet rs = Requests.readById(id,"airport");
+            rs.next();
+            int addressId = rs.getInt(4);
+            System.out.println(addressId);
+            for (Map.Entry<Integer, Integer> entry : addressesWithId.entrySet()) {
+                Integer key = entry.getKey();
+                Integer value = entry.getValue();
+                if (value == addressId) {
+                    comboBox.setSelectedIndex(key);
+                }
+            }
         } else {
             initDetailComponents();
             String[] all = address.split(",", 2);

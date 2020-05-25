@@ -7,6 +7,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,6 +58,41 @@ public class Actions {
                     }
                 }
             });
+        });
+    }
+
+    public static void setDetailOrUpdateFlight (Boolean update,JButton jButton, JTable jTable, ManageWindow mw) {
+        removeActions(jButton);
+        jButton.addActionListener(e -> {
+            if (jTable.getSelectedRow() == -1) return;
+            int row = jTable.getSelectedRow();
+            int id = Integer.parseInt(jTable.getModel().getValueAt(jTable.convertRowIndexToModel(row), 0).toString());
+            ResultSet rs = null;
+            try {
+                rs = Requests.readById(id,"flight");
+                rs.next();
+                int depid = rs.getInt(2);
+                int arrid = rs.getInt(3);
+                int pilotId = rs.getInt(4);
+                int planeId = rs.getInt(5);
+                String depTime = rs.getString(6).split("\\.")[0];
+                String depDate = rs.getString(7);
+                String arrTime = rs.getString(8).split("\\.")[0];
+                String arrDate = rs.getString(9);
+                int price = rs.getInt(10);
+                new FlightDetailsFrame(update, id, depid, arrid, pilotId, planeId, depTime, depDate, arrTime, arrDate, price).addWindowListener(new WindowAdapter() {
+                    @Override
+                    public void windowClosed(WindowEvent e) {
+                        try {
+                            mw.reloadFlight();
+                        } catch (SQLException throwables) {
+                            throwables.printStackTrace();
+                        }
+                    }
+                });
+            } catch (SQLException | ParseException throwables) {
+                throwables.printStackTrace();
+            }
         });
     }
 
@@ -115,21 +151,6 @@ public class Actions {
             }
         });
     }
-
-    public static void detailsFlight(JButton jButton, JTable jTable) {
-        removeActions(jButton);
-        jButton.addActionListener(e -> {
-            if (jTable.getSelectedRow() == -1) return;
-            int row = jTable.getSelectedRow();
-            String from = jTable.getValueAt(row, 0).toString();
-            String to = jTable.getValueAt(row, 1).toString();
-            String dep = jTable.getValueAt(row, 3).toString() + " "+ jTable.getValueAt(row,2).toString().split("\\.")[0];
-            String arr = jTable.getValueAt(row, 5).toString() + " "+ jTable.getValueAt(row, 4).toString().split("\\.")[0];
-            String price = (String) jTable.getValueAt(row, 6);
-            new FlightDetailsFrame(from,to,dep,arr,price);
-        });
-    }
-
 
     public static void setDetailAirline (JButton jButton, JTable jTable) {
         removeActions(jButton);
@@ -219,6 +240,8 @@ public class Actions {
         });
     }
 
+
+
     public static void addPlaneAction(JButton jButton, ManageWindow mw) {
         removeActions(jButton);
         jButton.addActionListener(e -> {
@@ -250,6 +273,26 @@ public class Actions {
                     }
                 });
             } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+        });
+    }
+
+    public static void addFlightAction(JButton jButton, ManageWindow mw) {
+        removeActions(jButton);
+        jButton.addActionListener(e -> {
+            try {
+                new FlightDetailsFrame().addWindowListener(new WindowAdapter() {
+                    @Override
+                    public void windowClosed(WindowEvent e) {
+                        try {
+                            mw.reloadFlight();
+                        } catch (SQLException ex) {
+                            ex.printStackTrace();
+                        }
+                    }
+                });
+            } catch (SQLException | ParseException throwables) {
                 throwables.printStackTrace();
             }
         });
@@ -423,7 +466,6 @@ public class Actions {
         List<String> list = new ArrayList<>();
         while (rs.next()) {
             String x = rs.getString(1) + " - " + rs.getString(2) + "  (Quantity: " + rs.getInt(3) + ")";
-            System.out.println(x);
             list.add(x);
         }
         return list;

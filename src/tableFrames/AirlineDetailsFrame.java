@@ -340,6 +340,7 @@ public class AirlineDetailsFrame extends JFrame {
         okButton = new JButton();
         panel1 = new JPanel();
 
+
         setResizable(false);
         setMinimumSize(new Dimension(670, 430));
         setBackground(new Color(235, 242, 250));

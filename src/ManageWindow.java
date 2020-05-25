@@ -27,6 +27,7 @@ public class ManageWindow extends JFrame {
     public ManageWindow() throws SQLException {
         initComponents();
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        reloadClients();
     }
 
     private void initComponents() throws SQLException {
@@ -210,6 +211,16 @@ public class ManageWindow extends JFrame {
         update();
     }
 
+    public void reloadFlight() throws SQLException {
+        table = Requests.readFlights();
+        TableRowFilter.create(searchField, table);
+        Actions.setDetailOrUpdateFlight(false, detailsButton, table, this);
+        Actions.setDetailOrUpdateFlight(true,updateButton, table, this);
+        Actions.addFlightAction(addButton, this);
+        //Actions.setDeleteButtonAction(deleteButton,"pilot",table,this);
+        update();
+    }
+
 
     public void mainComboBoxAction() {
         comboBox.addActionListener(e-> {
@@ -258,10 +269,7 @@ public class ManageWindow extends JFrame {
                     break;
                 case 6:
                     try {
-                        table = Requests.readFlights();
-                        TableRowFilter.create(searchField, table);
-                        Actions.detailsFlight(detailsButton, table);
-
+                        reloadFlight();
                     } catch (SQLException ex) {
                         ex.printStackTrace();
                     }
