@@ -217,10 +217,29 @@ public class ManageWindow extends JFrame {
         Actions.setDetailOrUpdateFlight(false, detailsButton, table, this);
         Actions.setDetailOrUpdateFlight(true,updateButton, table, this);
         Actions.addFlightAction(addButton, this);
-        //Actions.setDeleteButtonAction(deleteButton,"pilot",table,this);
+        Actions.setDeleteButtonAction(deleteButton,"flight",table,this);
         update();
     }
 
+    public void reloadClass() throws SQLException {
+        table = Requests.readClassTable();
+        TableRowFilter.create(searchField, table);
+        Actions.setDetailOrUpdateClass(false, detailsButton, table, this);
+        Actions.setDetailOrUpdateClass(true, updateButton, table, this);
+        Actions.addClassAction(addButton, this);
+        Actions.setDeleteButtonAction(deleteButton,"class",table,this);
+        update();
+    }
+
+    public void reloadLuggage() throws SQLException {
+        table = Requests.readLuggageTable();
+        TableRowFilter.create(searchField, table);
+        Actions.setDetailOrUpdateLuggage(false, detailsButton, table, this);
+        Actions.setDetailOrUpdateLuggage(true, updateButton, table, this);
+        Actions.addLuggageAction(addButton, this);
+        Actions.setDeleteButtonAction(deleteButton,"luggage",table,this);
+        update();
+    }
 
     public void mainComboBoxAction() {
         comboBox.addActionListener(e-> {
@@ -285,18 +304,14 @@ public class ManageWindow extends JFrame {
                     break;
                 case 8:
                     try {
-                        table = Requests.readLuggageTable();
-                        TableRowFilter.create(searchField, table);
-                        Actions.detailsLuggage(detailsButton,table);
+                        reloadLuggage();
                     } catch (SQLException ex) {
                         ex.printStackTrace();
                     }
                     break;
                 case 9:
                     try {
-                        table = Requests.readClassTable();
-                        TableRowFilter.create(searchField, table);
-                        Actions.detailsClass(detailsButton,table);
+                        reloadClass();
                     } catch (SQLException ex) {
                         ex.printStackTrace();
                     }

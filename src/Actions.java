@@ -321,24 +321,67 @@ public class Actions {
         });
     }
 
-    public static void detailsClass(JButton jButton, JTable jTable) {
+    public static void setDetailOrUpdateClass(Boolean update,JButton jButton, JTable jTable, ManageWindow mw) {
         removeActions(jButton);
-        jButton.addActionListener(e-> {
+        jButton.addActionListener(e -> {
             if (jTable.getSelectedRow() == -1) return;
             int row = jTable.getSelectedRow();
             int id = Integer.parseInt(jTable.getModel().getValueAt(jTable.convertRowIndexToModel(row), 0).toString());
+            ResultSet rs = null;
             try {
-                ResultSet rs = Requests.readById(id,"class");
+                rs = Requests.readById(id,"class");
                 while (rs.next()) {
                     String name = rs.getString(2);
                     String price = rs.getString(3);
-                    new ClassDetailsFrame(name,price);
+                    new ClassDetailsFrame(update,id,name,price).addWindowListener(new WindowAdapter() {
+                        @Override
+                        public void windowClosed(WindowEvent e) {
+                            try {
+                                mw.reloadClass();
+                            } catch (SQLException ex) {
+                                ex.printStackTrace();
+                            }
+                        }
+                    });
                 }
-            } catch (SQLException ex) {
-                ex.printStackTrace();
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
             }
         });
     }
+
+    public static void setDetailOrUpdateLuggage(Boolean update,JButton jButton, JTable jTable, ManageWindow mw) {
+        removeActions(jButton);
+        jButton.addActionListener(e -> {
+            if (jTable.getSelectedRow() == -1) return;
+            int row = jTable.getSelectedRow();
+            int id = Integer.parseInt(jTable.getModel().getValueAt(jTable.convertRowIndexToModel(row), 0).toString());
+            ResultSet rs = null;
+            try {
+                rs = Requests.readById(id,"luggage");
+                while (rs.next()) {
+                    String name = rs.getString(2);
+                    float price = rs.getFloat(3);
+                    String height = rs.getString(4);
+                    String weight = rs.getString(5);
+                    new LuggageDetailsFrame(update,id,name,price,height,weight).addWindowListener(new WindowAdapter() {
+                        @Override
+                        public void windowClosed(WindowEvent e) {
+                            try {
+                                mw.reloadLuggage();
+                            } catch (SQLException ex) {
+                                ex.printStackTrace();
+                            }
+                        }
+                    });
+                }
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+        });
+    }
+
+
 
     public static void setDeleteButtonAction(JButton jButton, String name, JTable jTable, ManageWindow mw) {
         removeActions(jButton);
@@ -386,32 +429,41 @@ public class Actions {
                     } catch (SQLException throwables) {
                         throwables.printStackTrace();
                     } break;
+                case "flight":
+                    try {
+                        mw.reloadFlight();
+                    } catch (SQLException throwables) {
+                        throwables.printStackTrace();
+                    } break;
+                case "class":
+                    try {
+                        mw.reloadClass();
+                    } catch (SQLException throwables) {
+                        throwables.printStackTrace();
+                    } break;
+                case "luggage":
+                    try {
+                        mw.reloadLuggage();
+                    } catch (SQLException throwables) {
+                        throwables.printStackTrace();
+                    }
                 default:
             }
         });
     }
 
-    public static void detailsLuggage(JButton jButton, JTable jTable) {
+    public static void addLuggageAction(JButton jButton, ManageWindow mw) {
         removeActions(jButton);
-        jButton.addActionListener(e-> {
-            if (jTable.getSelectedRow() == -1) return;
-            int row = jTable.getSelectedRow();
-            int id = Integer.parseInt(jTable.getModel().getValueAt(jTable.convertRowIndexToModel(row), 0).toString());
-            try {
-                ResultSet rs = Requests.readById(id,"luggage");
-                while (rs.next()) {
-                    String name = rs.getString(2);
-                    String price = rs.getString(3);
-                    String height = rs.getString(4);
-                    String weight = rs.getString(5);
-                    new LuggageDetailsFrame(name,price,height,weight);
-
+        jButton.addActionListener(e -> new LuggageDetailsFrame().addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosed(WindowEvent e) {
+                try {
+                    mw.reloadLuggage();
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
                 }
-            } catch (SQLException ex) {
-                ex.printStackTrace();
             }
-
-        });
+        }));
     }
 
     public static void addAddressAction(JButton jButton, ManageWindow mw) {
@@ -440,6 +492,22 @@ public class Actions {
                 }
             }
         }));
+    }
+
+    public static void addClassAction(JButton jButton, ManageWindow mw) {
+        removeActions(jButton);
+        jButton.addActionListener(e -> {
+            new ClassDetailsFrame().addWindowListener(new WindowAdapter() {
+                @Override
+                public void windowClosed(WindowEvent e) {
+                    try {
+                        mw.reloadClass();
+                    } catch (SQLException throwables) {
+                        throwables.printStackTrace();
+                    }
+                }
+            });
+        });
     }
 
     public static void addAirportAction (JButton jButton, ManageWindow mw) {
@@ -477,5 +545,4 @@ public class Actions {
 
         return jButton;
     }
-
 }

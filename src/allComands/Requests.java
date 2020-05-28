@@ -126,12 +126,12 @@ public class Requests {
         }
     }
 
-    public static void createClass(String name, int price) throws SQLException {
+    public static void createClass(String name, float price) throws SQLException {
         String sql = "insert into class (name, price) values (?, ?)";
 
         PreparedStatement statement = DBConnection.getConnection().prepareStatement(sql);
         statement.setString(1, name);
-        statement.setInt(2, price);
+        statement.setFloat(2, price);
 
         int rowsInserted = statement.executeUpdate();
         if (rowsInserted > 0) {
@@ -139,14 +139,14 @@ public class Requests {
         }
     }
 
-    public static void createLuggage(String name, int price, int height, int weight) throws SQLException {
+    public static void createLuggage(String name, String price, String height, String weight) throws SQLException {
         String sql = "insert into luggage (name, price, height, weight) values (?, ?, ?, ?)";
 
         PreparedStatement statement = DBConnection.getConnection().prepareStatement(sql);
         statement.setString(1, name);
-        statement.setInt(2, price);
-        statement.setInt(3, height);
-        statement.setInt(4, weight);
+        statement.setFloat(2, Float.parseFloat(price));
+        statement.setInt(3, Integer.parseInt(height));
+        statement.setInt(4, Integer.parseInt(weight));
 
         int rowsInserted = statement.executeUpdate();
         if (rowsInserted > 0) {
@@ -655,22 +655,22 @@ public class Requests {
         statement.executeUpdate();
     }
 
-    public static void updateClass(int id, String name, int price) throws SQLException {
+    public static void updateClass(int id, String name, float price) throws SQLException {
         String sql = "update class set name=?, price=? WHERE classID=?";
         PreparedStatement statement = DBConnection.getConnection().prepareStatement(sql);
         statement.setString(1, name);
-        statement.setInt(2, price);
+        statement.setFloat(2, price);
         statement.setInt(3, id);
         statement.executeUpdate();
     }
 
-    public static void updateLuggage(int id, String name, int price, int height, int weight) throws SQLException {
+    public static void updateLuggage(int id, String name, String price, String height, String weight) throws SQLException {
         String sql = "update luggage set name=?, price=?, height=?, weight=? WHERE luggageID=?";
         PreparedStatement statement = DBConnection.getConnection().prepareStatement(sql);
         statement.setString(1, name);
-        statement.setInt(2, price);
-        statement.setInt(3, height);
-        statement.setInt(4, weight);
+        statement.setFloat(2, Float.parseFloat(price));
+        statement.setInt(3, Integer.parseInt(height));
+        statement.setInt(4, Integer.parseInt(weight));
         statement.setInt(5,id);
         statement.executeUpdate();
     }
