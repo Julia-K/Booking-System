@@ -19,21 +19,29 @@ public class Actions {
             if (jTable.getSelectedRow() == -1) return;
             int row = jTable.getSelectedRow();
             int id = Integer.parseInt(jTable.getModel().getValueAt(jTable.convertRowIndexToModel(row), 0).toString());
-            String name = jTable.getValueAt(row, 0).toString();
-            String last = jTable.getValueAt(row, 1).toString();
-            String email = jTable.getValueAt(row, 2).toString();
-            String password = jTable.getValueAt(row, 3).toString();
-            String birthDate = jTable.getValueAt(row, 4).toString();
-            new ClientDetailsFrame(update,id,name,last,email,password,birthDate).addWindowListener(new WindowAdapter() {
-                @Override
-                public void windowClosed(WindowEvent e) {
-                    try {
-                        mw.reloadClients();
-                    } catch (SQLException ex) {
-                        ex.printStackTrace();
-                    }
+            ResultSet rs = null;
+            try {
+                rs = Requests.readById(id,"client");
+                while (rs.next()) {
+                    String name = rs.getString(2);
+                    String last = rs.getString(3);
+                    String email = rs.getString(4);
+                    String password = rs.getString(5);
+                    String birthDate = rs.getString(6);
+                    new ClientDetailsFrame(update,id,name,last,email,password,birthDate).addWindowListener(new WindowAdapter() {
+                        @Override
+                        public void windowClosed(WindowEvent e) {
+                            try {
+                                mw.reloadClients();
+                            } catch (SQLException ex) {
+                                ex.printStackTrace();
+                            }
+                        }
+                    });
                 }
-            });
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
         });
     }
 
