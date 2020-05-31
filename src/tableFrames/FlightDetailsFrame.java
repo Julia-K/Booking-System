@@ -264,7 +264,7 @@ public class FlightDetailsFrame extends JFrame {
         setLocationRelativeTo(getOwner());
     }
 
-    private void initAddUpdateComponents() throws SQLException, ParseException {
+    private void initAddUpdateComponents() throws SQLException {
         planePanel = new JPanel();
         airportsWithId = Requests.getAirportsWithId();
         pilotsWithId = Requests.getPilotsWithId();
@@ -440,24 +440,23 @@ public class FlightDetailsFrame extends JFrame {
                 String dep = depPicker.getDate();
                 String arr = arrPicker.getDate();
                 System.out.println("dep " + depPicker);
-                //String dep = depPicker.getValue().getText();
-                //String arr = arrPicker.getJFormattedTextField().getText();
 
                 if(update) {
                     try {
                         System.out.println("ID: " + id);
                         Requests.updateFlight(id,depId,arrId,pilotId,planeId,depSpinner, depPicker.getDate(),arrSpinner, arrPicker.getDate(), Integer.parseInt(fillPrice.getText()));
+                        dispose();
                     } catch (SQLException ex) {
                         ex.printStackTrace();
                     }
                 } else {
                     try {
                         Requests.createFlight(depId,arrId,pilotId,planeId,depSpinner,depPicker.getDate(),arrSpinner,arrPicker.getDate(), Integer.parseInt(fillPrice.getText()));
+                        dispose();
                     } catch (SQLException ex) {
                         ex.printStackTrace();
                     }
                 }
-                dispose();
             });
 
             dialogPane.add(buttonBar, BorderLayout.SOUTH);
@@ -514,14 +513,12 @@ public class FlightDetailsFrame extends JFrame {
                 panel2.add(arrTimeSpinner);
                 arrTimeSpinner.setBounds(15, 310, 195, 40);
 
-                depPicker.setBackground(Color.white);
                 depPicker.addTo(panel2);
                 depPicker.setBounds(15, 55, 195, 40);
 
                 setSpinner(arrTimeSpinner);
                 setSpinner(depTimeSpinner);
 
-                arrPicker.setBackground(Color.white);
                 arrPicker.addTo(panel2);
                 arrPicker.setBounds(15, 225, 195, 40);
             }
