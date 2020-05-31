@@ -44,5 +44,4 @@ public class MyOwnDatePicker {
 
     public void addTo(JPanel panel) {
         panel.add(datePicker); }
-
 }

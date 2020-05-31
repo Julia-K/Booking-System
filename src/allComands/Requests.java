@@ -4,12 +4,37 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 import java.sql.*;
-import java.util.Arrays;
-import java.util.Comparator;
+import java.util.*;
 import java.util.Date;
-import java.util.LinkedHashMap;
 
 public class Requests {
+
+    public static LinkedHashMap loadListOfSeats() throws SQLException {
+        LinkedHashMap<Integer, LinkedList<Integer>> listOfSeats = new LinkedHashMap<>();
+        ResultSet rs = Requests.readTableByRequest("select flightID from flight");
+        while (rs.next()) {
+            LinkedList<Integer> linkedList = new LinkedList<>();
+            for (int i = 1; i <= 50; i++) {
+                linkedList.add(i);
+            }
+            listOfSeats.put(rs.getInt(1), linkedList);
+        }
+
+        ResultSet rs2 = Requests.readTableByRequest("select flight_id, seat_number from booking");
+        while (rs2.next()) {
+            for (int k : listOfSeats.keySet()) {
+                if (rs2.getInt(1) == k) {
+                    System.out.println("Flight ID: " + rs2.getInt(1) + ",k: " + k);
+                    System.out.println("seat number: " + rs2.getInt(2));
+                    LinkedList<Integer> x = listOfSeats.get(k);
+                    x.remove(Integer.valueOf(rs2.getInt(2)));
+                    listOfSeats.put(k, x);
+                    System.out.println(listOfSeats);
+                }
+            }
+        }
+        return listOfSeats;
+    }
 
     public static boolean isAdmin(Connection cn, String login, String pass) throws SQLException {
         String sql = "select * from Admin";
@@ -213,24 +238,18 @@ public class Requests {
         jTable.setRowSorter(sorter);
         jTable.setModel(model);
         jTable.removeColumn(jTable.getColumnModel().getColumn(0));
-
-        //jTable.getColumnModel().getColumn(0).setMinWidth(0);
-        //jTable.getColumnModel().getColumn(0).setMaxWidth(0);
-        //jTable.getColumnModel().getColumn(0).setWidth(0);
         return jTable;
     }
 
     public static JTable showClientsTable() throws SQLException {
         JTable jTable = new JTable();
         DefaultTableModel model = new DefaultTableModel();
-        ResultSet rs = Requests.readByTableName("client");
+        ResultSet rs = Requests.readTableByRequest("select clientID, first_name, last_name, email from client");
 
         model.addColumn("ClientID");
         model.addColumn("First name");
         model.addColumn("Last name");
         model.addColumn("E-mail");
-        model.addColumn("Password");
-        model.addColumn("Birth date");
 
         TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
         jTable.setRowSorter(sorter);
@@ -251,21 +270,12 @@ public class Requests {
                 }
             }
         };
-        ResultSet rs = Requests.readByTableName("address");
+        ResultSet rs = Requests.readTableByRequest("select addressID, country, city from address");
         model.addColumn("addressID");
         model.addColumn("Country");
         model.addColumn("City");
-        model.addColumn("Postal code");
-        model.addColumn("Street");
-        model.addColumn("Number");
 
         TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
-        sorter.setComparator(5, new Comparator<Integer>() {
-            @Override
-            public int compare(Integer o1, Integer o2) {
-                return o1 - o2;
-            }
-        });
         jTable.setRowSorter(sorter);
         jTable.setModel(addRows(rs,model));
         jTable.removeColumn(jTable.getColumnModel().getColumn(0));
@@ -373,22 +383,34 @@ public class Requests {
         return jTable;
     }
 
+    public static JTable readBookings() throws SQLException {
+        JTable jTable = new JTable();
+        DefaultTableModel model = new DefaultTableModel();
+        ResultSet rs = Requests.readTableByRequest("select bookingID, client.email, luggage.name from booking\n" +
+                "inner join luggage on luggage.luggageID=luggage_id\n" +
+                "inner join client on client.clientID=client_id");
+        model.addColumn("bookingID");
+        model.addColumn("Client E-mail");
+        model.addColumn("Luggage name");
+        TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
+        jTable.setRowSorter(sorter);
+        jTable.setModel(addRows(rs,model));
+        jTable.removeColumn(jTable.getColumnModel().getColumn(0));
+        return jTable;
+    }
 
 
     public static JTable readFlights() throws SQLException {
         JTable jTable = new JTable();
         DefaultTableModel model = new DefaultTableModel();
-        ResultSet rs = Requests.readTableByRequest("select flightID, dep.name as dname, arr.name as aname, departure_time, departure_date, arrival_time, arrival_date, price from flight\n" +
+        ResultSet rs = Requests.readTableByRequest("select flightID, dep.name as dname, arr.name as aname, departure_date, arrival_date from flight\n" +
                 "inner join airport as dep on dep.airportID = flight.departureAirport_id\n" +
                 "inner join airport as arr on arr.airportID = flight.arrivalAirport_id");
         model.addColumn("flightID");
         model.addColumn("Departure Airport");
         model.addColumn("Arrival Airport");
-        model.addColumn("Departure time");
         model.addColumn("Departure date");
-        model.addColumn("Arrival time");
         model.addColumn("Arrival date");
-        model.addColumn("Price");
 
         TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
         jTable.setRowSorter(sorter);
@@ -498,6 +520,42 @@ public class Requests {
             i++;
         }
         return airportsWithID;
+    }
+
+    public static LinkedHashMap getClientsWithId() throws SQLException {
+        int i = 0;
+        LinkedHashMap<Integer, Integer> clientsWithId = new LinkedHashMap<>();
+        ResultSet rs = readTableByRequest("select clientID from client");
+        while (rs.next()) {
+            int id = rs.getInt("clientID");
+            clientsWithId.put(i,id);
+            i++;
+        }
+        return clientsWithId;
+    }
+
+    public static LinkedHashMap getLuggageWithId() throws SQLException {
+        int i = 0;
+        LinkedHashMap<Integer, Integer> luggageWithId = new LinkedHashMap<>();
+        ResultSet rs = readTableByRequest("select luggageID from luggage");
+        while (rs.next()) {
+            int id = rs.getInt("luggageID");
+            luggageWithId.put(i,id);
+            i++;
+        }
+        return luggageWithId;
+    }
+
+    public static LinkedHashMap getClassesWithId() throws SQLException {
+        int i = 0;
+        LinkedHashMap<Integer, Integer> classesWithId = new LinkedHashMap<>();
+        ResultSet rs = readTableByRequest("select classID from class");
+        while (rs.next()) {
+            int id = rs.getInt("classID");
+            classesWithId.put(i,id);
+            i++;
+        }
+        return classesWithId;
     }
 
     public static LinkedHashMap getPilotsWithId() throws SQLException {

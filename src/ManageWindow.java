@@ -1,10 +1,12 @@
 import allComands.Requests;
+import allComands.TableRowFilter;
 
 import java.awt.*;
 import java.sql.SQLException;
 import java.util.LinkedHashMap;
 import javax.swing.*;
 import javax.swing.border.*;
+import javax.swing.table.JTableHeader;
 
 public class ManageWindow extends JFrame {
     private static ManageWindow manageWindow;
@@ -153,6 +155,12 @@ public class ManageWindow extends JFrame {
 
     public void reloadClients() throws SQLException {
         table = Requests.showClientsTable();
+        table.setFont(new Font("Lucida Sans", Font.PLAIN, 25));
+        table.setRowHeight(30);
+        table.setBackground(new Color(235, 242, 250));
+        JTableHeader tableHeader = table.getTableHeader();
+        tableHeader.setBackground(new Color(66, 122, 161));
+        tableHeader.setForeground(Color.white);
         TableRowFilter.create(searchField, table);
         Actions.setDetailOrUpdateClient(false,detailsButton,table,this);
         Actions.setDetailOrUpdateClient(true,updateButton,table,this);
@@ -218,6 +226,15 @@ public class ManageWindow extends JFrame {
         Actions.setDetailOrUpdateFlight(true,updateButton, table, this);
         Actions.addFlightAction(addButton, this);
         Actions.setDeleteButtonAction(deleteButton,"flight",table,this);
+        update();
+    }
+
+    public void reloadBooking() throws SQLException {
+        table = Requests.readBookings();
+        TableRowFilter.create(searchField, table);
+        Actions.setDetailBooking(false,detailsButton, table, this);
+        //Actions.setUpdateBooking(updateButton, table, this);
+        Actions.addBookingAction(addButton, this);
         update();
     }
 
@@ -295,9 +312,7 @@ public class ManageWindow extends JFrame {
                     break;
                 case 7:
                     try {
-                        table = Requests.showTable("booking");
-                        TableRowFilter.create(searchField, table);
-
+                        reloadBooking();
                     } catch (SQLException ex) {
                         ex.printStackTrace();
                     }
@@ -340,16 +355,16 @@ public class ManageWindow extends JFrame {
     }
 
     private void addToCombobox() {
-        tableCombobox.put(1, "clients");
-        tableCombobox.put(2, "airport addresses");
-        tableCombobox.put(3, "airports");
-        tableCombobox.put(4, "planes");
-        tableCombobox.put(5, "airlines");
-        tableCombobox.put(6, "pilots");
-        tableCombobox.put(7, "flights");
-        tableCombobox.put(8, "bookings");
-        tableCombobox.put(9, "luggages");
-        tableCombobox.put(10, "classes");
+        tableCombobox.put(1, "Clients");
+        tableCombobox.put(2, "Airport Addresses");
+        tableCombobox.put(3, "Airports");
+        tableCombobox.put(4, "Planes");
+        tableCombobox.put(5, "Airlines");
+        tableCombobox.put(6, "Pilots");
+        tableCombobox.put(7, "Flights");
+        tableCombobox.put(8, "Bookings");
+        tableCombobox.put(9, "Luggages");
+        tableCombobox.put(10, "Classes");
 
         for (int i = 1; i <= tableCombobox.size(); i++) {
             comboBox.addItem(tableCombobox.get(i));

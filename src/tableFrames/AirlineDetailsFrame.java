@@ -376,21 +376,6 @@ public class AirlineDetailsFrame extends JFrame {
                 fillCode.setBackground(Color.white);
                 contentPanel.add(fillCode);
                 fillCode.setBounds(35, 190, 195, 40);
-
-                {
-                    Dimension preferredSize = new Dimension();
-                    for(int i = 0; i < contentPanel.getComponentCount(); i++) {
-                        Rectangle bounds = contentPanel.getComponent(i).getBounds();
-                        preferredSize.width = Math.max(bounds.x + bounds.width, preferredSize.width);
-                        preferredSize.height = Math.max(bounds.y + bounds.height, preferredSize.height);
-                    }
-                    Insets insets = contentPanel.getInsets();
-                    preferredSize.width += insets.right;
-                    preferredSize.height += insets.bottom;
-                    System.out.println(preferredSize.width + " "+preferredSize.height);
-                    contentPanel.setMinimumSize(preferredSize);
-                    contentPanel.setPreferredSize(preferredSize);
-                }
             }
             dialogPane.add(contentPanel, BorderLayout.EAST);
 

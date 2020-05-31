@@ -230,20 +230,6 @@ public class LuggageDetailsFrame extends JFrame {
                 fillHeight.setBackground(Color.white);
                 contentPanel.add(fillHeight);
                 fillHeight.setBounds(160, 210, 170, 45);
-
-                {
-                    Dimension preferredSize = new Dimension();
-                    for(int i = 0; i < contentPanel.getComponentCount(); i++) {
-                        Rectangle bounds = contentPanel.getComponent(i).getBounds();
-                        preferredSize.width = Math.max(bounds.x + bounds.width, preferredSize.width);
-                        preferredSize.height = Math.max(bounds.y + bounds.height, preferredSize.height);
-                    }
-                    Insets insets = contentPanel.getInsets();
-                    preferredSize.width += insets.right;
-                    preferredSize.height += insets.bottom;
-                    contentPanel.setMinimumSize(preferredSize);
-                    contentPanel.setPreferredSize(preferredSize);
-                }
             }
             dialogPane.add(contentPanel, BorderLayout.CENTER);
 

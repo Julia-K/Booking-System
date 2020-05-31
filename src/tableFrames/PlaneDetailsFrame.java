@@ -86,14 +86,6 @@ public class PlaneDetailsFrame extends JFrame {
                 modelL.setFont(modelL.getFont().deriveFont(modelL.getFont().getStyle() | Font.BOLD, modelL.getFont().getSize() + 12f));
                 contentPanel.add(modelL);
                 modelL.setBounds(35, 175, 455, 40);
-
-                {
-                    Dimension preferredSize = new Dimension();
-                    preferredSize.width = 490;
-                    preferredSize.height = 215;
-                    contentPanel.setMinimumSize(preferredSize);
-                    contentPanel.setPreferredSize(preferredSize);
-                }
             }
             dialogPane.add(contentPanel, BorderLayout.EAST);
 
@@ -176,14 +168,6 @@ public class PlaneDetailsFrame extends JFrame {
                 fillModel.setBackground(Color.white);
                 contentPanel.add(fillModel);
                 fillModel.setBounds(35, 210, 195, 40);
-
-                {
-                    Dimension preferredSize = new Dimension();
-                    preferredSize.width =490;
-                    preferredSize.height = 250;
-                    contentPanel.setMinimumSize(preferredSize);
-                    contentPanel.setPreferredSize(preferredSize);
-                }
             }
             dialogPane.add(contentPanel, BorderLayout.EAST);
 
