@@ -18,7 +18,6 @@ public class ManageWindow extends JFrame {
     private JPanel leftPanel;
     private JPanel filterPanel;
     private JTextField searchField;
-    private JButton searchButton;
     private JButton detailsButton;
     private JButton updateButton;
     private JButton deleteButton;
@@ -41,7 +40,6 @@ public class ManageWindow extends JFrame {
         leftPanel = new JPanel();
         filterPanel = new JPanel();
         searchField = new JTextField();
-        searchButton = new JButton();
         detailsButton = new JButton();
         updateButton = new JButton();
         deleteButton = new JButton();
@@ -106,9 +104,6 @@ public class ManageWindow extends JFrame {
                     searchField.setToolTipText("filter expression");
                     filterPanel.add(searchField);
 
-                    searchButton.setMaximumSize(new Dimension(150, 40));
-                    searchButton.setText("Search");
-                    filterPanel.add(searchButton);
                 }
                 leftPanel.add(filterPanel);
 
@@ -155,12 +150,6 @@ public class ManageWindow extends JFrame {
 
     public void reloadClients() throws SQLException {
         table = Requests.showClientsTable();
-        table.setFont(new Font("Lucida Sans", Font.PLAIN, 25));
-        table.setRowHeight(30);
-        table.setBackground(new Color(235, 242, 250));
-        JTableHeader tableHeader = table.getTableHeader();
-        tableHeader.setBackground(new Color(66, 122, 161));
-        tableHeader.setForeground(Color.white);
         TableRowFilter.create(searchField, table);
         Actions.setDetailOrUpdateClient(false,detailsButton,table,this);
         Actions.setDetailOrUpdateClient(true,updateButton,table,this);
@@ -232,8 +221,9 @@ public class ManageWindow extends JFrame {
     public void reloadBooking() throws SQLException {
         table = Requests.readBookings();
         TableRowFilter.create(searchField, table);
-        Actions.setDetailBooking(false,detailsButton, table, this);
-        //Actions.setUpdateBooking(updateButton, table, this);
+        Actions.setDetailBooking(detailsButton, table, this);
+        Actions.setUpdateBooking(updateButton,table,this);
+        Actions.setDeleteButtonAction(deleteButton,"booking",table, this);
         Actions.addBookingAction(addButton, this);
         update();
     }
@@ -342,6 +332,7 @@ public class ManageWindow extends JFrame {
                 default:
                     return;
             }
+            setTableDesign();
             update();
         });
     }
@@ -372,8 +363,6 @@ public class ManageWindow extends JFrame {
     }
 
     public static void main(String[] args) {
-        //setUndecorated(true);
-        //mainWindow.setVisible(true);
         EventQueue.invokeLater((() -> {
             try {
                 manageWindow = new ManageWindow();
@@ -382,5 +371,14 @@ public class ManageWindow extends JFrame {
                 e.printStackTrace();
             }
         }));
+    }
+
+    private void setTableDesign() {
+        table.setFont(new Font("Lucida Sans", Font.PLAIN, 25));
+        table.setRowHeight(30);
+        table.setBackground(new Color(235, 242, 250));
+        JTableHeader tableHeader = table.getTableHeader();
+        tableHeader.setBackground(new Color(66, 122, 161));
+        tableHeader.setForeground(Color.white);
     }
 }

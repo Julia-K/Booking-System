@@ -24,15 +24,43 @@ public class Requests {
         while (rs2.next()) {
             for (int k : listOfSeats.keySet()) {
                 if (rs2.getInt(1) == k) {
-                    System.out.println("Flight ID: " + rs2.getInt(1) + ",k: " + k);
-                    System.out.println("seat number: " + rs2.getInt(2));
                     LinkedList<Integer> x = listOfSeats.get(k);
                     x.remove(Integer.valueOf(rs2.getInt(2)));
                     listOfSeats.put(k, x);
-                    System.out.println(listOfSeats);
                 }
             }
         }
+        return listOfSeats;
+    }
+
+    public static LinkedHashMap loadListOfSeats(int flight, int seat) throws SQLException {
+        LinkedHashMap<Integer, LinkedList<Integer>> listOfSeats = new LinkedHashMap<>();
+        ResultSet rs = Requests.readTableByRequest("select flightID from flight");
+        while (rs.next()) {
+            LinkedList<Integer> linkedList = new LinkedList<>();
+            for (int i = 1; i <= 50; i++) {
+                linkedList.add(i);
+            }
+            listOfSeats.put(rs.getInt(1), linkedList);
+        }
+
+        ResultSet rs2 = Requests.readTableByRequest("select flight_id, seat_number from booking");
+        while (rs2.next()) {
+            for (int k : listOfSeats.keySet()) {
+                if (rs2.getInt(1) == k) {
+                    LinkedList<Integer> x = listOfSeats.get(k);
+                    if(k == flight && seat == rs2.getInt(2)) {
+                        System.out.println("flight: " + flight + ", seat: " + seat);
+
+                    } else {
+                        x.remove(Integer.valueOf(rs2.getInt(2)));
+                    }
+                    listOfSeats.put(k, x);
+                }
+            }
+        }
+        System.out.println(listOfSeats);
+
         return listOfSeats;
     }
 
@@ -260,16 +288,7 @@ public class Requests {
 
     public static JTable showAddresses() throws SQLException {
         JTable jTable = new JTable();
-        DefaultTableModel model = new DefaultTableModel() {
-            @Override
-            public Class getColumnClass(int column) {
-                if (column == 5) {
-                    return Integer.class;
-                } else {
-                    return String.class;
-                }
-            }
-        };
+        DefaultTableModel model = new DefaultTableModel();
         ResultSet rs = Requests.readTableByRequest("select addressID, country, city from address");
         model.addColumn("addressID");
         model.addColumn("Country");
@@ -288,7 +307,6 @@ public class Requests {
         ResultSet rs = Requests.readByTableName("class");
         model.addColumn("classID");
         model.addColumn("Name");
-        model.addColumn("Price");
 
         TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
         jTable.setRowSorter(sorter);
@@ -333,9 +351,6 @@ public class Requests {
         ResultSet rs = Requests.readByTableName("luggage");
         model.addColumn("luggageID");
         model.addColumn("Name");
-        model.addColumn("Price");
-        model.addColumn("Height");
-        model.addColumn("Weight");
 
         TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
         jTable.setRowSorter(sorter);
@@ -347,20 +362,14 @@ public class Requests {
     public static JTable readAirports() throws SQLException {
         JTable jTable = new JTable();
         DefaultTableModel model = new DefaultTableModel();
-        ResultSet rs = Requests.readTableByRequest("select * from airport");
+        ResultSet rs = Requests.readTableByRequest("select airportID, name, code from airport");
         model.addColumn("airportID");
         model.addColumn("Airport name");
         model.addColumn("Code");
-        model.addColumn("Address");
 
         TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
         jTable.setRowSorter(sorter);
         jTable.setModel(addRows(rs,model));
-        rs.beforeFirst();
-        while (rs.next()) {
-            String address = getStringAddress(rs.getInt(4));
-            model.setValueAt(address,rs.getRow()-1,3);
-        }
         jTable.removeColumn(jTable.getColumnModel().getColumn(0));
         return jTable;
     }
@@ -368,13 +377,12 @@ public class Requests {
     public static JTable readPilots() throws SQLException {
         JTable jTable = new JTable();
         DefaultTableModel model = new DefaultTableModel();
-        ResultSet rs = Requests.readTableByRequest("select pilotID, first_name, last_name, employment_date, airline.name from pilot\n" +
+        ResultSet rs = Requests.readTableByRequest("select pilotID, first_name, last_name, employment_date from pilot\n" +
                 "inner join airline on airline.airlineID = pilot.airline_id");
         model.addColumn("pilotID");
         model.addColumn("First Name");
         model.addColumn("Last name");
         model.addColumn("Employment date");
-        model.addColumn("Airline name");
 
         TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
         jTable.setRowSorter(sorter);
@@ -406,6 +414,26 @@ public class Requests {
         ResultSet rs = Requests.readTableByRequest("select flightID, dep.name as dname, arr.name as aname, departure_date, arrival_date from flight\n" +
                 "inner join airport as dep on dep.airportID = flight.departureAirport_id\n" +
                 "inner join airport as arr on arr.airportID = flight.arrivalAirport_id");
+        model.addColumn("flightID");
+        model.addColumn("Departure Airport");
+        model.addColumn("Arrival Airport");
+        model.addColumn("Departure date");
+        model.addColumn("Arrival date");
+
+        TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
+        jTable.setRowSorter(sorter);
+        jTable.setModel(addRows(rs,model));
+        jTable.removeColumn(jTable.getColumnModel().getColumn(0));
+        return jTable;
+    }
+
+    public static JTable readFligthsById(int id) throws SQLException {
+        JTable jTable = new JTable();
+        DefaultTableModel model = new DefaultTableModel();
+        ResultSet rs = Requests.readTableByRequest("select flightID, dep.name as dname, arr.name as aname, departure_date, arrival_date from flight\n" +
+                "inner join airport as dep on dep.airportID = flight.departureAirport_id\n" +
+                "inner join airport as arr on arr.airportID = flight.arrivalAirport_id\n" +
+                "where flightID=" + id);
         model.addColumn("flightID");
         model.addColumn("Departure Airport");
         model.addColumn("Arrival Airport");
@@ -753,16 +781,15 @@ public class Requests {
 
     }
 
-    public static void updateBooking(int id, int flightId, int clientId, int luggageId,int classId, int seat, String date) throws SQLException {
-        String sql = "update booking set flight_id=?, client_id=?, luggage_id=?, class_id=?, seat_number=?, approval_date=? WHERE bookingID=?";
+    public static void updateBooking(int id, int flightId, int clientId, int luggageId,int classId, int seat) throws SQLException {
+        String sql = "update booking set flight_id=?, client_id=?, luggage_id=?, class_id=?, seat_number=? WHERE bookingID=?";
         PreparedStatement statement = DBConnection.getConnection().prepareStatement(sql);
         statement.setInt(1, flightId);
         statement.setInt(2, clientId);
         statement.setInt(3, luggageId);
         statement.setInt(4, classId);
         statement.setInt(5, seat);
-        statement.setString(6, date);
-        statement.setInt(7,id);
+        statement.setInt(6,id);
         statement.executeUpdate();
     }
 

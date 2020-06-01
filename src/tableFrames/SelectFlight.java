@@ -31,6 +31,7 @@ public class SelectFlight extends JFrame {
     private JLabel priceFromL;
     private JLabel priceToL;
     private JButton searchButton;
+    private JButton searchAllButton;
     private JLabel infoLabel;
     private JPanel panelForTable;
     private JScrollPane scrollPane;
@@ -39,9 +40,13 @@ public class SelectFlight extends JFrame {
     private JButton okButton;
     private JPanel panel1;
     BookingDetailsFrame bdf;
+    private int flight;
+    private boolean update;
 
-    public SelectFlight(BookingDetailsFrame bdf) throws SQLException {
+    public SelectFlight(boolean update, BookingDetailsFrame bdf) throws SQLException {
+        this.update = update;
         this.bdf = bdf;
+        this.flight = bdf.getFlightId();
         Date data = java.util.Calendar.getInstance().getTime();
         String s = new SimpleDateFormat("yyyy-MM-dd").format(data);
         dateFrom = new MyOwnDatePicker(s);
@@ -65,6 +70,7 @@ public class SelectFlight extends JFrame {
         priceFromL = new JLabel();
         priceToL = new JLabel();
         searchButton = new JButton();
+        searchAllButton = new JButton();
         infoLabel = new JLabel();
         panelForTable = new JPanel();
         scrollPane = new JScrollPane();
@@ -185,6 +191,25 @@ public class SelectFlight extends JFrame {
                     panelForTable.repaint();
                 });
 
+                searchAllButton.setText("Search All");
+                searchAllButton.setBackground(new Color(5, 102, 141));
+                searchAllButton.setForeground(Color.white);
+                contentPanel.add(searchAllButton);
+                searchAllButton.setBounds(755, 165, 130, 40);
+
+                searchAllButton.addActionListener(e -> {
+                    try {
+                        table = Requests.readFlights();
+                    } catch (SQLException throwables) {
+                        throwables.printStackTrace();
+                    }
+                    scrollPane.setViewportView(table);
+                    panelForTable.removeAll();
+                    panelForTable.add(scrollPane);
+                    panelForTable.revalidate();
+                    panelForTable.repaint();
+                });
+
                 infoLabel.setText(" Double click on the row for the details");
                 infoLabel.setBackground(new Color(235, 242, 250));
                 infoLabel.setForeground(new Color(5, 102, 141));
@@ -199,7 +224,11 @@ public class SelectFlight extends JFrame {
                     {
 
                         table.setPreferredScrollableViewportSize(new Dimension(450, 180));
-                        table = Requests.readFlights();
+                        if(update) {
+                            table = (JTable) Requests.readFligthsById(flight);
+                        } else {
+                            table = Requests.readFlights();
+                        }
                         scrollPane.setViewportView(table);
                     }
                     panelForTable.add(scrollPane);

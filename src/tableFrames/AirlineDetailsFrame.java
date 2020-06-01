@@ -376,6 +376,14 @@ public class AirlineDetailsFrame extends JFrame {
                 fillCode.setBackground(Color.white);
                 contentPanel.add(fillCode);
                 fillCode.setBounds(35, 190, 195, 40);
+
+                {
+                    Dimension preferredSize = new Dimension();
+                    preferredSize.width =490;
+                    preferredSize.height = 230;
+                    contentPanel.setMinimumSize(preferredSize);
+                    contentPanel.setPreferredSize(preferredSize);
+                }
             }
             dialogPane.add(contentPanel, BorderLayout.EAST);
 

@@ -77,7 +77,40 @@ public class Actions {
         });
     }
 
-    public static void setDetailBooking(Boolean update, JButton jButton, JTable jTable, ManageWindow mw) {
+    public static void setUpdateBooking(JButton jButton, JTable jTable, ManageWindow mw) {
+        removeActions(jButton);
+        jButton.addActionListener(e -> {
+            if (jTable.getSelectedRow() == -1) return;
+            int row = jTable.getSelectedRow();
+            int id = Integer.parseInt(jTable.getModel().getValueAt(jTable.convertRowIndexToModel(row), 0).toString());
+            ResultSet rs = null;
+            try {
+                rs = Requests.readById(id, "booking");
+                while (rs.next()) {
+                    int flightId = rs.getInt(2);
+                    int clientId = rs.getInt(3);
+                    int luggageId = rs.getInt(4);
+                    int classId = rs.getInt(5);
+                    int seat = rs.getInt(6);
+
+                    new BookingDetailsFrame(id,flightId,clientId,luggageId,classId,seat).addWindowListener(new WindowAdapter() {
+                        @Override
+                        public void windowClosed(WindowEvent e) {
+                            try {
+                                mw.reloadBooking();
+                            } catch (SQLException ex) {
+                                ex.printStackTrace();
+                            }
+                        }
+                    });
+                }
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+        });
+    }
+
+    public static void setDetailBooking(JButton jButton, JTable jTable, ManageWindow mw) {
         removeActions(jButton);
         jButton.addActionListener(e -> {
             if (jTable.getSelectedRow() == -1) return;
@@ -98,7 +131,7 @@ public class Actions {
                     String classP = rs.getString(4);
                     String seat = rs.getString(5);
                     String price = rs.getString(6);
-                    new BookingDetailsFrame(update,id,flightId,email,luggage,classP,seat,price).addWindowListener(new WindowAdapter() {
+                    new BookingDetailsFrame(id,flightId,email,luggage,classP,seat,price).addWindowListener(new WindowAdapter() {
                         @Override
                         public void windowClosed(WindowEvent e) {
                             try {
@@ -491,6 +524,12 @@ public class Actions {
                 case "luggage":
                     try {
                         mw.reloadLuggage();
+                    } catch (SQLException throwables) {
+                        throwables.printStackTrace();
+                    }
+                case "booking":
+                    try {
+                        mw.reloadBooking();
                     } catch (SQLException throwables) {
                         throwables.printStackTrace();
                     }
