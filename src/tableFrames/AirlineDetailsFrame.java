@@ -1,11 +1,14 @@
 package tableFrames;
 
 import allComands.Requests;
+import allComands.StringsFormatter;
+import com.microsoft.sqlserver.jdbc.SQLServerException;
 
 import java.awt.*;
 import java.awt.event.ItemEvent;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.LinkedHashMap;
 import javax.swing.*;
 import javax.swing.border.*;
@@ -17,28 +20,21 @@ public class AirlineDetailsFrame extends JFrame {
     private JLabel airlineL;
     private JTextField fillAirline2;
     private JLabel fillAirline;
-    private JLabel listL;
-    private JScrollPane scrollPane1;
-    private JList<String> fillList;
     private JPanel buttonBar;
     private JButton okButton;
     private JPanel panel1;
     private DefaultListModel<String> model;
-    private JPanel contentPane;
     private JLabel codeL;
     private JTextField fillCode;
     private JCheckBox checkBox;
     private JComboBox comboBox;
     private JTextField fillQuantity;
-    private JPanel panel5;
     private JLabel quantityL;
     private JLabel planeL;
-    private JPanel panel;
     private int id;
-    private boolean update;
 
     public AirlineDetailsFrame() throws SQLException {
-        this.update = false;
+        boolean update = false;
         initAddComponents();
         setVisibility(false);
         setVisible(true);
@@ -67,9 +63,9 @@ public class AirlineDetailsFrame extends JFrame {
         contentPanel = new JPanel();
         airlineL = new JLabel();
         fillAirline = new JLabel();
-        listL = new JLabel();
-        scrollPane1 = new JScrollPane();
-        fillList = new JList<>(model);
+        JLabel listL = new JLabel();
+        JScrollPane scrollPane1 = new JScrollPane();
+        JList<String> fillList = new JList<>(model);
         buttonBar = new JPanel();
         okButton = new JButton();
         panel1 = new JPanel();
@@ -163,7 +159,7 @@ public class AirlineDetailsFrame extends JFrame {
     private void initAddComponents() throws SQLException {
         planesWithId = Requests.getPlanesWithId();
         dialogPane = new JPanel();
-        contentPane = new JPanel();
+        JPanel contentPane = new JPanel();
         airlineL = new JLabel();
         codeL = new JLabel();
         fillAirline2 = new JTextField();
@@ -171,12 +167,12 @@ public class AirlineDetailsFrame extends JFrame {
         checkBox = new JCheckBox();
         comboBox = getComboBox();
         fillQuantity = new JTextField();
-        panel5 = new JPanel();
+        JPanel panel5 = new JPanel();
         quantityL = new JLabel();
         planeL = new JLabel();
         buttonBar = new JPanel();
         okButton = new JButton();
-        panel = new JPanel();
+        JPanel panel = new JPanel();
 
         setResizable(false);
         setMinimumSize(new Dimension(680, 430));
@@ -207,10 +203,12 @@ public class AirlineDetailsFrame extends JFrame {
                 codeL.setBounds(35, 125, 135, 40);
 
                 fillAirline2.setBackground(Color.white);
+                StringsFormatter.setTextFieldLength(60,fillAirline2);
                 contentPane.add(fillAirline2);
                 fillAirline2.setBounds(35, 75, 195, 40);
 
                 fillCode.setBackground(Color.white);
+                StringsFormatter.setTextFieldLength(2, fillCode);
                 contentPane.add(fillCode);
                 fillCode.setBounds(35, 175, 195, 40);
 
@@ -232,6 +230,7 @@ public class AirlineDetailsFrame extends JFrame {
                 comboBox.setBounds(275, 75, 195, 40);
 
                 fillQuantity.setBackground(Color.white);
+                StringsFormatter.setOnlyDigits(fillQuantity);
                 contentPane.add(fillQuantity);
                 fillQuantity.setBounds(275, 175, 195, 40);
 
@@ -290,26 +289,33 @@ public class AirlineDetailsFrame extends JFrame {
                         new Insets(0, 0, 0, 0), 0, 0));
 
                 okButton.addActionListener(e-> {
-                    if(!checkBox.isSelected()) {
-                        try {
-                            Requests.createAirline(fillAirline2.getText(),fillCode.getText());
-                        } catch (SQLException throwables) {
-                            throwables.printStackTrace();
-                        }
-                    } else {
-                        try {
-                            Requests.createAirline(fillAirline2.getText(),fillCode.getText());
-                            ResultSet rs = Requests.readTableByRequest("SELECT TOP 1 airlineID FROM airline ORDER BY airlineID DESC");
-                            while (rs.next()) {
-                                int id = rs.getInt(1);
-                                Requests.createPlaneAirplane((Integer) planesWithId.get(comboBox.getSelectedIndex()),id, Integer.parseInt(fillQuantity.getText()));
-                                updateContent();
+                    if(isAddingValidate()) {
+                        if(!checkBox.isSelected()) {
+                            try {
+                                Requests.createAirline(fillAirline2.getText(),fillCode.getText());
+                                dispose();
+                            } catch (SQLServerException ex) {
+                                JOptionPane.showMessageDialog(new Frame(), "Code and Airline name must be unique!");
+                            } catch (SQLException throwables) {
+                                throwables.printStackTrace();
                             }
-                        } catch (SQLException throwables) {
-                            throwables.printStackTrace();
+                        } else {
+                            try {
+                                Requests.createAirline(fillAirline2.getText(),fillCode.getText());
+                                ResultSet rs = Requests.readTableByRequest("SELECT TOP 1 airlineID FROM airline ORDER BY airlineID DESC");
+                                while (rs.next()) {
+                                    int id = rs.getInt(1);
+                                    Requests.createPlaneAirplane((Integer) planesWithId.get(comboBox.getSelectedIndex()),id, Integer.parseInt(fillQuantity.getText()));
+                                    updateContent();
+                                    dispose();
+                                }
+                            } catch (SQLServerException exception) {
+                                JOptionPane.showMessageDialog(new Frame(), "Code must be unique!");
+                            } catch (SQLException throwables) {
+                                throwables.printStackTrace();
+                            }
                         }
                     }
-                    dispose();
                 });
             }
             dialogPane.add(buttonBar, BorderLayout.SOUTH);
@@ -370,10 +376,12 @@ public class AirlineDetailsFrame extends JFrame {
                 codeL.setBounds(35, 140, 455, 40);
 
                 fillAirline2.setBackground(Color.white);
+                StringsFormatter.setTextFieldLength(60, fillAirline2);
                 contentPanel.add(fillAirline2);
                 fillAirline2.setBounds(35, 90, 195, 40);
 
                 fillCode.setBackground(Color.white);
+                StringsFormatter.setTextFieldLength(2,fillCode);
                 contentPanel.add(fillCode);
                 fillCode.setBounds(35, 190, 195, 40);
 
@@ -401,12 +409,16 @@ public class AirlineDetailsFrame extends JFrame {
                         new Insets(0, 0, 0, 0), 0, 0));
 
                 okButton.addActionListener(e-> {
-                    try {
-                        Requests.updateAirline(id,fillAirline2.getText(),fillCode.getText());
-                    } catch (SQLException ex) {
-                        ex.printStackTrace();
+                    if(isUpdatingValidate()) {
+                        try {
+                            Requests.updateAirline(id,fillAirline2.getText(),fillCode.getText());
+                            dispose();
+                        } catch (SQLServerException throwables) {
+                            JOptionPane.showMessageDialog(new Frame(), "Code must be unique!");
+                        } catch (SQLException ex) {
+                            ex.printStackTrace();
+                        }
                     }
-                    dispose();
                 });
             }
             dialogPane.add(buttonBar, BorderLayout.SOUTH);
@@ -447,4 +459,41 @@ public class AirlineDetailsFrame extends JFrame {
         }
         return x;
     }
+
+    public boolean isUpdatingValidate() {
+        if (fillAirline2.getText().equals("") || fillCode.getText().equals("")) {
+            JOptionPane.showMessageDialog(new Frame(), "All fields must be filled!");
+            return false;
+        } else if (fillCode.getText().length() != 2) {
+            JOptionPane.showMessageDialog(new Frame(), "Code must have 2 letters.");
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    public boolean isAddingValidate() {
+        if(checkBox.isSelected()) {
+            if (fillAirline2.getText().equals("") || fillCode.getText().equals("") || fillQuantity.getText().equals("")) {
+                JOptionPane.showMessageDialog(new Frame(), "All fields must be filled!");
+                return false;
+            } else if (fillCode.getText().length() != 2) {
+                JOptionPane.showMessageDialog(new Frame(), "Code must have 2 letters.");
+                return false;
+            } else {
+                return true;
+            }
+        } else {
+            if (fillAirline2.getText().equals("") || fillCode.getText().equals("")) {
+                JOptionPane.showMessageDialog(new Frame(), "All fields must be filled!");
+                return false;
+            } else if (fillCode.getText().length() != 2) {
+                JOptionPane.showMessageDialog(new Frame(), "Code must have 2 letters.");
+                return false;
+            } else {
+                return true;
+            }
+        }
+    }
+
 }

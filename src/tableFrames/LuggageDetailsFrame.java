@@ -1,6 +1,8 @@
 package tableFrames;
 
 import allComands.Requests;
+import allComands.StringsFormatter;
+import com.microsoft.sqlserver.jdbc.SQLServerException;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -204,10 +206,13 @@ public class LuggageDetailsFrame extends JFrame {
                 priceL.setBounds(50, 150, 80, 45);
 
                 fillName.setBackground(Color.white);
+                StringsFormatter.setLettersWithSpaces(fillName);
+                StringsFormatter.setTextFieldLength(20,fillName);
                 contentPanel.add(fillName);
                 fillName.setBounds(160, 90, 170, 45);
 
                 fillPrice.setBackground(Color.white);
+                StringsFormatter.setFloatPattern(3, fillPrice);
                 contentPanel.add(fillPrice);
                 fillPrice.setBounds(160, 150, 170, 45);
 
@@ -218,6 +223,8 @@ public class LuggageDetailsFrame extends JFrame {
                 weightL.setBounds(50, 270, 95, 45);
 
                 fillWeight.setBackground(Color.white);
+                StringsFormatter.setOnlyDigits(fillWeight);
+                StringsFormatter.setTextFieldLength(7,fillWeight);
                 contentPanel.add(fillWeight);
                 fillWeight.setBounds(160, 270, 170, 45);
 
@@ -228,6 +235,8 @@ public class LuggageDetailsFrame extends JFrame {
                 heightL.setBounds(50, 210, 90, 45);
 
                 fillHeight.setBackground(Color.white);
+                StringsFormatter.setOnlyDigits(fillHeight);
+                StringsFormatter.setTextFieldLength(7,fillHeight);
                 contentPanel.add(fillHeight);
                 fillHeight.setBounds(160, 210, 170, 45);
             }
@@ -244,20 +253,21 @@ public class LuggageDetailsFrame extends JFrame {
                 okButton.setBackground(new Color(66, 122, 161));
 
                 okButton.addActionListener(e-> {
-                    if(update) {
+                    if(isValidate()) {
                         try {
-                            Requests.updateLuggage(id,fillName.getText(),fillPrice.getText(),fillHeight.getText(),fillWeight.getText());
+                            if(update) {
+                                Requests.updateLuggage(id,fillName.getText(),fillPrice.getText(),fillHeight.getText(),fillWeight.getText());
+                            } else {
+                                Requests.createLuggage(fillName.getText(),fillPrice.getText(),fillHeight.getText(),fillWeight.getText());
+                            }
+                            dispose();
+                        } catch (SQLServerException exception) {
+                            JOptionPane.showMessageDialog(new Frame(),"Luggage name must be unique!");
                         } catch (SQLException throwables) {
                             throwables.printStackTrace();
                         }
-                    } else {
-                        try {
-                            Requests.createLuggage(fillName.getText(),fillPrice.getText(),fillHeight.getText(),fillWeight.getText());
-                        } catch (SQLException throwables) {
-                            throwables.printStackTrace();
-                        }
+
                     }
-                    dispose();
                 });
 
                 buttonBar.add(okButton, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0,
@@ -279,6 +289,14 @@ public class LuggageDetailsFrame extends JFrame {
         contentPane.add(dialogPane, BorderLayout.CENTER);
         pack();
         setLocationRelativeTo(getOwner());
+    }
+
+    private boolean isValidate() {
+        if (fillWeight.getText().equals("") || fillHeight.getText().equals("") || fillPrice.getText().equals("") || fillName.getText().equals("")) {
+            JOptionPane.showMessageDialog(new Frame(), "All fields must be filled");
+            return false;
+        }
+        return true;
     }
 }
 

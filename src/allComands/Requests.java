@@ -64,12 +64,12 @@ public class Requests {
         return listOfSeats;
     }
 
-    public static boolean isAdmin(Connection cn, String login, String pass) throws SQLException {
+    public static boolean isAdmin(Connection cn, String login, char[] pass) throws SQLException {
         String sql = "select * from Admin";
         PreparedStatement ps=cn.prepareStatement("select * from admin", ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE);
         ResultSet rs=ps.executeQuery();
         while (rs.next()) {
-            if (rs.getString("login").equals(login) && rs.getString("password").equals(pass)) {
+            if (rs.getString("login").equals(login) && rs.getString("password").equals(PasswordUtils.hash256(pass))) {
                 return true;
             }
         }
@@ -77,6 +77,18 @@ public class Requests {
     }
 
     //----------------------------- INSERT -----------------------------
+
+    public static void createAdmin(String login, char[] password) throws SQLException {
+        String codedPassword = PasswordUtils.hash256(password);
+        String sql = "insert into admin (login, password) values (?, ?)";
+        PreparedStatement statement = DBConnection.getConnection().prepareStatement(sql);
+        statement.setString(1, login);
+        statement.setString(2, codedPassword);
+        int rowsInserted = statement.executeUpdate();
+        if (rowsInserted > 0) {
+            System.out.println("A new admin was inserted successfully!");
+        }
+    }
 
     public static void createAddress(String country, String city, String postal_code, String street, int number) throws SQLException {
         String sql = "insert into address (country, city, postal_code, street, number) values (?, ?, ?, ?, ?)";
@@ -207,7 +219,7 @@ public class Requests {
         }
     }
 
-    public static void createFlight(int depA_id, int arrA_id, int pilotId, int planeId, String depTime, String depDate, String arrTime, String arrDate, int price) throws SQLException {
+    public static void createFlight(int depA_id, int arrA_id, int pilotId, int planeId, String depTime, String depDate, String arrTime, String arrDate, float price) throws SQLException {
         String sql = "insert into flight (departureAirport_id, arrivalAirport_id, pilot_id, plane_id, departure_time, departure_date, arrival_time, arrival_date, price) values (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         PreparedStatement statement = DBConnection.getConnection().prepareStatement(sql);
@@ -219,7 +231,7 @@ public class Requests {
         statement.setString(6, depDate);
         statement.setString(7, arrTime);
         statement.setString(8, arrDate);
-        statement.setInt(9, price);
+        statement.setFloat(9, price);
 
         int rowsInserted = statement.executeUpdate();
         if (rowsInserted > 0) {
@@ -245,31 +257,7 @@ public class Requests {
 
     //----------------------------- READ -----------------------------
 
-    public static JTable showTable(String table) throws SQLException {
-        JTable jTable = new JTable();
-        DefaultTableModel model = new DefaultTableModel();
-        ResultSet rs = Requests.readByTableName(table);
-        ResultSetMetaData rsmd = rs.getMetaData();
-        String[] cells = new String[rsmd.getColumnCount()];
-
-        for (int i = 1 ; i <= rsmd.getColumnCount(); i++) {
-            model.addColumn(rsmd.getColumnName(i));
-        }
-        while (rs.next()) {
-            for (int i =1; i <= rsmd.getColumnCount(); i++) {
-                cells[i-1] = (rs.getString(rsmd.getColumnName(i)));
-            }
-            model.addRow(cells);
-            Arrays.fill(cells,null);
-        }
-        TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
-        jTable.setRowSorter(sorter);
-        jTable.setModel(model);
-        jTable.removeColumn(jTable.getColumnModel().getColumn(0));
-        return jTable;
-    }
-
-    public static JTable showClientsTable() throws SQLException {
+        public static JTable showClientsTable() throws SQLException {
         JTable jTable = new JTable();
         DefaultTableModel model = new DefaultTableModel();
         ResultSet rs = Requests.readTableByRequest("select clientID, first_name, last_name, email from client");
@@ -327,6 +315,95 @@ public class Requests {
         jTable.setRowSorter(sorter);
         jTable.setModel(addRows(rs,model));
         jTable.removeColumn(jTable.getColumnModel().getColumn(0));
+        return jTable;
+    }
+
+    public static JTable readTableAfterFullSearching(String dateFrom, String dateTo, float priceFrom, float priceTo, int depId, int arrId) throws SQLException {
+        JTable jTable = new JTable();
+        DefaultTableModel model = new DefaultTableModel();
+        try {
+            ResultSet rs = readTableByRequest("select flightID, dep.name as dname, arr.name as aname, departure_date, arrival_date from flight\n" +
+                    "inner join airport as dep on dep.airportID = flight.departureAirport_id\n" +
+                    "inner join airport as arr on arr.airportID = flight.arrivalAirport_id\n" +
+                    "where price between " + priceFrom + " and " + priceTo + "\n" +
+                    "and dep.airportID = " + depId + " and arr.airportID = " + arrId + "\n" +
+                    "and departure_date >= '" + dateFrom + "' \n" +
+                    "and arrival_date <= '" + dateTo + "'");
+            model.addColumn("flightID");
+            model.addColumn("Departure Airport");
+            model.addColumn("Arrival Airport");
+            model.addColumn("Departure date");
+            model.addColumn("Arrival date");
+            TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
+            jTable.setRowSorter(sorter);
+            jTable.setModel(Requests.addRows(rs, model));
+            jTable.removeColumn(jTable.getColumnModel().getColumn(0));
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return jTable;
+    }
+
+    public static JTable readTableAfterSearchingWithoutPrice(String dateFrom, String dateTo, int depId, int arrId) throws SQLException {
+        JTable jTable = new JTable();
+        DefaultTableModel model = new DefaultTableModel();
+        try {
+            ResultSet rs = readTableByRequest("select flightID, dep.name as dname, arr.name as aname, departure_date, arrival_date from flight\n" +
+                    "inner join airport as dep on dep.airportID = flight.departureAirport_id\n" +
+                    "inner join airport as arr on arr.airportID = flight.arrivalAirport_id\n" +
+                    "where dep.airportID = " + depId + " and arr.airportID = " + arrId + "\n" +
+                    "and departure_date >= '" + dateFrom + "' \n" +
+                    "and arrival_date <= '" + dateTo + "'");
+            model.addColumn("flightID");
+            model.addColumn("Departure Airport");
+            model.addColumn("Arrival Airport");
+            model.addColumn("Departure date");
+            model.addColumn("Arrival date");
+            TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
+            jTable.setRowSorter(sorter);
+            jTable.setModel(Requests.addRows(rs, model));
+            jTable.removeColumn(jTable.getColumnModel().getColumn(0));
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return jTable;
+    }
+
+    public static JTable readTableAfterSearchingWithOnePrice(boolean isFrom, String dateFrom, String dateTo, float price,int depId, int arrId) throws SQLException {
+        String sql;
+        if(isFrom) {
+            sql = "select flightID, dep.name as dname, arr.name as aname, departure_date, arrival_date from flight\n" +
+                    "inner join airport as dep on dep.airportID = flight.departureAirport_id\n" +
+                    "inner join airport as arr on arr.airportID = flight.arrivalAirport_id\n" +
+                    "where price >= " + price + "\n" +
+                    "and dep.airportID = " + depId + " and arr.airportID = " + arrId + "\n" +
+                    "and departure_date >= '" + dateFrom + "' \n" +
+                    "and arrival_date <= '" + dateTo + "'";
+        } else {
+            sql = "select flightID, dep.name as dname, arr.name as aname, departure_date, arrival_date from flight\n" +
+                    "inner join airport as dep on dep.airportID = flight.departureAirport_id\n" +
+                    "inner join airport as arr on arr.airportID = flight.arrivalAirport_id\n" +
+                    "where price <= " + price + "\n" +
+                    "and dep.airportID = " + depId + " and arr.airportID = " + arrId + "\n" +
+                    "and departure_date >= '" + dateFrom + "' \n" +
+                    "and arrival_date <= '" + dateTo + "'";
+        }
+        JTable jTable = new JTable();
+        DefaultTableModel model = new DefaultTableModel();
+        try {
+            ResultSet rs = readTableByRequest(sql);
+            model.addColumn("flightID");
+            model.addColumn("Departure Airport");
+            model.addColumn("Arrival Airport");
+            model.addColumn("Departure date");
+            model.addColumn("Arrival date");
+            TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
+            jTable.setRowSorter(sorter);
+            jTable.setModel(Requests.addRows(rs, model));
+            jTable.removeColumn(jTable.getColumnModel().getColumn(0));
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
         return jTable;
     }
 
@@ -761,7 +838,7 @@ public class Requests {
         statement.executeUpdate();
     }
 
-    public static void updateFlight(int id, int dAId, int aAId, int pilotId, int planeId, String dTime, String dDate, String aTime, String aDate, int price) throws SQLException {
+    public static void updateFlight(int id, int dAId, int aAId, int pilotId, int planeId, String dTime, String dDate, String aTime, String aDate, float price) throws SQLException {
         String sql = "update flight set departureAirport_id=?, arrivalAirport_id=?, pilot_id=?, plane_id=?, departure_time=?, departure_date=?, arrival_time=?, arrival_date=?, price=? WHERE flightID=?";
         PreparedStatement statement = DBConnection.getConnection().prepareStatement(sql);
         statement.setInt(1, dAId);
@@ -772,7 +849,7 @@ public class Requests {
         statement.setString(6, dDate);
         statement.setString(7, aTime);
         statement.setString(8, aDate);
-        statement.setInt(9, price);
+        statement.setFloat(9, price);
         statement.setInt(10, id);
         int rowsInserted = statement.executeUpdate();
         if (rowsInserted > 0) {

@@ -1,6 +1,7 @@
 package tableFrames;
 
 import allComands.Requests;
+import allComands.StringsFormatter;
 
 import java.awt.*;
 import java.sql.SQLException;
@@ -95,7 +96,7 @@ public class PlaneDetailsFrame extends JFrame {
                     contentPanel.setPreferredSize(preferredSize);
                 }
             }
-            dialogPane.add(contentPanel, BorderLayout.EAST);
+            dialogPane.add(contentPanel, BorderLayout. EAST);
 
             {
                 buttonBar.setBorder(new EmptyBorder(12, 0, 0, 0));
@@ -170,10 +171,12 @@ public class PlaneDetailsFrame extends JFrame {
                 modelL.setBounds(35, 160, 225, 40);
 
                 fillBrand.setBackground(Color.white);
+                StringsFormatter.setTextFieldLength(30, fillBrand);
                 contentPanel.add(fillBrand);
                 fillBrand.setBounds(35, 110, 195, 40);
 
                 fillModel.setBackground(Color.white);
+                StringsFormatter.setTextFieldLength(10, fillModel);
                 contentPanel.add(fillModel);
                 fillModel.setBounds(35, 210, 195, 40);
 
@@ -213,24 +216,36 @@ public class PlaneDetailsFrame extends JFrame {
             dialogPane.add(panel1, BorderLayout.WEST);
 
             okButton.addActionListener(e-> {
-                if (update) {
-                    try {
-                        Requests.updatePlane(id, fillBrand.getText(), fillModel.getText());
-                    } catch (SQLException throwables) {
-                        throwables.printStackTrace();
-                    }
-                } else {
-                    try {
-                        Requests.createPlane(fillBrand.getText(),fillModel.getText());
-                    } catch (SQLException throwables) {
-                        throwables.printStackTrace();
+                if (isValidate()) {
+                    if (update) {
+                        try {
+                            Requests.updatePlane(id, fillBrand.getText(), fillModel.getText());
+                            dispose();
+                        } catch (SQLException throwables) {
+                            throwables.printStackTrace();
+                        }
+                    } else {
+                        try {
+                            Requests.createPlane(fillBrand.getText(),fillModel.getText());
+                            dispose();
+                        } catch (SQLException throwables) {
+                            throwables.printStackTrace();
+                        }
                     }
                 }
-                dispose();
             });
         }
         contentPane.add(dialogPane, BorderLayout.CENTER);
         pack();
         setLocationRelativeTo(getOwner());
+    }
+
+    public boolean isValidate() {
+        if(fillBrand.getText().equals("") || fillModel.getText().equals("")) {
+            JOptionPane.showMessageDialog(new Frame(),"All fields must be filled!");
+            return false;
+        } else {
+            return true;
+        }
     }
 }

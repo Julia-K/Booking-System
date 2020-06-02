@@ -20,7 +20,6 @@ public class BookingDetailsFrame extends JFrame {
     private LinkedHashMap<Integer,Integer> classWithId;
     private JPanel dialogPane;
     private JPanel contentPanel;
-    private JLabel email;
     private JLabel classL;
     private JPanel panel3;
     private JLabel displayEmail;
@@ -32,18 +31,14 @@ public class BookingDetailsFrame extends JFrame {
     private JPanel panel1;
     private JPanel panel2;
     private JLabel seatL;
-    private JButton buttonFlight;
     private JLabel displaySeat;
-    private JLabel priceL;
     private JLabel displayPrice;
     private int flightId;
-    private JLabel nameL;
     private JComboBox<String> classCombo;
     private JComboBox<String> luggageCombo;
     private JComboBox<String> clientCombo;
     private JComboBox<Integer> seatCombo;
     private JButton selectFlightButton;
-    private JPanel panelForInformation;
     private JLabel totalPrice;
     private JTextPane informationPane;
     private JPanel panel4;
@@ -128,7 +123,7 @@ public class BookingDetailsFrame extends JFrame {
     private void initDetailsComponents() {
         dialogPane = new JPanel();
         contentPanel = new JPanel();
-        email = new JLabel();
+        JLabel email = new JLabel();
         classL = new JLabel();
         panel3 = new JPanel();
         displayEmail = new JLabel();
@@ -140,9 +135,9 @@ public class BookingDetailsFrame extends JFrame {
         panel1 = new JPanel();
         panel2 = new JPanel();
         seatL = new JLabel();
-        buttonFlight = new JButton();
+        JButton buttonFlight = new JButton();
         displaySeat = new JLabel();
-        priceL = new JLabel();
+        JLabel priceL = new JLabel();
         displayPrice = new JLabel();
 
         setResizable(false);
@@ -177,7 +172,6 @@ public class BookingDetailsFrame extends JFrame {
                 classL.setFont(classL.getFont().deriveFont(classL.getFont().getStyle() | Font.BOLD, classL.getFont().getSize() + 17f));
                 contentPanel.add(classL);
                 classL.setBounds(35, 280, 135, 40);
-
                 {
                     panel3.setBackground(new Color(5, 102, 141));
                     panel3.setLayout(null);
@@ -254,7 +248,6 @@ public class BookingDetailsFrame extends JFrame {
                 panel2.add(seatL);
                 seatL.setBounds(5, 40, 205, 40);
 
-
                 buttonFlight.setText("Display flight");
                 buttonFlight.setBackground(new Color(66, 122, 161));
                 buttonFlight.setForeground(Color.white);
@@ -313,7 +306,7 @@ public class BookingDetailsFrame extends JFrame {
         classWithId = Requests.getClassesWithId();
         dialogPane = new JPanel();
         contentPanel = new JPanel();
-        nameL = new JLabel();
+        JLabel nameL = new JLabel();
         luggageL = new JLabel();
         classL = new JLabel();
         classCombo = getClassComboBox();
@@ -327,7 +320,7 @@ public class BookingDetailsFrame extends JFrame {
         panel1 = new JPanel();
         panel2 = new JPanel();
         selectFlightButton = new JButton();
-        panelForInformation = new JPanel();
+        JPanel panelForInformation = new JPanel();
         totalPrice = new JLabel();
         informationPane = new JTextPane();
 
@@ -458,24 +451,28 @@ public class BookingDetailsFrame extends JFrame {
                     int clientId = clietsWithId.get(clientCombo.getSelectedIndex());
                     int luggId = luggageWithId.get(luggageCombo.getSelectedIndex());
                     int classId = classWithId.get(classCombo.getSelectedIndex());
-                    int seatNum = (int) seatCombo.getItemAt(seatCombo.getSelectedIndex());
-                    System.out.println("UPDATE: " + update);
-                    if(update) {
-                        try {
-                            System.out.println(id+ " " + flightId + " " + clientId + " " + luggId + " " + classId + " "+ seatNum);
-                            Requests.updateBooking(id,flightId,clientId,luggId,classId,seatNum);
-                            dispose();
-                        } catch (SQLException throwables) {
-                            throwables.printStackTrace();
+                    int seatNum;
+                    try {
+                        seatNum = (int) seatCombo.getItemAt(seatCombo.getSelectedIndex());
+                        if(update) {
+                            try {
+                                Requests.updateBooking(id,flightId,clientId,luggId,classId,seatNum);
+                                dispose();
+                            } catch (SQLException throwables) {
+                                throwables.printStackTrace();
+                            }
+                        } else {
+                            try {
+                                Requests.createBooking(flightId,clientId,luggId,classId,seatNum);
+                                dispose();
+                            } catch (SQLException throwables) {
+                                throwables.printStackTrace();
+                            }
                         }
-                    } else {
-                        try {
-                            Requests.createBooking(flightId,clientId,luggId,classId,seatNum);
-                            dispose();
-                        } catch (SQLException throwables) {
-                            throwables.printStackTrace();
-                        }
+                    } catch (NullPointerException x) {
+                        JOptionPane.showMessageDialog(new Frame(), "You must select flight.");
                     }
+
                 });
                 buttonBar.add(okButton, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0,
                         GridBagConstraints.CENTER, GridBagConstraints.BOTH,
@@ -632,6 +629,7 @@ public class BookingDetailsFrame extends JFrame {
         for (int i : linkedList) {
             seatCombo.addItem(i);
         }
+
         panel4.add(seatCombo);
         panel4.revalidate();
         panel4.repaint();

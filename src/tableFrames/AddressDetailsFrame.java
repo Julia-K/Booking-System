@@ -1,9 +1,11 @@
 package tableFrames;
 
 import allComands.Requests;
+import allComands.StringsFormatter;
 
 import java.awt.*;
 import java.sql.SQLException;
+import java.text.ParseException;
 import javax.swing.*;
 import javax.swing.border.*;
 
@@ -29,13 +31,13 @@ public class AddressDetailsFrame extends JFrame {
     private boolean update;
     private int id;
 
-    public AddressDetailsFrame() {
+    public AddressDetailsFrame() throws ParseException {
         update = false;
         initAddUpdateComponents();
         setVisible(true);
     }
 
-    public AddressDetailsFrame(Boolean update, int id,String country, String city, String postal, String street, String number) {
+    public AddressDetailsFrame(Boolean update, int id,String country, String city, String postal, String street, String number) throws ParseException {
         if(update) {
             initAddUpdateComponents();
             this.id = id;
@@ -156,7 +158,7 @@ public class AddressDetailsFrame extends JFrame {
         setLocationRelativeTo(getOwner());
     }
 
-    private void initAddUpdateComponents() {
+    private void initAddUpdateComponents() throws ParseException {
         dialogPane = new JPanel();
         contentPanel = new JPanel();
         countryL = new JLabel();
@@ -165,7 +167,7 @@ public class AddressDetailsFrame extends JFrame {
         postalL = new JLabel();
         fillCity = new JTextField();
         panel3 = new JPanel();
-        fillPostal = new JTextField();
+        fillPostal = StringsFormatter.getPostalCodeTextField();
         buttonBar = new JPanel();
         okButton = new JButton();
         panel1 = new JPanel();
@@ -210,6 +212,9 @@ public class AddressDetailsFrame extends JFrame {
                 cityL.setBounds(35, 140, 185, 40);
 
                 fillCountry.setBackground(Color.white);
+                StringsFormatter.setTextFieldLength(30, fillCountry);
+                StringsFormatter.setLettersWithSpaces(fillCountry);
+
                 contentPanel.add(fillCountry);
                 fillCountry.setBounds(35, 90, 195, 40);
 
@@ -220,6 +225,8 @@ public class AddressDetailsFrame extends JFrame {
                 postalL.setBounds(35, 240, 165, 40);
 
                 fillCity.setBackground(Color.white);
+                StringsFormatter.setTextFieldLength(30, fillCity);
+                StringsFormatter.setLettersWithSpaces(fillCity);
                 contentPanel.add(fillCity);
                 fillCity.setBounds(35, 190, 195, 40);
 
@@ -254,22 +261,24 @@ public class AddressDetailsFrame extends JFrame {
                         new Insets(0, 0, 0, 0), 0, 0));
 
                 okButton.addActionListener(e-> {
-                    if(update) {
-                        try {
-                            Requests.updateAddress(id,Integer.parseInt(fillNumber.getText()),fillCountry.getText(),fillCity.getText(),fillPostal.getText(),fillStreet.getText());
-                        } catch (SQLException ex) {
-                            ex.printStackTrace();
-                        }
-                    } else {
-                        try {
-                            Requests.createAddress(fillCountry.getText(),fillCity.getText(),fillPostal.getText(),fillStreet.getText(),Integer.parseInt(fillNumber.getText()));
-                        } catch (SQLException ex) {
-                            ex.printStackTrace();
+                    if(isValidate()) {
+                        if(update) {
+                            try {
+                                Requests.updateAddress(id,Integer.parseInt(fillNumber.getText()),fillCountry.getText(),fillCity.getText(),fillPostal.getText(),fillStreet.getText());
+                                dispose();
+                            } catch (SQLException ex) {
+                                ex.printStackTrace();
+                            }
+                        } else {
+                            try {
+                                Requests.createAddress(fillCountry.getText(),fillCity.getText(),fillPostal.getText(),fillStreet.getText(),Integer.parseInt(fillNumber.getText()));
+                                dispose();
+                            } catch (SQLException ex) {
+                                ex.printStackTrace();
+                            }
                         }
                     }
-                    dispose();
                 });
-
             }
             dialogPane.add(buttonBar, BorderLayout.SOUTH);
 
@@ -297,6 +306,8 @@ public class AddressDetailsFrame extends JFrame {
                 streetL.setBounds(5, 40, 205, 40);
 
                 fillStreet.setBackground(Color.white);
+                StringsFormatter.setTextFieldLength(30,fillStreet);
+                StringsFormatter.setLettersWithSpaces(fillStreet);
                 panel2.add(fillStreet);
                 fillStreet.setBounds(5, 90, 195, 40);
 
@@ -307,6 +318,8 @@ public class AddressDetailsFrame extends JFrame {
                 numberL.setBounds(5, 140, 185, 40);
 
                 fillNumber.setBackground(Color.white);
+                StringsFormatter.setOnlyDigits(fillNumber);
+                StringsFormatter.setTextFieldLength(7,fillNumber);
                 panel2.add(fillNumber);
                 fillNumber.setBounds(5, 190, 195, 40);
             }
@@ -315,5 +328,18 @@ public class AddressDetailsFrame extends JFrame {
         contentPane.add(dialogPane, BorderLayout.CENTER);
         pack();
         setLocationRelativeTo(getOwner());
+    }
+
+    public boolean isValidate() {
+        if(fillCountry.getText().equals("") || fillCity.getText().equals("")
+                || fillNumber.getText().equals("") || !StringsFormatter.checkPostalCode(fillPostal.getText()) || fillStreet.getText().equals("")) {
+            JOptionPane.showMessageDialog(new Frame(), "All fields must be filled!");
+            return false;
+        } else if (fillPostal.getText().length() != 6) {
+            JOptionPane.showMessageDialog(new Frame(), "Postal code must have 5 digits. (__-___)");
+            return false;
+        } else {
+            return true;
+        }
     }
 }

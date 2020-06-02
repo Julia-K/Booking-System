@@ -1,12 +1,18 @@
 package tableFrames;
 
 import allComands.Requests;
+import allComands.StringsFormatter;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -31,27 +37,25 @@ public class PilotDetailsFrame extends JFrame {
     private JTextField fillLast;
     private JComboBox comboBox;
     private JPanel panel5;
-    private JComboBox dayBox;
-    private JComboBox monthBox;
-    private JComboBox yearBox;
     private JPanel panel;
+    private MyOwnDatePicker datePicker;
 
     public PilotDetailsFrame() throws SQLException {
         update = false;
+        Date data = java.util.Calendar.getInstance().getTime();
+        String s = new SimpleDateFormat("yyyy-MM-dd").format(data);
+        datePicker = new MyOwnDatePicker(s);
         initAddUpdateComponents();
         setVisible(true);
     }
 
-    public PilotDetailsFrame(Boolean update, int id, String first, String last, String date, String airline, int airlineid) throws SQLException {
+    public PilotDetailsFrame(Boolean update, int id, String first, String last, String date, int airlineid) throws SQLException {
         if (update) {
-            String[] dateArray = date.split("-");
+            datePicker = new MyOwnDatePicker(date);
             this.id = id;
             initAddUpdateComponents();
             fillFirst.setText(first);
             fillLast.setText(last);
-            yearBox.setSelectedItem(dateArray[0]);
-            monthBox.setSelectedItem(dateArray[1]);
-            dayBox.setSelectedItem(dateArray[2]);
             for (Map.Entry<Integer, Integer> entry : airlinesWithId.entrySet()) { //set comboBox
                 Integer key = entry.getKey();
                 Integer value = entry.getValue();
@@ -63,7 +67,12 @@ public class PilotDetailsFrame extends JFrame {
         } else {
             initDetailComponents();
             nameL.setText(nameL.getText() + " "+first+ " "+last);
-            fillDate.setText(date);
+            LocalDate birth = LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            int years = Period.between(birth,LocalDate.now()).getYears();
+            fillDate.setText(date + " (Years of work: " + years +")");
+            ResultSet rs = Requests.readTableByRequest("select name, code from airline where airlineID=" + airlineid);
+            rs.next();
+            String airline = rs.getString(1) + " (" + rs.getString(2) + ")";
             fillAirline.setText(airline);
         }
         this.update = update;
@@ -170,9 +179,6 @@ public class PilotDetailsFrame extends JFrame {
     }
 
     private void initAddUpdateComponents() throws SQLException {
-        String[] years = {"2020", "2019", "2018", "2000"};
-        String[] months = {"01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"};
-        String[] days = {"01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17"};
         dialogPane = new JPanel();
         contentPane = new JPanel();
         firstL = new JLabel();
@@ -183,9 +189,6 @@ public class PilotDetailsFrame extends JFrame {
         panel5 = new JPanel();
         airlineL = new JLabel();
         dateL = new JLabel();
-        dayBox = new JComboBox();
-        monthBox = new JComboBox();
-        yearBox = new JComboBox();
         buttonBar = new JPanel();
         okButton = new JButton();
         panel = new JPanel();
@@ -220,10 +223,14 @@ public class PilotDetailsFrame extends JFrame {
                 lastL.setBounds(35, 125, 190, 40);
 
                 fillFirst.setBackground(Color.white);
+                StringsFormatter.setTextFieldLength(30,fillFirst);
+                StringsFormatter.setOnlyLetters(fillFirst);
                 contentPane.add(fillFirst);
                 fillFirst.setBounds(35, 75, 195, 40);
 
                 fillLast.setBackground(Color.white);
+                StringsFormatter.setTextFieldLength(30,fillLast);
+                StringsFormatter.setOnlyLetters(fillLast);
                 contentPane.add(fillLast);
                 fillLast.setBounds(35, 175, 195, 40);
 
@@ -254,25 +261,8 @@ public class PilotDetailsFrame extends JFrame {
                 contentPane.add(dateL);
                 dateL.setBounds(35, 225, 190, 40);
 
-                dayBox.setBackground(Color.white);
-                dayBox.setForeground(Color.black);
-                contentPane.add(dayBox);
-                dayBox.setBounds(new Rectangle(new Point(35, 275), dayBox.getPreferredSize()));
-
-                monthBox.setBackground(Color.white);
-                monthBox.setForeground(Color.black);
-                contentPane.add(monthBox);
-                monthBox.setBounds(115, 275, 80, 30);
-
-                yearBox.setBackground(Color.white);
-                yearBox.setForeground(Color.black);
-                contentPane.add(yearBox);
-                yearBox.setBounds(195, 275, 80, 30);
-
-                yearBox.setModel(new DefaultComboBoxModel<>(years));
-                monthBox.setModel(new DefaultComboBoxModel<>(months));
-                dayBox.setModel(new DefaultComboBoxModel<>(days));
-
+                datePicker.addTo(contentPane);
+                datePicker.setBounds(35, 275, 190, 26);
                 {
                     Dimension preferredSize = new Dimension();
                     preferredSize.width =510;
@@ -308,24 +298,26 @@ public class PilotDetailsFrame extends JFrame {
             }
 
             okButton.addActionListener(e -> {
-                String date =yearBox.getSelectedItem() + "-" + monthBox.getSelectedItem()+ "-" + dayBox.getSelectedItem();
-                if (update) {
-                    try {
-                        System.out.println("ID PILOTAL " + id);
-                        Requests.updatePilot(id,fillFirst.getText(),fillLast.getText(),date,(Integer)airlinesWithId.get(comboBox.getSelectedIndex()));
-                        updateContent();
-                    } catch (SQLException throwables) {
-                        throwables.printStackTrace();
-                    }
-                } else {
-                    try {
-                        Requests.createPilot(fillFirst.getText(),fillLast.getText(),date,(Integer)airlinesWithId.get(comboBox.getSelectedIndex()));
-                        updateContent();
-                    } catch (SQLException throwables) {
-                        throwables.printStackTrace();
+                String date = datePicker.getDate();
+                if (isValidate()) {
+                    if (update) {
+                        try {
+                            Requests.updatePilot(id,fillFirst.getText(),fillLast.getText(),date,(Integer)airlinesWithId.get(comboBox.getSelectedIndex()));
+                            updateContent();
+                            dispose();
+                        } catch (SQLException throwables) {
+                            throwables.printStackTrace();
+                        }
+                    } else {
+                        try {
+                            Requests.createPilot(fillFirst.getText(),fillLast.getText(),date,(Integer)airlinesWithId.get(comboBox.getSelectedIndex()));
+                            updateContent();
+                            dispose();
+                        } catch (SQLException throwables) {
+                            throwables.printStackTrace();
+                        }
                     }
                 }
-                dispose();
             });
 
             dialogPane.add(panel, BorderLayout.WEST);
@@ -348,5 +340,17 @@ public class PilotDetailsFrame extends JFrame {
             x.addItem(Requests.getStringAirline(id));
         }
         return x;
+    }
+
+    public boolean isValidate() {
+        if(!StringsFormatter.isDateValid(datePicker.getDate())) {
+            JOptionPane.showMessageDialog(new Frame(), "Date cannot be in the future");
+            return false;
+        } else if (fillFirst.getText().equals("") || fillLast.getText().equals("")) {
+            JOptionPane.showMessageDialog(new Frame(), "All fields must be filled!");
+            return false;
+        } else {
+            return true;
+        }
     }
 }

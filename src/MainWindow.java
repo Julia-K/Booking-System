@@ -56,7 +56,7 @@ public class MainWindow extends JFrame {
         contentPane.add(logInButton);
         logInButton.addActionListener(e -> {
             try {
-                if (Requests.isAdmin(DBConnection.getConnection(), email.getText(), new String(passwordField.getPassword()))) {
+                if (Requests.isAdmin(DBConnection.getConnection(), email.getText(), passwordField.getPassword())) {
                     System.out.println("LogIn");
                     this.dispose();
                     ManageWindow.main(new String[]{});

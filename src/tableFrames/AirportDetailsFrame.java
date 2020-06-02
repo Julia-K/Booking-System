@@ -1,11 +1,14 @@
 package tableFrames;
 
 import allComands.Requests;
+import allComands.StringsFormatter;
+import com.microsoft.sqlserver.jdbc.SQLServerException;
 
 import java.awt.*;
 import java.awt.event.ItemEvent;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.ParseException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import javax.swing.*;
@@ -42,13 +45,13 @@ public class AirportDetailsFrame extends JFrame {
     private int id;
     private boolean update;
 
-    public AirportDetailsFrame() throws SQLException {
+    public AirportDetailsFrame() throws SQLException, ParseException {
         this.update = false;
         initAddUpdateComponents();
         setVisible(true);
     }
 
-    public AirportDetailsFrame(Boolean update, int id, String name, String code, String address) throws SQLException {
+    public AirportDetailsFrame(Boolean update, int id, String name, String code, String address) throws SQLException, ParseException {
         if(update) {
             this.id = id;
             initAddUpdateComponents();
@@ -166,7 +169,7 @@ public class AirportDetailsFrame extends JFrame {
         setLocationRelativeTo(getOwner());
     }
 
-    private void initAddUpdateComponents() throws SQLException {
+    private void initAddUpdateComponents() throws SQLException, ParseException {
         addressesWithId = Requests.getAddressesWihtId();
         dialogPane = new JPanel();
         contentPanel = new JPanel();
@@ -187,7 +190,7 @@ public class AirportDetailsFrame extends JFrame {
         cityL = new JLabel();
         fillCity = new JTextField();
         postalL = new JLabel();
-        fillPostal = new JTextField();
+        fillPostal = StringsFormatter.getPostalCodeTextField();
         streetL = new JLabel();
         fillStreet = new JTextField();
         numberL = new JLabel();
@@ -228,6 +231,8 @@ public class AirportDetailsFrame extends JFrame {
                 addressL.setBounds(35, 140, 90, 40);
 
                 fillnameL.setBackground(Color.white);
+                StringsFormatter.setLettersWithSpaces(fillnameL);
+                StringsFormatter.setTextFieldLength(60, fillnameL);
                 contentPanel.add(fillnameL);
                 fillnameL.setBounds(35, 90, 250, 40);
 
@@ -238,6 +243,8 @@ public class AirportDetailsFrame extends JFrame {
                 addressL3.setBounds(35, 240, 130, 40);
 
                 fillCodeL.setBackground(Color.white);
+                StringsFormatter.setOnlyLetters(fillCodeL);
+                StringsFormatter.setTextFieldLength(4, fillCodeL);
                 contentPanel.add(fillCodeL);
                 fillCodeL.setBounds(35, 190, 250, 40);
 
@@ -314,6 +321,8 @@ public class AirportDetailsFrame extends JFrame {
                 countryL.setBounds(20, 0, 190, 40);
 
                 fillCountry.setBackground(Color.white);
+                StringsFormatter.setLettersWithSpaces(fillCountry);
+                StringsFormatter.setTextFieldLength(30, fillCountry);
                 panel2.add(fillCountry);
                 fillCountry.setBounds(20, 40, 195, 40);
 
@@ -325,6 +334,8 @@ public class AirportDetailsFrame extends JFrame {
                 cityL.setBounds(20, 80, 190, 40);
 
                 fillCity.setBackground(Color.white);
+                StringsFormatter.setLettersWithSpaces(fillCity);
+                StringsFormatter.setTextFieldLength(30, fillCity);
                 panel2.add(fillCity);
                 fillCity.setBounds(20, 120, 195, 40);
 
@@ -347,6 +358,8 @@ public class AirportDetailsFrame extends JFrame {
                 streetL.setBounds(20, 245, 190, 40);
 
                 fillStreet.setBackground(Color.white);
+                StringsFormatter.setLettersWithSpaces(fillStreet);
+                StringsFormatter.setTextFieldLength(30, fillStreet);
                 panel2.add(fillStreet);
                 fillStreet.setBounds(20, 285, 195, 40);
 
@@ -358,42 +371,38 @@ public class AirportDetailsFrame extends JFrame {
                 numberL.setBounds(20, 330, 190, 40);
 
                 fillNumber.setBackground(Color.white);
+                StringsFormatter.setOnlyDigits(fillNumber);
                 panel2.add(fillNumber);
                 fillNumber.setBounds(20, 370, 195, 40);
             }
             dialogPane.add(panel2, BorderLayout.EAST);
             okButton.addActionListener(e -> {
-                if(update) {
+                if(isValidate()) {
                     try {
-                        System.out.println("INDEKS ADRESU (COMBOBOX): "+ (Integer) addressesWithId.get(comboBox.getSelectedIndex()));
-                        Requests.updateAirport(id,fillnameL.getText(),fillCodeL.getText(),(Integer) addressesWithId.get(comboBox.getSelectedIndex()));
-                    } catch (SQLException ex) {
-                        ex.printStackTrace();
-                    }
-                } else {
-                    if(!checkBox.isSelected()) {
-                        try {
-                            Requests.createAirport(fillnameL.getText(),fillCodeL.getText(), (Integer) addressesWithId.get(comboBox.getSelectedIndex()));
-                            updateContent();
-                        } catch (SQLException ex) {
-                            ex.printStackTrace();
-                        }
-                    } else {
-                        try {
-                            Requests.createAddress(fillCountry.getText(), fillCity.getText(),fillPostal.getText(),fillStreet.getText(), Integer.parseInt(fillNumber.getText()));
-                            ResultSet rs = Requests.readTableByRequest("SELECT TOP 1 addressID FROM address ORDER BY addressID DESC");
-                            while (rs.next()) {
+                        if(update) {
+                            Requests.updateAirport(id,fillnameL.getText(),fillCodeL.getText(),(Integer) addressesWithId.get(comboBox.getSelectedIndex()));
+                            dispose();
+                        } else {
+                            if(!checkBox.isSelected()) {
+                                Requests.createAirport(fillnameL.getText(),fillCodeL.getText(), (Integer) addressesWithId.get(comboBox.getSelectedIndex()));
+                                dispose();
+                                updateContent();
+                            } else {
+                                Requests.createAddress(fillCountry.getText(), fillCity.getText(),fillPostal.getText(),fillStreet.getText(), Integer.parseInt(fillNumber.getText()));
+                                ResultSet rs = Requests.readTableByRequest("SELECT TOP 1 addressID FROM address ORDER BY addressID DESC");
+                                rs.next();
                                 int id = rs.getInt(1);
                                 Requests.createAirport(fillnameL.getText(),fillCodeL.getText(),id);
                                 updateContent();
+                                dispose();
                             }
-
-                        } catch (SQLException ex) {
-                            ex.printStackTrace();
                         }
+                    } catch (SQLServerException sqlServerException) {
+                        JOptionPane.showMessageDialog(new Frame(), "Airport name and code must be unique!");
+                    } catch (SQLException throwables) {
+                        throwables.printStackTrace();
                     }
                 }
-                dispose();
             });
         }
         contentPane.add(dialogPane, BorderLayout.CENTER);
@@ -430,5 +439,30 @@ public class AirportDetailsFrame extends JFrame {
         }
 
         return comboBox;
+    }
+
+    public boolean isValidate() {
+        if(!fillNumber.isVisible()) {
+            if(fillnameL.getText().equals("") || fillCodeL.getText().equals("")) {
+                JOptionPane.showMessageDialog(new Frame(), "All fields must be filled!");
+                return false;
+            } else if (fillCodeL.getText().length() != 4) {
+                JOptionPane.showMessageDialog(new Frame(), "Code must have 4 characters");
+                return false;
+            } else {
+                return true;
+            }
+        } else {
+            if(fillnameL.getText().equals("") || fillCodeL.getText().equals("") || fillCountry.getText().equals("") || fillCity.getText().equals("")
+                    || fillNumber.getText().equals("") || fillPostal.getText().equals("") || fillStreet.getText().equals("")) {
+                JOptionPane.showMessageDialog(new Frame(), "All fields must be filled!");
+                return false;
+            } else if (fillCodeL.getText().length() != 4) {
+                JOptionPane.showMessageDialog(new Frame(), "Code must have 4 characters");
+                return false;
+            } else {
+                return true;
+            }
+        }
     }
 }

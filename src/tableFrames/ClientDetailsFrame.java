@@ -1,9 +1,17 @@
 package tableFrames;
 
+import allComands.PasswordUtils;
 import allComands.Requests;
+import allComands.StringsFormatter;
+import com.microsoft.sqlserver.jdbc.SQLServerException;
 
 import java.awt.*;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import javax.swing.*;
 import javax.swing.border.*;
 
@@ -13,6 +21,7 @@ public class ClientDetailsFrame extends JFrame {
     private JPanel dialogPane;
     private JPanel contentPanel;
     private JLabel nameL;
+    private MyOwnDatePicker birthDate;
     private JLabel emailL;
     private JLabel passL;
     private JLabel birthL;
@@ -29,32 +38,33 @@ public class ClientDetailsFrame extends JFrame {
     private JPanel panel3;
     private JPanel panel2;
     private JTextField fillEmail;
-    private JTextField fillPassword;
+    private JPasswordField fillPassword;
 
     public ClientDetailsFrame(Boolean update, int id, String name, String last, String email, String pass, String date) {
         if(update) {
-            String[] dateArray = date.split("-");
             this.id = id;
+            birthDate = new MyOwnDatePicker(date);
             initAddUpdateComponents();
             fillFirst.setText(name);
             fillLast.setText(last);
             fillEmail.setText(email);
             fillPassword.setText(pass);
-            yearBox.setSelectedItem(dateArray[0]);
-            monthBox.setSelectedItem(dateArray[1]);
-            dayBox.setSelectedItem(dateArray[2]);
         } else {
             initDetailComponents();
             nameL.setText(nameL.getText() + " " + name + " " + last);
             emailL.setText(emailL.getText() + " " + email);
-            passL.setText(passL.getText() + " " + pass);
-            birthL.setText(birthL.getText() + " " + date);
+            LocalDate birth = LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            int age = Period.between(birth,LocalDate.now()).getYears();
+            birthL.setText(birthL.getText() + " " + date + " (Age: " + age +")");
         }
         this.update = update;
         setVisible(true);
     }
 
     public ClientDetailsFrame() {
+        Date data = java.util.Calendar.getInstance().getTime();
+        String s = new SimpleDateFormat("yyyy-MM-dd").format(data);
+        birthDate = new MyOwnDatePicker(s);
         update = false;
         initAddUpdateComponents();
         setVisible(true);
@@ -79,7 +89,7 @@ public class ClientDetailsFrame extends JFrame {
         emailL = new JLabel();
         fillEmail = new JTextField();
         passL = new JLabel();
-        fillPassword = new JTextField();
+        fillPassword = new JPasswordField();
 
         setResizable(false);
         setMinimumSize(new Dimension(670, 430));
@@ -116,6 +126,8 @@ public class ClientDetailsFrame extends JFrame {
                 lastL.setBounds(35, 140, 185, 40);
 
                 fillFirst.setBackground(Color.white);
+                StringsFormatter.setTextFieldLength(30,fillFirst);
+                StringsFormatter.setOnlyLetters(fillFirst);
                 contentPanel.add(fillFirst);
                 fillFirst.setBounds(35, 90, 195, 40);
 
@@ -126,20 +138,13 @@ public class ClientDetailsFrame extends JFrame {
                 birthL.setBounds(35, 240, 165, 40);
 
                 fillLast.setBackground(Color.white);
+                StringsFormatter.setTextFieldLength(30,fillLast);
+                StringsFormatter.setOnlyLetters(fillLast);
+
                 contentPanel.add(fillLast);
                 fillLast.setBounds(35, 190, 195, 40);
-                contentPanel.add(dayBox);
-                dayBox.setBounds(35, 290, 90, 40);
-                contentPanel.add(monthBox);
-                monthBox.setBounds(135, 290, 90, 40);
-                contentPanel.add(yearBox);
-                yearBox.setBounds(235, 290, 90, 40);
-                String[] years = {"2020", "2019", "2018", "2000"};
-                String[] months = {"01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"};
-                String[] days = {"01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17"};
-                yearBox.setModel(new DefaultComboBoxModel<>(years));
-                monthBox.setModel(new DefaultComboBoxModel<>(months));
-                dayBox.setModel(new DefaultComboBoxModel<>(days));
+                birthDate.addTo(contentPanel);
+                birthDate.setBounds(35, 290, 195, 26);
 
                 {
                     panel3.setBackground(new Color(5, 102, 141));
@@ -208,6 +213,8 @@ public class ClientDetailsFrame extends JFrame {
                 emailL.setBounds(5, 40, 205, 40);
 
                 fillEmail.setBackground(Color.white);
+                StringsFormatter.setTextFieldLength(45,fillEmail);
+
                 panel2.add(fillEmail);
                 fillEmail.setBounds(5, 90, 195, 40);
 
@@ -218,28 +225,35 @@ public class ClientDetailsFrame extends JFrame {
                 passL.setBounds(5, 140, 185, 40);
 
                 fillPassword.setBackground(Color.white);
+                StringsFormatter.setTextFieldLength(100,fillPassword);
                 panel2.add(fillPassword);
                 fillPassword.setBounds(5, 190, 195, 40);
             }
 
             okButton.addActionListener(e -> {
-                String date = yearBox.getSelectedItem() + "-" + monthBox.getSelectedItem()+ "-" + dayBox.getSelectedItem();
-                if(update) {
-                    try {
-                        Requests.updateClient(id,fillFirst.getText(),fillLast.getText(),fillEmail.getText(),fillPassword.getText(),date);
-                    } catch (SQLException ex) {
-                        ex.printStackTrace();
-                    }
-                } else {
-                    try {
-                        Requests.createClient(fillFirst.getText(),fillLast.getText(),fillEmail.getText(),fillPassword.getText(),date);
-                    } catch (SQLException ex) {
-                        ex.printStackTrace();
+                String date = birthDate.getDate();
+                String codedPassword = PasswordUtils.hash256(fillPassword.getPassword());
+                if(isValidate()) {
+                    if(update) {
+                        try {
+                            Requests.updateClient(id,fillFirst.getText(),fillLast.getText(),fillEmail.getText(), codedPassword,date);
+                            dispose();
+                        } catch (SQLServerException exception) {
+                            JOptionPane.showMessageDialog(new Frame(), "E-mail must be unique!");
+                        } catch (SQLException ex) {
+                            ex.printStackTrace();
+                        }
+
+                    } else {
+                        try {
+                            Requests.createClient(fillFirst.getText(),fillLast.getText(),fillEmail.getText(),codedPassword,date);
+                            dispose();
+                        } catch (SQLException ex) {
+                            ex.printStackTrace();
+                        }
                     }
                 }
-                dispose();
             });
-
             dialogPane.add(panel2, BorderLayout.EAST);
         }
         contentPane.add(dialogPane, BorderLayout.CENTER);
@@ -252,7 +266,6 @@ public class ClientDetailsFrame extends JFrame {
         contentPanel = new JPanel();
         nameL = new JLabel();
         emailL = new JLabel();
-        passL = new JLabel();
         birthL = new JLabel();
         buttonBar = new JPanel();
         okButton = new JButton();
@@ -277,25 +290,19 @@ public class ClientDetailsFrame extends JFrame {
                 nameL.setFont(nameL.getFont().deriveFont(nameL.getFont().getStyle() | Font.BOLD, nameL.getFont().getSize() + 17f));
                 nameL.setBorder(null);
                 contentPanel.add(nameL);
-                nameL.setBounds(35, 40, 455, 40);
+                nameL.setBounds(35, 70, 455, 40);
 
                 emailL.setText("Email:");
                 emailL.setForeground(Color.black);
                 emailL.setFont(emailL.getFont().deriveFont(emailL.getFont().getStyle() | Font.BOLD, emailL.getFont().getSize() + 17f));
                 contentPanel.add(emailL);
-                emailL.setBounds(35, 90, 455, 40);
-
-                passL.setText("Password:");
-                passL.setForeground(Color.black);
-                passL.setFont(passL.getFont().deriveFont(passL.getFont().getStyle() | Font.BOLD, passL.getFont().getSize() + 17f));
-                contentPanel.add(passL);
-                passL.setBounds(35, 140, 455, 40);
+                emailL.setBounds(35, 120, 455, 40);
 
                 birthL.setText("Birth date: ");
                 birthL.setForeground(Color.black);
                 birthL.setFont(birthL.getFont().deriveFont(birthL.getFont().getStyle() | Font.BOLD, birthL.getFont().getSize() + 17f));
                 contentPanel.add(birthL);
-                birthL.setBounds(35, 190, 455, 40);
+                birthL.setBounds(35, 170, 455, 40);
 
                 {
                     Dimension preferredSize = new Dimension();
@@ -335,5 +342,21 @@ public class ClientDetailsFrame extends JFrame {
         contentPane.add(dialogPane, BorderLayout.CENTER);
         pack();
         setLocationRelativeTo(getOwner());
+    }
+
+    public boolean isValidate() {
+        if(!StringsFormatter.checkEmail(fillEmail.getText())) {
+            JOptionPane.showMessageDialog(new Frame(), "Wrong e-mail format.");
+            return false;
+        } else if(!StringsFormatter.checkBirthDate( birthDate.getDate())) {
+            JOptionPane.showMessageDialog(new Frame(), "Client must be at least 18 years old");
+            return false;
+        } else if (fillEmail.getText().equals("") || fillFirst.getText().equals("")
+                || fillLast.getText().equals("") || birthDate.getDate().equals("") || fillPassword.getPassword().length == 0) {
+            JOptionPane.showMessageDialog(new Frame(), "All fields must be filled!");
+            return false;
+        } else {
+            return true;
+        }
     }
 }

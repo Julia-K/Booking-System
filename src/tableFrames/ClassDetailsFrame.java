@@ -1,6 +1,8 @@
 package tableFrames;
 
 import allComands.Requests;
+import allComands.StringsFormatter;
+import com.microsoft.sqlserver.jdbc.SQLServerException;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -169,10 +171,13 @@ public class ClassDetailsFrame extends JFrame {
                 priceL.setBounds(50, 190, 80, 45);
 
                 fillName.setBackground(Color.white);
+                StringsFormatter.setTextFieldLength(30, fillName);
+                StringsFormatter.setLettersWithSpaces(fillName);
                 contentPanel.add(fillName);
                 fillName.setBounds(160, 130, 170, 45);
 
                 fillPrice.setBackground(Color.white);
+                StringsFormatter.setFloatPattern(3, fillPrice);
                 contentPanel.add(fillPrice);
                 fillPrice.setBounds(160, 190, 170, 45);
 
@@ -197,20 +202,21 @@ public class ClassDetailsFrame extends JFrame {
                 okButton.setBackground(new Color(66, 122, 161));
 
                 okButton.addActionListener(e-> {
-                    if(update) {
+                    if(isValidate()) {
                         try {
-                            Requests.updateClass(id,fillName.getText(), Float.parseFloat(fillPrice.getText()));
-                        } catch (SQLException throwables) {
-                            throwables.printStackTrace();
-                        }
-                    } else {
-                        try {
-                            Requests.createClass(fillName.getText(), Float.parseFloat(fillPrice.getText()));
+                            if(update) {
+                                Requests.updateClass(id,fillName.getText(), Float.parseFloat(fillPrice.getText()));
+                                dispose();
+                            } else {
+                                Requests.createClass(fillName.getText(), Float.parseFloat(fillPrice.getText()));
+                                dispose();
+                            }
+                        } catch(SQLServerException exception) {
+                            JOptionPane.showMessageDialog(new Frame(),"Class name must be unique!");
                         } catch (SQLException throwables) {
                             throwables.printStackTrace();
                         }
                     }
-                    dispose();
                 });
 
                 buttonBar.add(okButton, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0,
@@ -232,5 +238,13 @@ public class ClassDetailsFrame extends JFrame {
         contentPane.add(dialogPane, BorderLayout.CENTER);
         pack();
         setLocationRelativeTo(getOwner());
+    }
+
+    private boolean isValidate() {
+        if(fillPrice.getText().equals("") || fillName.getText().equals("")) {
+            JOptionPane.showMessageDialog(new Frame(), "All fields must be filled");
+            return false;
+        }
+        return true;
     }
 }

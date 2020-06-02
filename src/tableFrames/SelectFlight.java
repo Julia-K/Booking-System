@@ -1,45 +1,34 @@
 package tableFrames;
 
 import allComands.Requests;
+import allComands.StringsFormatter;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedHashMap;
 
 public class SelectFlight extends JFrame {
     private LinkedHashMap airportsWithId;
-    private JPanel dialogPane;
-    private JPanel contentPanel;
     private JComboBox fromCombo;
     private JComboBox toCombo;
-    private JLabel searchL;
-    private JLabel fromL;
     private MyOwnDatePicker dateFrom;
     private MyOwnDatePicker dateTo;
     private JTextField fillPriceFrom;
     private JTextField fillPriceTo;
-    private JLabel toL;
-    private JLabel dateFromL;
-    private JLabel dateToL;
-    private JLabel priceFromL;
-    private JLabel priceToL;
-    private JButton searchButton;
-    private JButton searchAllButton;
-    private JLabel infoLabel;
     private JPanel panelForTable;
     private JScrollPane scrollPane;
     private JTable table;
-    private JPanel buttonBar;
-    private JButton okButton;
-    private JPanel panel1;
-    BookingDetailsFrame bdf;
+    private BookingDetailsFrame bdf;
     private int flight;
     private boolean update;
 
@@ -55,29 +44,29 @@ public class SelectFlight extends JFrame {
     }
 
     private void initComponents() throws SQLException {
-        dialogPane = new JPanel();
-        contentPanel = new JPanel();
+        JPanel dialogPane = new JPanel();
+        JPanel contentPanel = new JPanel();
         airportsWithId = Requests.getAirportsWithId();
         fromCombo = getFilledComboBox();
         toCombo = getFilledComboBox();
-        searchL = new JLabel();
-        fromL = new JLabel();
+        JLabel searchL = new JLabel();
+        JLabel fromL = new JLabel();
         fillPriceFrom = new JTextField();
         fillPriceTo = new JTextField();
-        toL = new JLabel();
-        dateFromL = new JLabel();
-        dateToL = new JLabel();
-        priceFromL = new JLabel();
-        priceToL = new JLabel();
-        searchButton = new JButton();
-        searchAllButton = new JButton();
-        infoLabel = new JLabel();
+        JLabel toL = new JLabel();
+        JLabel dateFromL = new JLabel();
+        JLabel dateToL = new JLabel();
+        JLabel priceFromL = new JLabel();
+        JLabel priceToL = new JLabel();
+        JButton searchButton = new JButton();
+        JButton searchAllButton = new JButton();
+        JLabel infoLabel = new JLabel();
         panelForTable = new JPanel();
         scrollPane = new JScrollPane();
         table = new JTable();
-        buttonBar = new JPanel();
-        okButton = new JButton();
-        panel1 = new JPanel();
+        JPanel buttonBar = new JPanel();
+        JButton okButton = new JButton();
+        JPanel panel1 = new JPanel();
 
         setResizable(false);
         setMinimumSize(new Dimension(1100, 700));
@@ -133,11 +122,13 @@ public class SelectFlight extends JFrame {
 
                 fillPriceFrom.setForeground(Color.black);
                 fillPriceFrom.setBackground(new Color(235, 242, 250));
+                StringsFormatter.setFloatPattern(5,fillPriceFrom);
                 contentPanel.add(fillPriceFrom);
                 fillPriceFrom.setBounds(885, 95, 70, 26);
 
                 fillPriceTo.setForeground(Color.black);
                 fillPriceTo.setBackground(new Color(235, 242, 250));
+                StringsFormatter.setFloatPattern(5,fillPriceTo);
                 contentPanel.add(fillPriceTo);
                 fillPriceTo.setBounds(960, 95, 70, 26);
 
@@ -183,7 +174,34 @@ public class SelectFlight extends JFrame {
                 searchButton.setBounds(895, 165, 130, 40);
 
                 searchButton.addActionListener(e -> {
-                    table = getTableAfterSearching();
+                    String dateFromString = dateFrom.getDate();
+                    String dateToString = dateTo.getDate();
+                    float pricefrom;
+                    float priceTo;
+                    int depId = (Integer) airportsWithId.get(fromCombo.getSelectedIndex());
+                    int arrId = (Integer) airportsWithId.get(toCombo.getSelectedIndex());
+                    try {
+                        if (fillPriceFrom.getText().equals("")) {
+                            if (fillPriceTo.getText().equals("")) {
+                                table = Requests.readTableAfterSearchingWithoutPrice(dateFromString, dateToString, depId, arrId);
+                            } else {
+                                priceTo = Float.parseFloat(fillPriceTo.getText());
+                                table = Requests.readTableAfterSearchingWithOnePrice(false, dateFromString, dateToString, priceTo, depId, arrId);
+                            }
+                        } else {
+                            if (fillPriceTo.getText().equals("")) {
+                                pricefrom = Float.parseFloat(fillPriceFrom.getText());
+                                table = Requests.readTableAfterSearchingWithOnePrice(true, dateFromString, dateToString, pricefrom, depId, arrId);
+                            } else {
+                                pricefrom = Float.parseFloat(fillPriceFrom.getText());
+                                priceTo = Float.parseFloat(fillPriceTo.getText());
+                                table = Requests.readTableAfterFullSearching(dateFromString, dateToString, pricefrom, priceTo, depId, arrId);
+                            }
+                        }
+                        setDoubleClick();
+                    } catch (SQLException throwables) {
+                        throwables.printStackTrace();
+                    }
                     scrollPane.setViewportView(table);
                     panelForTable.removeAll();
                     panelForTable.add(scrollPane);
@@ -200,6 +218,7 @@ public class SelectFlight extends JFrame {
                 searchAllButton.addActionListener(e -> {
                     try {
                         table = Requests.readFlights();
+                        setDoubleClick();
                     } catch (SQLException throwables) {
                         throwables.printStackTrace();
                     }
@@ -222,13 +241,13 @@ public class SelectFlight extends JFrame {
                     panelForTable.setLayout(null);
 
                     {
-
                         table.setPreferredScrollableViewportSize(new Dimension(450, 180));
                         if(update) {
                             table = (JTable) Requests.readFligthsById(flight);
                         } else {
                             table = Requests.readFlights();
                         }
+                        setDoubleClick();
                         scrollPane.setViewportView(table);
                     }
                     panelForTable.add(scrollPane);
@@ -254,7 +273,6 @@ public class SelectFlight extends JFrame {
                     if (table.getSelectedRow() == -1) return;
                     int row = table.getSelectedRow();
                     int id = Integer.parseInt(table.getModel().getValueAt(table.convertRowIndexToModel(row), 0).toString());
-                    System.out.println("ID FLIGHT: "+ id);
                     try {
                         bdf.setFlightId(id);
                         bdf.setSeatComboBox();
@@ -305,6 +323,36 @@ public class SelectFlight extends JFrame {
         return (name + " - " + code);
     }
 
+    private void setDoubleClick() {
+        table.addMouseListener(new MouseAdapter() {
+            public void mousePressed(MouseEvent mouseEvent) {
+                JTable table =(JTable) mouseEvent.getSource();
+                Point point = mouseEvent.getPoint();
+                int row = table.rowAtPoint(point);
+                if (mouseEvent.getClickCount() == 2 && table.getSelectedRow() != -1) {
+                    int id = Integer.parseInt(table.getModel().getValueAt(table.convertRowIndexToModel(row), 0).toString());
+                    ResultSet rs = null;
+                    try {
+                        rs = Requests.readById(id, "flight");
+                        rs.next();
+                        int depid = rs.getInt(2);
+                        int arrid = rs.getInt(3);
+                        int pilotId = rs.getInt(4);
+                        int planeId = rs.getInt(5);
+                        String depTime = rs.getString(6).split("\\.")[0];
+                        String depDate = rs.getString(7);
+                        String arrTime = rs.getString(8).split("\\.")[0];
+                        String arrDate = rs.getString(9);
+                        float price = rs.getInt(10);
+                        new FlightDetailsFrame(false,id,depid,arrid,pilotId,planeId,depTime,depDate,arrTime,arrDate,price);
+                    } catch (SQLException | ParseException throwables) {
+                        throwables.printStackTrace();
+                    }
+                }
+            }
+        });
+    }
+
     private void updateContent(int airlineid) throws SQLException {
         airportsWithId = Requests.getAirportsWithId();
         fromCombo = getFilledComboBox();
@@ -335,7 +383,6 @@ public class SelectFlight extends JFrame {
             model.addColumn("Arrival date");
             TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
             jTable.setRowSorter(sorter);
-            System.out.println("DZIAla?");
             jTable.setModel(Requests.addRows(rs, model));
             jTable.removeColumn(jTable.getColumnModel().getColumn(0));
         } catch (SQLException throwables) {

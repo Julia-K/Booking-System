@@ -1,14 +1,11 @@
 package tableFrames;
 
 import allComands.Requests;
-import org.jdatepicker.JDatePicker;
-import org.jdatepicker.impl.JDatePanelImpl;
-import org.jdatepicker.impl.JDatePickerImpl;
-import org.jdatepicker.impl.UtilDateModel;
+import allComands.StringsFormatter;
+import com.microsoft.sqlserver.jdbc.SQLServerException;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-import javax.swing.text.DateFormatter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -16,6 +13,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class FlightDetailsFrame extends JFrame {
@@ -66,7 +65,7 @@ public class FlightDetailsFrame extends JFrame {
         initAddUpdateComponents();
         setVisible(true);
     }
-    public FlightDetailsFrame(Boolean update, int id, int depId, int arrId, int pilotId, int planeId, String depTime, String depDate, String arrTime, String arrDate, int price) throws SQLException, ParseException {
+    public FlightDetailsFrame(Boolean update, int id, int depId, int arrId, int pilotId, int planeId, String depTime, String depDate, String arrTime, String arrDate, float price) throws SQLException, ParseException {
         this.depDate = depDate;
         this.arrDate = arrDate;
         this.update = update;
@@ -368,6 +367,7 @@ public class FlightDetailsFrame extends JFrame {
 
                 fillPrice.setBackground(Color.white);
                 fillPrice.setForeground(Color.black);
+                StringsFormatter.setFloatPattern(5,fillPrice);
                 contentPanel.add(fillPrice);
                 fillPrice.setBounds(155, 360, 75, 40);
 
@@ -437,28 +437,31 @@ public class FlightDetailsFrame extends JFrame {
                 SimpleDateFormat formater = new SimpleDateFormat("HH:mm");
                 String arrSpinner = formater.format(arrTimeSpinner.getValue());
                 String depSpinner = formater.format(depTimeSpinner.getValue());
-                String dep = depPicker.getDate();
-                String arr = arrPicker.getDate();
-                System.out.println("dep " + depPicker);
 
-                if(update) {
-                    try {
-                        System.out.println("ID: " + id);
-                        Requests.updateFlight(id,depId,arrId,pilotId,planeId,depSpinner, depPicker.getDate(),arrSpinner, arrPicker.getDate(), Integer.parseInt(fillPrice.getText()));
-                        dispose();
-                    } catch (SQLException ex) {
-                        ex.printStackTrace();
-                    }
-                } else {
-                    try {
-                        Requests.createFlight(depId,arrId,pilotId,planeId,depSpinner,depPicker.getDate(),arrSpinner,arrPicker.getDate(), Integer.parseInt(fillPrice.getText()));
-                        dispose();
-                    } catch (SQLException ex) {
-                        ex.printStackTrace();
+                if(isValidate()) {
+                    if(update) {
+                        try {
+                            System.out.println("ID: " + id);
+                            Requests.updateFlight(id,depId,arrId,pilotId,planeId,depSpinner, depPicker.getDate(),arrSpinner,
+                                    arrPicker.getDate(), Float.parseFloat(fillPrice.getText()));
+                            dispose();
+                        } catch (SQLServerException x) {
+                            JOptionPane.showMessageDialog(new Frame(), "Price must be of the float type in the given formula (max: _ _ _ _ _._ _)");
+                        }
+                        catch (SQLException ex) {
+                            ex.printStackTrace();
+                        }
+                    } else {
+                        try {
+                            Requests.createFlight(depId,arrId,pilotId,planeId,depSpinner,depPicker.getDate(),arrSpinner,
+                                    arrPicker.getDate(), Float.parseFloat(fillPrice.getText()));
+                            dispose();
+                        } catch (SQLException ex) {
+                            ex.printStackTrace();
+                        }
                     }
                 }
             });
-
             dialogPane.add(buttonBar, BorderLayout.SOUTH);
 
             {
@@ -514,13 +517,15 @@ public class FlightDetailsFrame extends JFrame {
                 arrTimeSpinner.setBounds(15, 310, 195, 40);
 
                 depPicker.addTo(panel2);
-                depPicker.setBounds(15, 55, 195, 40);
+                depPicker.setBackground(new Color(235, 242, 250));
+                depPicker.setBounds(15, 55, 195, 26);
 
                 setSpinner(arrTimeSpinner);
                 setSpinner(depTimeSpinner);
 
                 arrPicker.addTo(panel2);
-                arrPicker.setBounds(15, 225, 195, 40);
+                arrPicker.setBackground(new Color(235, 242, 250));
+                arrPicker.setBounds(15, 225, 195, 26);
             }
             dialogPane.add(panel2, BorderLayout.EAST);
         }
@@ -588,5 +593,26 @@ public class FlightDetailsFrame extends JFrame {
         jSpinner.setModel(sm);
         JSpinner.DateEditor de = new JSpinner.DateEditor(jSpinner, "HH:mm");
         jSpinner.setEditor(de);
+    }
+
+    public boolean isValidate() {
+        SimpleDateFormat formater = new SimpleDateFormat("HH:mm");
+        String arrSpinner = formater.format(arrTimeSpinner.getValue());
+        String depSpinner = formater.format(depTimeSpinner.getValue());
+        if(fillPrice.getText().equals("")) {
+            JOptionPane.showMessageDialog(new Frame(), "All fields must be filled!");
+            return false;
+        } else if (!StringsFormatter.isFlightDateValid(depPicker.getDate(),arrPicker.getDate())) {
+            JOptionPane.showMessageDialog(new Frame(), "Dates must be from the future and departure date cannot be later than the date of arrival");
+            return false;
+        } else if (StringsFormatter.isDatesAreEqual(depPicker.getDate(),arrPicker.getDate())) {
+            if(!StringsFormatter.isDepTimeIsBefore(depSpinner,arrSpinner)) {
+                JOptionPane.showMessageDialog(new Frame(), "If dates are the same, the arrival time must be later than the departure time");
+                return false;
+            }
+            return true;
+        } else {
+            return true;
+        }
     }
 }

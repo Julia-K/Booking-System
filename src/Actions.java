@@ -64,14 +64,14 @@ public class Actions {
                         @Override
                         public void windowClosed(WindowEvent e) {
                             try {
-                                mw.reloadClients();
+                                mw.reloadAddress();
                             } catch (SQLException ex) {
                                 ex.printStackTrace();
                             }
                         }
                     });
                 }
-            } catch (SQLException throwables) {
+            } catch (SQLException | ParseException throwables) {
                 throwables.printStackTrace();
             }
         });
@@ -166,7 +166,7 @@ public class Actions {
                 String depDate = rs.getString(7);
                 String arrTime = rs.getString(8).split("\\.")[0];
                 String arrDate = rs.getString(9);
-                int price = rs.getInt(10);
+                float price = rs.getInt(10);
                 new FlightDetailsFrame(update, id, depid, arrid, pilotId, planeId, depTime, depDate, arrTime, arrDate, price).addWindowListener(new WindowAdapter() {
                     @Override
                     public void windowClosed(WindowEvent e) {
@@ -189,10 +189,14 @@ public class Actions {
             if (jTable.getSelectedRow() == -1) return;
             int row = jTable.getSelectedRow();
             int id = Integer.parseInt(jTable.getModel().getValueAt(jTable.convertRowIndexToModel(row), 0).toString());
-            String name = jTable.getValueAt(row, 0).toString();
-            String code = jTable.getValueAt(row, 1).toString();
-            String address = jTable.getValueAt(row, 2).toString();
+            System.out.println("ID AIRPORT: " + id);
+            ResultSet rs = null;
             try {
+                rs = Requests.readById(id,"airport");
+                rs.next();
+                String name = rs.getString(2);
+                String code = rs.getString(3);
+                String address = Requests.getStringAddress(rs.getInt(4));
                 new AirportDetailsFrame(update, id,name,code,address).addWindowListener(new WindowAdapter() {
                     @Override
                     public void windowClosed(WindowEvent e) {
@@ -203,7 +207,7 @@ public class Actions {
                         }
                     }
                 });
-            } catch (SQLException ex) {
+            } catch (SQLException | ParseException ex) {
                 ex.printStackTrace();
             }
         });
@@ -217,13 +221,13 @@ public class Actions {
             int id = Integer.parseInt(jTable.getModel().getValueAt(jTable.convertRowIndexToModel(row), 0).toString());
             ResultSet rs = null;
             try {
-                rs = Requests.readTableByRequest("select * from pilot where pilotID="+ id);
+                rs = Requests.readById(id,"pilot");
                 rs.next();
                 String first = rs.getString(2);
                 String last = rs.getString(3);
                 String date = rs.getString(4);
                 int airlineId = rs.getInt(5);
-                new PilotDetailsFrame(update,id,first,last,date,jTable.getValueAt(row,3).toString(),airlineId).addWindowListener(new WindowAdapter() {
+                new PilotDetailsFrame(update,id,first,last,date,airlineId).addWindowListener(new WindowAdapter() {
                     @Override
                     public void windowClosed(WindowEvent e) {
                         try {
@@ -554,16 +558,22 @@ public class Actions {
 
     public static void addAddressAction(JButton jButton, ManageWindow mw) {
         removeActions(jButton);
-        jButton.addActionListener(e -> new AddressDetailsFrame().addWindowListener(new WindowAdapter() {
-            @Override
-            public void windowClosed(WindowEvent e) {
-                try {
-                    mw.reloadAddress();
-                } catch (SQLException ex) {
-                    ex.printStackTrace();
-                }
+        jButton.addActionListener(e -> {
+            try {
+                new AddressDetailsFrame().addWindowListener(new WindowAdapter() {
+                    @Override
+                    public void windowClosed(WindowEvent e) {
+                        try {
+                            mw.reloadAddress();
+                        } catch (SQLException ex) {
+                            ex.printStackTrace();
+                        }
+                    }
+                });
+            } catch (ParseException parseException) {
+                parseException.printStackTrace();
             }
-        }));
+        });
     }
 
     public static void addClientAction(JButton jButton, ManageWindow mw) {
@@ -610,7 +620,7 @@ public class Actions {
                         }
                     }
                 });
-            } catch (SQLException ex) {
+            } catch (SQLException | ParseException ex) {
                 ex.printStackTrace();
             }
         });

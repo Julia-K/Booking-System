@@ -29,6 +29,7 @@ public class ManageWindow extends JFrame {
         initComponents();
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         reloadClients();
+        setTableDesign();
     }
 
     private void initComponents() throws SQLException {
@@ -45,7 +46,7 @@ public class ManageWindow extends JFrame {
         deleteButton = new JButton();
         addButton = new JButton();
         rightPanel = new JPanel();
-        table = Requests.showTable("client");
+        comboBox.setSelectedItem(0);
 
         setResizable(false);
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
@@ -155,6 +156,7 @@ public class ManageWindow extends JFrame {
         Actions.setDetailOrUpdateClient(true,updateButton,table,this);
         Actions.setDeleteButtonAction(deleteButton,"client",table,this);
         Actions.addClientAction(addButton,this);
+        setTableDesign();
         update();
     }
 
@@ -165,6 +167,7 @@ public class ManageWindow extends JFrame {
         Actions.setDetailOrUpdateAddress(true,updateButton,table,this);
         Actions.setDeleteButtonAction(deleteButton, "address", table, this);
         Actions.addAddressAction(addButton,this);
+        setTableDesign();
         update();
     }
 
@@ -175,6 +178,7 @@ public class ManageWindow extends JFrame {
         Actions.setDetailOrUpdateAirport(true, updateButton, table,this);
         Actions.addAirportAction(addButton, this);
         Actions.setDeleteButtonAction(deleteButton,"airport",table,this);
+        setTableDesign();
         update();
     }
 
@@ -185,6 +189,7 @@ public class ManageWindow extends JFrame {
         Actions.setDetailOrUpdatePlane(true,updateButton, table, this);
         Actions.addPlaneAction(addButton, this);
         Actions.setDeleteButtonAction(deleteButton,"plane",table,this);
+        setTableDesign();
         update();
     }
 
@@ -195,6 +200,7 @@ public class ManageWindow extends JFrame {
         Actions.setDetailAirline(detailsButton,table);
         Actions.setUpdateAirline(updateButton,table,this);
         Actions.setDeleteButtonAction(deleteButton,"airline",table,this);
+        setTableDesign();
         update();
     }
 
@@ -205,6 +211,7 @@ public class ManageWindow extends JFrame {
         Actions.setDetailOrUpdatePilot(true,updateButton, table, this);
         Actions.addPilotAction(addButton, this);
         Actions.setDeleteButtonAction(deleteButton,"pilot",table,this);
+        setTableDesign();
         update();
     }
 
@@ -215,6 +222,7 @@ public class ManageWindow extends JFrame {
         Actions.setDetailOrUpdateFlight(true,updateButton, table, this);
         Actions.addFlightAction(addButton, this);
         Actions.setDeleteButtonAction(deleteButton,"flight",table,this);
+        setTableDesign();
         update();
     }
 
@@ -225,6 +233,7 @@ public class ManageWindow extends JFrame {
         Actions.setUpdateBooking(updateButton,table,this);
         Actions.setDeleteButtonAction(deleteButton,"booking",table, this);
         Actions.addBookingAction(addButton, this);
+        setTableDesign();
         update();
     }
 
@@ -235,6 +244,7 @@ public class ManageWindow extends JFrame {
         Actions.setDetailOrUpdateClass(true, updateButton, table, this);
         Actions.addClassAction(addButton, this);
         Actions.setDeleteButtonAction(deleteButton,"class",table,this);
+        setTableDesign();
         update();
     }
 
@@ -245,6 +255,7 @@ public class ManageWindow extends JFrame {
         Actions.setDetailOrUpdateLuggage(true, updateButton, table, this);
         Actions.addLuggageAction(addButton, this);
         Actions.setDeleteButtonAction(deleteButton,"luggage",table,this);
+        setTableDesign();
         update();
     }
 
@@ -321,18 +332,9 @@ public class ManageWindow extends JFrame {
                         ex.printStackTrace();
                     }
                     break;
-                case 10:
-                    try {
-                        table = Requests.showPlaneAirlineTable();
-                        TableRowFilter.create(searchField, table);
-                    } catch (SQLException ex) {
-                        ex.printStackTrace();
-                    }
-                    break;
                 default:
                     return;
             }
-            setTableDesign();
             update();
         });
     }
