@@ -1,3 +1,5 @@
+package tableFrames;
+
 import allComands.Requests;
 import tableFrames.*;
 

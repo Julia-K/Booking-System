@@ -1,3 +1,5 @@
+package tableFrames;
+
 import allComands.Requests;
 import allComands.TableRowFilter;
 
@@ -57,20 +59,21 @@ public class ManageWindow extends JFrame {
         topPanel.setMaximumSize(new Dimension(150, 70));
         topPanel.setMinimumSize(new Dimension(150, 70));
         topPanel.setPreferredSize(new Dimension(150, 70));
-        topPanel.setBackground(Color.black);
+        topPanel.setBackground(new Color(66, 122, 161));
         topPanel.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
         topPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
 
         manage.setText("Manage");
         manage.setPreferredSize(new Dimension(150, 50));
         manage.setAlignmentX(0.5F);
-        manage.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 20));
+        manage.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 30));
         manage.setHorizontalAlignment(SwingConstants.CENTER);
         manage.setForeground(Color.white);
         manage.setBorder(new EmptyBorder(5, 10, 5, 5));
         topPanel.add(manage);
 
         comboBox.setPreferredSize(new Dimension(150, 30));
+        comboBox.setBackground(Color.white);
         addToCombobox();
         comboBox.setSelectedIndex(0);
         mainComboBoxAction();

@@ -3,6 +3,8 @@ package allComands;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
+import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 import java.sql.*;
 import java.util.*;
 import java.util.Date;
@@ -64,22 +66,29 @@ public class Requests {
         return listOfSeats;
     }
 
-    public static boolean isAdmin(Connection cn, String login, char[] pass) throws SQLException {
-        String sql = "select * from Admin";
-        PreparedStatement ps=cn.prepareStatement("select * from admin", ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE);
-        ResultSet rs=ps.executeQuery();
-        while (rs.next()) {
-            if (rs.getString("login").equals(login) && rs.getString("password").equals(PasswordUtils.hash256(pass))) {
-                return true;
-            }
+    public static boolean isAdmin(String login, String pass) throws SQLException, NoSuchAlgorithmException, IOException {
+        String hash = "";
+        System.out.println(login);
+        System.out.println(pass);
+        ResultSet rs = readTableByRequest("select password from admin where login like '" + login + "'");
+        if (rs.next()) {
+            hash = rs.getString(1);
+            System.out.println(hash);
         }
-        return false;
+        if (hash.equals("")) {
+            return false;
+        } else {
+            System.out.println(pass);
+            System.out.println(hash + " XD");
+            System.out.println(PasswordUtils.hashing(pass));
+            return (hash.equals(PasswordUtils.hashing(pass)));
+        }
     }
 
     //----------------------------- INSERT -----------------------------
 
-    public static void createAdmin(String login, char[] password) throws SQLException {
-        String codedPassword = PasswordUtils.hash256(password);
+    public static void createAdmin(String login, String password) throws SQLException {
+        String codedPassword = PasswordUtils.hashing(password);
         String sql = "insert into admin (login, password) values (?, ?)";
         PreparedStatement statement = DBConnection.getConnection().prepareStatement(sql);
         statement.setString(1, login);
@@ -555,13 +564,75 @@ public class Requests {
         return airline;
     }
 
+    public static JTable showClassStatistic() throws SQLException {
+        JTable jTable = new JTable();
+        DefaultTableModel model = new DefaultTableModel();
+        ResultSet rs = Requests.readTableByRequest("select class.name as 'name', concat(convert(decimal(5,2),(count(class.name) * 100.0 / (select count(*) from booking))),' %') as 'procent' from class\n" +
+                "inner join booking on booking.class_id = class.classID\n" +
+                "group by name\n" +
+                "order by procent desc");
+        model.addColumn("Class name");
+        model.addColumn("%");
+        jTable.setModel(addRows(rs,model));
+        return jTable;
+    }
+
+    public static JTable showPilotStatistics() throws SQLException {
+        JTable jTable = new JTable();
+        DefaultTableModel model = new DefaultTableModel();
+        ResultSet rs = Requests.readTableByRequest("select concat(pilot.first_name, ' ',pilot.last_name) as name,\n" +
+                " datediff(YEAR,pilot.employment_date,GETDATE()) as ilosc from pilot\n" +
+                "order by ilosc desc");
+        model.addColumn("Pilot name");
+        model.addColumn("Number of years");
+        jTable.setModel(addRows(rs,model));
+        return jTable;
+    }
+
+    public static JTable showClientStatistics() throws SQLException {
+        JTable jTable = new JTable();
+        DefaultTableModel model = new DefaultTableModel();
+        ResultSet rs = Requests.readTableByRequest("select client.email, count(booking.client_id) as 'liczba' from booking\n" +
+                "inner join client on booking.client_id = client.clientID\n" +
+                "group by client.email\n" +
+                "order by liczba desc");
+        model.addColumn("Customer E-mail");
+        model.addColumn("Number of reservations");
+        jTable.setModel(addRows(rs,model));
+        return jTable;
+    }
+
+    public static JTable showYearsStatistics() throws SQLException {
+        JTable jTable = new JTable();
+        DefaultTableModel model = new DefaultTableModel();
+        ResultSet rs = Requests.readTableByRequest("select YEAR(booking.approval_date) as rok, count(*) as liczba from booking\n" +
+                "group by YEAR(booking.approval_date)\n" +
+                "order by liczba desc");
+        model.addColumn("Year");
+        model.addColumn("Number of reservations");
+        jTable.setModel(addRows(rs,model));
+        return jTable;
+    }
+
+    public static JTable showMonthStatistics(String year) throws SQLException {
+        JTable jTable = new JTable();
+        DefaultTableModel model = new DefaultTableModel();
+        ResultSet rs = Requests.readTableByRequest("select DATENAME(month,booking.approval_date) as miesiac, count (*) as liczba from booking\n" +
+                "where YEAR(booking.approval_date)='"+year+"'\n" +
+                "group by DATENAME(month,booking.approval_date)\n" +
+                "order by miesiac desc");
+        model.addColumn("Year");
+        model.addColumn("Number of reservations");
+        jTable.setModel(addRows(rs,model));
+        return jTable;
+    }
+
     public static JTable showPlaneAirlineTable() throws SQLException {
         JTable jTable = new JTable();
         DefaultTableModel model = new DefaultTableModel();
         ResultSet rs = Requests.readTableByRequest("select plane.brand, airline.name, planes_quantity from plane_airline\n" +
                 "inner join plane on plane.planeID = plane_airline.plane_id\n" +
                 "inner join airline on airline.airlineID = plane_airline.airline_id");
-       // model.addColumn("PlaneAirlineID");
         model.addColumn("Plane brand");
         model.addColumn("Airline name");
         model.addColumn("Quantity of planes");

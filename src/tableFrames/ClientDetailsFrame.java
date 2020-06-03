@@ -232,7 +232,7 @@ public class ClientDetailsFrame extends JFrame {
 
             okButton.addActionListener(e -> {
                 String date = birthDate.getDate();
-                String codedPassword = PasswordUtils.hash256(fillPassword.getPassword());
+                String codedPassword = PasswordUtils.hashing(new String(fillPassword.getPassword()));
                 if(isValidate()) {
                     if(update) {
                         try {

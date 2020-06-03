@@ -1,18 +1,18 @@
 package allComands;
 
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 public class PasswordUtils {
-    public static String hash256(char[] password) {
-        String passwordS = password.toString();
+    public static String hashing(String password) {
         MessageDigest messageDigest = null;
         try {
             messageDigest = MessageDigest.getInstance("SHA-256");
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
-        messageDigest.update(passwordS.getBytes());
+        messageDigest.update(password.getBytes());
         return bytesToHex(messageDigest.digest());
     }
 

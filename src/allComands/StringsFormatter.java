@@ -81,6 +81,17 @@ public class StringsFormatter {
         });
     }
 
+    public static void setNoSpaces(JTextField jTextField) {
+        jTextField.addKeyListener(new KeyAdapter() {
+            public void keyTyped(KeyEvent e) {
+                char c = e.getKeyChar();
+                if (c == ' ') {
+                    e.consume();
+                }
+            }
+        });
+    }
+
     public static void setOnlyDigits(JTextField jTextField) {
         jTextField.addKeyListener(new KeyAdapter() {
             public void keyTyped(KeyEvent e) {
@@ -97,6 +108,8 @@ public class StringsFormatter {
         Matcher matcher = pattern.matcher(postal);
         return matcher.matches();
     };
+
+
 
     public static JFormattedTextField getPostalCodeTextField() throws ParseException {
         MaskFormatter maskFormatter = new MaskFormatter("##-###");
