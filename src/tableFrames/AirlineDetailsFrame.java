@@ -21,6 +21,10 @@ public class AirlineDetailsFrame extends JFrame {
     private JTextField fillAirline2;
     private JLabel fillAirline;
     private JPanel buttonBar;
+    private JPanel panel5;
+    private JButton addButton;
+    private JButton updateButton;
+    private JButton deleteButton;
     private JButton okButton;
     private JPanel panel1;
     private DefaultListModel<String> model;
@@ -339,13 +343,17 @@ public class AirlineDetailsFrame extends JFrame {
         dialogPane = new JPanel();
         contentPanel = new JPanel();
         airlineL = new JLabel();
+        panel5 = new JPanel();
+        planeL = new JLabel();
+        addButton = new JButton();
+        updateButton = new JButton();
+        deleteButton = new JButton();
         codeL = new JLabel();
         fillAirline2 = new JTextField();
         fillCode = new JTextField();
         buttonBar = new JPanel();
         okButton = new JButton();
         panel1 = new JPanel();
-
 
         setResizable(false);
         setMinimumSize(new Dimension(670, 430));
@@ -385,15 +393,67 @@ public class AirlineDetailsFrame extends JFrame {
                 contentPanel.add(fillCode);
                 fillCode.setBounds(35, 190, 195, 40);
 
-                {
-                    Dimension preferredSize = new Dimension();
-                    preferredSize.width =490;
-                    preferredSize.height = 230;
-                    contentPanel.setMinimumSize(preferredSize);
-                    contentPanel.setPreferredSize(preferredSize);
-                }
+
+                panel5.setBackground(new Color(5, 102, 141));
+                panel5.setPreferredSize(new Dimension(5, 200));
+                panel5.setMinimumSize(new Dimension(5, 200));
+                panel5.setMaximumSize(new Dimension(5, 200));
+                panel5.setLayout(null);
+
+                contentPanel.setMinimumSize(new Dimension(490,230));
+                contentPanel.setPreferredSize(new Dimension(490,230));
+
             }
-            dialogPane.add(contentPanel, BorderLayout.EAST);
+            contentPanel.add(panel5);
+            panel5.setBounds(260, 75, 5, 220);
+
+            addButton.setText("Add");
+            addButton.setBackground(new Color(5, 102, 141));
+            addButton.setForeground(Color.white);
+            addButton.setFont(addButton.getFont().deriveFont(addButton.getFont().getStyle() & ~Font.ITALIC));
+            contentPanel.add(addButton);
+            addButton.setBounds(310, 95, 110, 40);
+            addButton.addActionListener(e-> {
+                try {
+                    new PlaneAirlineFrame(0, id);
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                }
+            });
+
+            updateButton.setText("Update");
+            updateButton.setBackground(new Color(5, 102, 141));
+            updateButton.setForeground(Color.white);
+            contentPanel.add(updateButton);
+            updateButton.setBounds(310, 170, 110, 40);
+            updateButton.addActionListener(e-> {
+                try {
+                    new PlaneAirlineFrame(1, id);
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                }
+            });
+
+            deleteButton.setText("Delete");
+            deleteButton.setBackground(new Color(5, 102, 141));
+            deleteButton.setForeground(Color.white);
+            contentPanel.add(deleteButton);
+            deleteButton.setBounds(310, 245, 110, 40);
+            deleteButton.addActionListener(e-> {
+                try {
+                    new PlaneAirlineFrame(2, id);
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                }
+            });
+
+            planeL.setText("Plane:");
+            planeL.setForeground(Color.black);
+            planeL.setFont(planeL.getFont().deriveFont(planeL.getFont().getStyle() | Font.BOLD, planeL.getFont().getSize() + 10f));
+            contentPanel.add(planeL);
+            planeL.setBounds(310, 40, 115, 40);
+
+            dialogPane.add(contentPanel, BorderLayout.CENTER);
 
             {
                 buttonBar.setBorder(new EmptyBorder(12, 0, 0, 0));

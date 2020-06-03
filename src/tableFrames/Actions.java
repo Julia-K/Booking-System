@@ -400,16 +400,20 @@ public class Actions {
     public static void addPlaneAction(JButton jButton, ManageWindow mw) {
         removeActions(jButton);
         jButton.addActionListener(e -> {
-            new PlaneDetailsFrame().addWindowListener(new WindowAdapter() {
-                @Override
-                public void windowClosed(WindowEvent e) {
-                    try {
-                        mw.reloadPlane();
-                    } catch (SQLException ex) {
-                        ex.printStackTrace();
+            try {
+                new PlaneDetailsFrame().addWindowListener(new WindowAdapter() {
+                    @Override
+                    public void windowClosed(WindowEvent e) {
+                        try {
+                            mw.reloadPlane();
+                        } catch (SQLException ex) {
+                            ex.printStackTrace();
+                        }
                     }
-                }
-            });
+                });
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
         });
     }
 

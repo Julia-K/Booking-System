@@ -4,13 +4,25 @@ import allComands.Requests;
 import allComands.StringsFormatter;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.LinkedHashMap;
 import javax.swing.*;
 import javax.swing.border.*;
 
 public class PlaneDetailsFrame extends JFrame {
+    private LinkedHashMap<Integer,Integer> airlinesWithId;
+    private JLabel quantity;
+    private JTextField fillQuantity;
+    private JComboBox comboBox;
+    private JLabel airlineL;
     private JPanel dialogPane;
     private JPanel contentPanel;
+    private JPanel panel5;
     private JLabel planeL;
     private JLabel brandL;
     private JLabel modelL;
@@ -23,16 +35,17 @@ public class PlaneDetailsFrame extends JFrame {
     private int id;
 
 
-    public PlaneDetailsFrame() {
+    public PlaneDetailsFrame() throws SQLException {
         this.update = false;
         initAddUpdateComponents();
         setVisible(true);
     }
 
-    public PlaneDetailsFrame(boolean update, int id, String brand, String model) {
+    public PlaneDetailsFrame(boolean update, int id, String brand, String model) throws SQLException {
+        this.update = update;
         if (update) {
-            initAddUpdateComponents();
             this.id = id;
+            initAddUpdateComponents();
             fillBrand.setText(brand);
             fillModel.setText(model);
         } else {
@@ -40,7 +53,6 @@ public class PlaneDetailsFrame extends JFrame {
             brandL.setText(brandL.getText() + " " + brand);
             modelL.setText(modelL.getText() + " " + model);
         }
-        this.update = update;
         setVisible(true);
     }
 
@@ -131,9 +143,14 @@ public class PlaneDetailsFrame extends JFrame {
         setLocationRelativeTo(getOwner());
     }
 
-    private void initAddUpdateComponents() {
+    private void initAddUpdateComponents() throws SQLException {
+        airlinesWithId = new LinkedHashMap<>();
+        quantity = new JLabel();
+        fillQuantity = new JTextField();
+        airlineL = new JLabel();
         dialogPane = new JPanel();
         contentPanel = new JPanel();
+        panel5 = new JPanel();
         brandL = new JLabel();
         modelL = new JLabel();
         fillBrand = new JTextField();
@@ -141,6 +158,27 @@ public class PlaneDetailsFrame extends JFrame {
         buttonBar = new JPanel();
         okButton = new JButton();
         panel1 = new JPanel();
+        comboBox = new JComboBox();
+        if(update) {
+            updateContent();
+            comboBox.addItemListener(new ItemListener() {
+                @Override
+                public void itemStateChanged(ItemEvent e) {
+                    try {
+                        int airlineid = (Integer)airlinesWithId.get(comboBox.getSelectedIndex());
+                        ResultSet rs = Requests.readTableByRequest("select planes_quantity from plane_airline\n" +
+                                "where plane_id = " + id + " and airline_id = " + airlineid);
+                        rs.next();
+                        fillQuantity.setText(rs.getString(1));
+                    } catch (Exception exception) {
+                        exception.printStackTrace();
+                    }
+                }
+            });
+            comboBox.setSelectedItem(0);
+        } else {
+            updateContent();
+        }
 
         setResizable(false);
         setMinimumSize(new Dimension(670, 430));
@@ -180,13 +218,39 @@ public class PlaneDetailsFrame extends JFrame {
                 contentPanel.add(fillModel);
                 fillModel.setBounds(35, 210, 195, 40);
 
-                {
-                    Dimension preferredSize = new Dimension();
-                    preferredSize.width =490;
-                    preferredSize.height = 250;
-                    contentPanel.setMinimumSize(preferredSize);
-                    contentPanel.setPreferredSize(preferredSize);
-                }
+                panel5.setBackground(new Color(5, 102, 141));
+                panel5.setPreferredSize(new Dimension(5, 200));
+                panel5.setMinimumSize(new Dimension(5, 200));
+                panel5.setMaximumSize(new Dimension(5, 200));
+                panel5.setLayout(null);
+                contentPanel.add(panel5);
+                panel5.setBounds(250, 55, 5, 220);
+
+                contentPanel.setMinimumSize(new Dimension(490,250));
+                contentPanel.setPreferredSize(new Dimension(490,250));
+
+                comboBox.setBackground(Color.white);
+                contentPanel.add(comboBox);
+                comboBox.setBounds(275, 210, 195, 40);
+
+                airlineL.setText("Airline:");
+                airlineL.setForeground(Color.black);
+                airlineL.setFont(airlineL.getFont().deriveFont(airlineL.getFont().getStyle() | Font.BOLD, airlineL.getFont().getSize() + 17f));
+                contentPanel.add(airlineL);
+                airlineL.setBounds(280, 165, 110, 40);
+
+                quantity.setText("Quantity");
+                quantity.setForeground(Color.black);
+                quantity.setFont(quantity.getFont().deriveFont(quantity.getFont().getStyle() | Font.BOLD, quantity.getFont().getSize() + 17f));
+                contentPanel.add(quantity);
+                quantity.setBounds(275, 60, 150, 40);
+
+                fillQuantity.setBackground(Color.white);
+                StringsFormatter.setOnlyDigits(fillQuantity);
+                StringsFormatter.setTextFieldLength(2, fillQuantity);
+                contentPanel.add(fillQuantity);
+                fillQuantity.setBounds(275, 110, 195, 40);
+
             }
             dialogPane.add(contentPanel, BorderLayout.EAST);
 
@@ -220,6 +284,7 @@ public class PlaneDetailsFrame extends JFrame {
                     if (update) {
                         try {
                             Requests.updatePlane(id, fillBrand.getText(), fillModel.getText());
+                            updateContent();
                             dispose();
                         } catch (SQLException throwables) {
                             throwables.printStackTrace();
@@ -227,6 +292,13 @@ public class PlaneDetailsFrame extends JFrame {
                     } else {
                         try {
                             Requests.createPlane(fillBrand.getText(),fillModel.getText());
+                            ResultSet rs = Requests.readTableByRequest("SELECT TOP 1 * FROM plane ORDER BY planeID DESC");
+                            rs.next();
+                            int planeid = rs.getInt(1);
+                            Requests.createPlaneAirplane(planeid,(Integer)airlinesWithId.get(comboBox.getSelectedIndex()),
+                                    Integer.parseInt(fillQuantity.getText()));
+
+                            updateContent();
                             dispose();
                         } catch (SQLException throwables) {
                             throwables.printStackTrace();
@@ -247,5 +319,40 @@ public class PlaneDetailsFrame extends JFrame {
         } else {
             return true;
         }
+    }
+    private void updateContent() throws SQLException {
+        if(update) {
+            airlinesWithId = Requests.getAirlinesWithId(id);
+            comboBox = getSelectedComboBox();
+        } else {
+            airlinesWithId = Requests.getAirlinesWithId();
+            comboBox = getComboBox();
+        }
+    }
+
+    private JComboBox getComboBox() throws SQLException {
+        JComboBox x = new JComboBox();
+        ResultSet rs = Requests.readTableByRequest("select airlineID from airline");
+        while (rs.next()) {
+            int id = rs.getInt("airlineID");
+            x.addItem(Requests.getStringAirline(id));
+        }
+        return x;
+    }
+
+    private JComboBox getSelectedComboBox() throws SQLException {
+        boolean first = true;
+        JComboBox x = new JComboBox();
+        ResultSet rs = Requests.readTableByRequest("select * from plane_airline\n" +
+                "where plane_id = '"+id+"'");
+        while (rs.next()) {
+            if(first) {
+                fillQuantity.setText(rs.getString(3));
+                first = false;
+            }
+            int airlineid = rs.getInt(2);
+            comboBox.addItem(Requests.getStringAirline(airlineid));
+        }
+        return comboBox;
     }
 }

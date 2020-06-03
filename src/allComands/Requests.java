@@ -31,6 +31,7 @@ public class Requests {
         statement.setString(3, postal_code);
         statement.setString(4, street);
         statement.setInt(5, number);
+        statement.executeUpdate();
     }
 
     public static void createClient(String first, String last, String email, String password, String birth_date) throws SQLException {
@@ -42,6 +43,7 @@ public class Requests {
         statement.setString(3, email);
         statement.setString(4, password);
         statement.setString(5, birth_date);
+        statement.executeUpdate();
     }
 
     public static void createAirline(String name, String code) throws SQLException {
@@ -50,6 +52,7 @@ public class Requests {
         PreparedStatement statement = DBConnection.getConnection().prepareStatement(sql);
         statement.setString(1, name);
         statement.setString(2, code);
+        statement.executeUpdate();
     }
 
     public static void createPlane(String brand, String model) throws SQLException {
@@ -58,6 +61,7 @@ public class Requests {
         PreparedStatement statement = DBConnection.getConnection().prepareStatement(sql);
         statement.setString(1, brand);
         statement.setString(2, model);
+        statement.executeUpdate();
     }
 
     public static void createAirport(String name, String code, int addressId) throws SQLException {
@@ -67,6 +71,7 @@ public class Requests {
         statement.setString(1, name);
         statement.setString(2, code);
         statement.setInt(3, addressId);
+        statement.executeUpdate();
     }
 
     public static void createPilot(String first, String last, String date, int airlineId) throws SQLException {
@@ -77,6 +82,7 @@ public class Requests {
         statement.setString(2, last);
         statement.setString(3, date);
         statement.setInt(4, airlineId);
+        statement.executeUpdate();
     }
 
     public static void createPlaneAirplane(int planeId, int airlineId, int quantity) throws SQLException {
@@ -86,6 +92,7 @@ public class Requests {
         statement.setInt(1, planeId);
         statement.setInt(2, airlineId);
         statement.setInt(3, quantity);
+        statement.executeUpdate();
     }
 
     public static void createClass(String name, float price) throws SQLException {
@@ -94,6 +101,7 @@ public class Requests {
         PreparedStatement statement = DBConnection.getConnection().prepareStatement(sql);
         statement.setString(1, name);
         statement.setFloat(2, price);
+        statement.executeUpdate();
     }
 
     public static void createLuggage(String name, String price, String height, String weight) throws SQLException {
@@ -104,6 +112,7 @@ public class Requests {
         statement.setFloat(2, Float.parseFloat(price));
         statement.setInt(3, Integer.parseInt(height));
         statement.setInt(4, Integer.parseInt(weight));
+        statement.executeUpdate();
     }
 
     public static void createFlight(int depA_id, int arrA_id, int pilotId, int planeId, String depTime, String depDate, String arrTime, String arrDate, String price) throws SQLException {
@@ -119,6 +128,7 @@ public class Requests {
         statement.setString(7, arrTime);
         statement.setString(8, arrDate);
         statement.setFloat(9, Float.parseFloat(price));
+        statement.executeUpdate();
     }
 
     public static void createBooking(int flightId, int clientId, int luggageId, int classId, int seatNum) throws SQLException {
@@ -130,6 +140,7 @@ public class Requests {
         statement.setInt(3, luggageId);
         statement.setInt(4, classId);
         statement.setInt(5, seatNum);
+        statement.executeUpdate();
     }
 
     //----------------------------- READ -----------------------------
@@ -654,6 +665,18 @@ public class Requests {
         return airlinesWithId;
     }
 
+    public static LinkedHashMap getAirlinesWithId(int id) throws SQLException {
+        int i = 0;
+        LinkedHashMap<Integer, Integer> airlinesWithId = new LinkedHashMap<>();
+        ResultSet rs = readTableByRequest("select airline_id from plane_airline where plane_id='"+id+"'");
+        while (rs.next()) {
+            int airlineid = rs.getInt(1);
+            airlinesWithId.put(i, airlineid);
+            i++;
+        }
+        return airlinesWithId;
+    }
+
     public static ResultSet readTableByRequest(String sql) throws SQLException {
         Statement st = DBConnection.getConnection().createStatement(ResultSet.TYPE_SCROLL_SENSITIVE,
                 ResultSet.CONCUR_UPDATABLE);
@@ -785,6 +808,7 @@ public class Requests {
         statement.setString(8, aDate);
         statement.setFloat(9, Float.parseFloat(price));
         statement.setInt(10, id);
+        statement.executeUpdate();
     }
 
     public static void updateBooking(int id, int flightId, int clientId, int luggageId,int classId, int seat) throws SQLException {
@@ -804,6 +828,16 @@ public class Requests {
     public static void deleteRow(int id, String table){
         try {
             String sql = "delete from " + table +" WHERE "+table+"ID=" + id;
+            PreparedStatement statement = DBConnection.getConnection().prepareStatement(sql);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(new Frame(), "You can not delete this. Delete the combined values first.");
+        }
+    }
+
+    public static void deleteFromPlaneAirline(int airline, int plane) {
+        try {
+            String sql = "delete from plane_airplane WHERE plane_id =" + plane + " and airline_id =" + airline;
             PreparedStatement statement = DBConnection.getConnection().prepareStatement(sql);
             statement.executeUpdate();
         } catch (SQLException e) {
