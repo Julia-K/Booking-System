@@ -152,21 +152,6 @@ public class ClientDetailsFrame extends JFrame {
                     panel3.setMinimumSize(new Dimension(5, 200));
                     panel3.setMaximumSize(new Dimension(5, 200));
                     panel3.setLayout(null);
-
-                    {
-                        Dimension preferredSize = new Dimension();
-                        for (int i = 0; i < panel3.getComponentCount(); i++) {
-                            Rectangle bounds = panel3.getComponent(i).getBounds();
-                            preferredSize.width = Math.max(bounds.x + bounds.width, preferredSize.width);
-                            preferredSize.height = Math.max(bounds.y + bounds.height, preferredSize.height);
-                        }
-                        Insets insets = panel3.getInsets();
-                        preferredSize.width += insets.right;
-                        preferredSize.height += insets.bottom;
-                        System.out.println(preferredSize.width + " "+preferredSize.height);
-                        panel3.setMinimumSize(preferredSize);
-                        panel3.setPreferredSize(preferredSize);
-                    }
                 }
                 contentPanel.add(panel3);
                 panel3.setBounds(345, 40, 5, 300);
@@ -239,7 +224,7 @@ public class ClientDetailsFrame extends JFrame {
                             Requests.updateClient(id,fillFirst.getText(),fillLast.getText(),fillEmail.getText(), codedPassword,date);
                             dispose();
                         } catch (SQLServerException exception) {
-                            JOptionPane.showMessageDialog(new Frame(), "E-mail must be unique!");
+                            JOptionPane.showMessageDialog(new Frame(), "An account with this email already exists");
                         } catch (SQLException ex) {
                             ex.printStackTrace();
                         }
@@ -249,7 +234,7 @@ public class ClientDetailsFrame extends JFrame {
                             Requests.createClient(fillFirst.getText(),fillLast.getText(),fillEmail.getText(),codedPassword,date);
                             dispose();
                         } catch (SQLException ex) {
-                            ex.printStackTrace();
+                            JOptionPane.showMessageDialog(new Frame(), "An account with this email already exists");
                         }
                     }
                 }

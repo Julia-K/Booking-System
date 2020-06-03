@@ -110,7 +110,7 @@ public class LoginFrame extends JFrame {
                             System.out.println(fillLogin.getText() + " " + haslo);
                             if(Requests.isAdmin(fillLogin.getText(), haslo)) {
                                 dispose();
-                                // tutaj bedzie przejscie do nowej hahaahahahahah
+                                ManageWindow.main(new String[]{});
                             } else {
                                 JOptionPane.showMessageDialog(new Frame(), "Incorrect login or password.");
                             }

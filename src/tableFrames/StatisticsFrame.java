@@ -3,13 +3,10 @@ package tableFrames;
 import allComands.Requests;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.JTableHeader;
 import java.awt.*;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 public class StatisticsFrame extends JFrame{
@@ -56,20 +53,23 @@ public class StatisticsFrame extends JFrame{
 
             {
                 leftPanel.setPreferredSize(new Dimension(210, 150));
-                leftPanel.setBackground(new Color(5, 102, 141));
-                leftPanel.setForeground(new Color(5, 102, 141));
+                leftPanel.setBackground(new Color(235, 242, 250));
                 leftPanel.setMaximumSize(new Dimension(160, 150));
-                leftPanel.setMinimumSize(new Dimension(160, 200));
                 leftPanel.setLayout(null);
+                leftPanel.setBorder(BorderFactory.createMatteBorder(0,10,10,10,new Color(4, 72, 98)));
+                //rightPanel.setBorder(BorderFactory.createMatteBorder(0,0,10,10,new Color(4, 72, 98)));
 
                 classButton.setText("Classes");
+                classButton.setForeground(Color.white);
+                classButton.setBackground(new Color(5, 102, 141));
+                classButton.setBounds(45, 50, 120, 45);
                 leftPanel.add(classButton);
-                classButton.setBounds(45, 50, 120, 50);
                 classButton.addActionListener(e-> {
                     try {
                         table = Requests.showClassStatistic();
                         yearsSpinner.setVisible(false);
                         chooseYearL.setVisible(false);
+                        information.setText("Percentage distribution of class selections by customers");
                         setTableDesign();
                         reload();
                     } catch (SQLException throwables) {
@@ -79,7 +79,9 @@ public class StatisticsFrame extends JFrame{
 
                 pilotButton.setText("Pilots");
                 leftPanel.add(pilotButton);
-                pilotButton.setBounds(45, 125, 120, 55);
+                pilotButton.setForeground(Color.white);
+                pilotButton.setBackground(new Color(5, 102, 141));
+                pilotButton.setBounds(45, 125, 120, 45);
                 pilotButton.addActionListener(e-> {
                     try {
                         table = Requests.showPilotStatistics();
@@ -95,7 +97,9 @@ public class StatisticsFrame extends JFrame{
 
                 clientButton.setText("Clients");
                 leftPanel.add(clientButton);
-                clientButton.setBounds(45, 205, 120, 50);
+                clientButton.setBounds(45, 200, 120, 45);
+                clientButton.setForeground(Color.white);
+                clientButton.setBackground(new Color(5, 102, 141));
                 clientButton.addActionListener(e-> {
                     try {
                         table = Requests.showClientStatistics();
@@ -111,7 +115,9 @@ public class StatisticsFrame extends JFrame{
 
                 yearsButton.setText("Tickets-Years");
                 leftPanel.add(yearsButton);
-                yearsButton.setBounds(45, 280, 120, 55);
+                yearsButton.setForeground(Color.white);
+                yearsButton.setBackground(new Color(5, 102, 141));
+                yearsButton.setBounds(45, 275, 120, 45);
                 yearsButton.addActionListener(e-> {
                     try {
                         table = Requests.showYearsStatistics();
@@ -126,6 +132,8 @@ public class StatisticsFrame extends JFrame{
                 });
 
                 monthsButton.setText("Tickets-Months");
+                monthsButton.setForeground(Color.white);
+                monthsButton.setBackground(new Color(5, 102, 141));
                 monthsButton.addActionListener(e-> {
                     int currentYear = Calendar.getInstance().get(Calendar.YEAR);
                     SpinnerModel yearModel = new SpinnerNumberModel(currentYear,currentYear - 100,currentYear + 100,1);
@@ -136,6 +144,7 @@ public class StatisticsFrame extends JFrame{
                     yearsSpinner.setVisible(true);
                     chooseYearL.setVisible(true);
                     information.setText("The number of reserved tickets in particular months of selected years");
+                    information.setFont(new Font("Roboto",Font.PLAIN,19));
                     try {
                         table = Requests.showMonthStatistics("2020");
                         setTableDesign();
@@ -154,7 +163,7 @@ public class StatisticsFrame extends JFrame{
                     }
                 });
                 leftPanel.add(monthsButton);
-                monthsButton.setBounds(45, 360, 120, 55);
+                monthsButton.setBounds(45, 350, 120, 45);
             }
             dialogPane.add(leftPanel, BorderLayout.WEST);
 
@@ -162,7 +171,7 @@ public class StatisticsFrame extends JFrame{
                 rightPanel.setBackground(new Color(235, 242, 250));
                 rightPanel.setPreferredSize(new Dimension(428, 600));
                 rightPanel.setLayout(new BorderLayout());
-                rightPanel.setBorder(new EmptyBorder(0,12,12,0));
+                rightPanel.setBorder(new EmptyBorder(0,12,12,12));
 
                 {
                     table.setPreferredScrollableViewportSize(new Dimension(500, 350));
@@ -176,7 +185,8 @@ public class StatisticsFrame extends JFrame{
                 reload();
                 setTableDesign();
                 information.setText("Percentage distribution of class selections by customers");
-                information.setFont(information.getFont().deriveFont(information.getFont().getStyle() | Font.BOLD, information.getFont().getSize() + 10f));
+                information.setFont(new Font("Roboto",Font.PLAIN,20));
+                //information.setFont(information.getFont().deriveFont(information.getFont().getStyle() | Font.BOLD, information.getFont().getSize() + 10f));
                 information.setHorizontalAlignment(SwingConstants.CENTER);
                 information.setForeground(Color.black);
                 information.setMaximumSize(new Dimension(634, 100));
@@ -187,48 +197,45 @@ public class StatisticsFrame extends JFrame{
             dialogPane.add(rightPanel, BorderLayout.CENTER);
 
             {
-                tiopPanel.setMaximumSize(new Dimension(32767, 80));
                 tiopPanel.setMinimumSize(new Dimension(0, 70));
                 tiopPanel.setPreferredSize(new Dimension(0, 80));
                 tiopPanel.setLayout(null);
 
                 statistic.setText("Statistics");
-                statistic.setMaximumSize(new Dimension(1200, 50));
                 statistic.setMinimumSize(new Dimension(33, 50));
                 statistic.setPreferredSize(new Dimension(150, 50));
-                statistic.setDisplayedMnemonicIndex(0);
-                statistic.setAlignmentX(0.5F);
                 statistic.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 25));
                 statistic.setHorizontalAlignment(SwingConstants.CENTER);
                 statistic.setBorder(new EmptyBorder(5, 10, 5, 5));
                 statistic.setForeground(Color.white);
                 tiopPanel.add(statistic);
-                statistic.setBounds(35, 10, 150, 50);
+                statistic.setBounds(20, 10, 175, 60);
                 tiopPanel.add(yearsSpinner);
-                yearsSpinner.setBounds(340, 25, 80, 30);
+                yearsSpinner.setBounds(320, 25, 80, 30);
                 yearsSpinner.setVisible(false);
 
                 chooseYearL.setText("Choose year: ");
                 chooseYearL.setForeground(Color.white);
-                chooseYearL.setFont(chooseYearL.getFont().deriveFont(chooseYearL.getFont().getSize() + 5f));
+                chooseYearL.setFont(new Font("Roboto", Font.BOLD, 13));
                 tiopPanel.add(chooseYearL);
-                chooseYearL.setBounds(215, 25, 120, 25);
+                chooseYearL.setBounds(220, 30, 90, 25);
                 chooseYearL.setVisible(false);
 
-                goButton.setText("Go to manage");
+                goButton.setText("Go to manage \uD83E\uDC46");
                 tiopPanel.add(goButton);
-                goButton.setBounds(720,25,120,25);
+                goButton.setBounds(690, 20, 150, 35);
+                goButton.setBackground(new Color(235, 242, 250));
                 goButton.addActionListener(e-> {
-                    //ManageWindow.main(new String[]);
+                    try {
+                        new ManageWindow().setVisible(true);
+                    } catch (SQLException throwables) {
+                        throwables.printStackTrace();
+                    }
                     dispose();
                 });
-
-                Dimension preferredSize = new Dimension();
-                preferredSize.width =870;
-                preferredSize.height = 80;
-                tiopPanel.setMinimumSize(preferredSize);
-                tiopPanel.setPreferredSize(preferredSize);
-                tiopPanel.setBackground(Color.black);
+                tiopPanel.setMinimumSize(new Dimension(870,80));
+                tiopPanel.setPreferredSize(new Dimension(870,80));
+                tiopPanel.setBackground(new Color(4, 72, 98));
             }
             dialogPane.add(tiopPanel, BorderLayout.NORTH);
         }
@@ -250,18 +257,20 @@ public class StatisticsFrame extends JFrame{
 
     public void reload() {
         rightPanel.removeAll();
-        rightPanel.add(new JScrollPane(table), BorderLayout.CENTER);
+        JScrollPane x = new JScrollPane(table);
+        x.getViewport().setBackground(new Color(235, 242, 250));
+        rightPanel.add(x, BorderLayout.CENTER);
         rightPanel.add(information, BorderLayout.NORTH);
         rightPanel.revalidate();
         rightPanel.repaint();
     }
 
     private void setTableDesign() {
-        table.setFont(new Font("Lucida Sans", Font.PLAIN, 25));
+        table.setFont(new Font("Roboto", Font.PLAIN, 15));
         table.setRowHeight(30);
         table.setBackground(new Color(235, 242, 250));
         JTableHeader tableHeader = table.getTableHeader();
-        tableHeader.setBackground(new Color(66, 122, 161));
+        tableHeader.setBackground(new Color(5, 102, 141));
         tableHeader.setForeground(Color.white);
     }
 }

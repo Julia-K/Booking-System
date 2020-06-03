@@ -6,6 +6,7 @@ import allComands.StringsFormatter;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
 import javax.swing.table.TableRowSorter;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -41,6 +42,7 @@ public class SelectFlight extends JFrame {
         dateFrom = new MyOwnDatePicker(s);
         dateTo = new MyOwnDatePicker(s);
         initComponents();
+        setTableDesign();
     }
 
     private void initComponents() throws SQLException {
@@ -118,7 +120,7 @@ public class SelectFlight extends JFrame {
                 dateFrom.setBounds(450, 95, 210, 50);
 
                 dateTo.addTo(contentPanel);
-                dateTo.setBounds(665, 95, 210, 50);
+                dateTo.setBounds(665, 95, 210, 26);
 
                 fillPriceFrom.setForeground(Color.black);
                 fillPriceFrom.setBackground(new Color(235, 242, 250));
@@ -188,6 +190,7 @@ public class SelectFlight extends JFrame {
                                 priceTo = Float.parseFloat(fillPriceTo.getText());
                                 table = Requests.readTableAfterSearchingWithOnePrice(false, dateFromString, dateToString, priceTo, depId, arrId);
                             }
+                            setTableDesign();
                         } else {
                             if (fillPriceTo.getText().equals("")) {
                                 pricefrom = Float.parseFloat(fillPriceFrom.getText());
@@ -197,6 +200,7 @@ public class SelectFlight extends JFrame {
                                 priceTo = Float.parseFloat(fillPriceTo.getText());
                                 table = Requests.readTableAfterFullSearching(dateFromString, dateToString, pricefrom, priceTo, depId, arrId);
                             }
+                            setTableDesign();
                         }
                         setDoubleClick();
                     } catch (SQLException throwables) {
@@ -305,9 +309,9 @@ public class SelectFlight extends JFrame {
 
     private JComboBox<String> getFilledComboBox() throws SQLException {
         JComboBox<String> comboBox = new JComboBox<String>();
-        ResultSet rs = Requests.readTableByRequest("select airportID from airport");
+        ResultSet rs = Requests.readByTableName("airport");
         while (rs.next()) {
-            int id = rs.getInt("airportID");
+            int id = rs.getInt(1);
             comboBox.addItem(getFromInformations(id));
         }
         return comboBox;
@@ -353,41 +357,13 @@ public class SelectFlight extends JFrame {
         });
     }
 
-    private void updateContent(int airlineid) throws SQLException {
-        airportsWithId = Requests.getAirportsWithId();
-        fromCombo = getFilledComboBox();
-        toCombo = getFilledComboBox();
+    private void setTableDesign() {
+        table.setFont(new Font("Roboto", Font.PLAIN, 15));
+        table.setRowHeight(30);
+        table.setBackground(new Color(235, 242, 250));
+        JTableHeader tableHeader = table.getTableHeader();
+        tableHeader.setBackground(new Color(5, 102, 141));
+        tableHeader.setForeground(Color.white);
     }
 
-    private JTable getTableAfterSearching() {
-        String dateFromString = dateFrom.getDate();
-        String dateToString = dateTo.getDate();
-        JTable jTable = new JTable();
-        int pricefrom = Integer.parseInt(fillPriceFrom.getText());
-        int priceTo = Integer.parseInt(fillPriceTo.getText());
-        int depId = (Integer) airportsWithId.get(fromCombo.getSelectedIndex());
-        int arrId = (Integer) airportsWithId.get(toCombo.getSelectedIndex());
-        DefaultTableModel model = new DefaultTableModel();
-        try {
-            ResultSet rs = Requests.readTableByRequest("select flightID, dep.name as dname, arr.name as aname, departure_date, arrival_date from flight\n" +
-                    "inner join airport as dep on dep.airportID = flight.departureAirport_id\n" +
-                    "inner join airport as arr on arr.airportID = flight.arrivalAirport_id\n" +
-                    "where price between " + pricefrom + " and " + priceTo + "\n" +
-                    "and dep.airportID = " + depId + " and arr.airportID = " + arrId + "\n" +
-                    "and departure_date >= '" + dateFromString + "' \n" +
-                    "and arrival_date <= '" + dateToString + "'");
-            model.addColumn("flightID");
-            model.addColumn("Departure Airport");
-            model.addColumn("Arrival Airport");
-            model.addColumn("Departure date");
-            model.addColumn("Arrival date");
-            TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
-            jTable.setRowSorter(sorter);
-            jTable.setModel(Requests.addRows(rs, model));
-            jTable.removeColumn(jTable.getColumnModel().getColumn(0));
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-        return jTable;
-    }
 }

@@ -61,7 +61,6 @@ public class AirportDetailsFrame extends JFrame {
             ResultSet rs = Requests.readById(id,"airport");
             rs.next();
             int addressId = rs.getInt(4);
-            System.out.println(addressId);
             for (Map.Entry<Integer, Integer> entry : addressesWithId.entrySet()) {
                 Integer key = entry.getKey();
                 Integer value = entry.getValue();
@@ -398,7 +397,7 @@ public class AirportDetailsFrame extends JFrame {
                             }
                         }
                     } catch (SQLServerException sqlServerException) {
-                        JOptionPane.showMessageDialog(new Frame(), "Airport name and code must be unique!");
+                        JOptionPane.showMessageDialog(new Frame(), "There is already an airport with this code");
                     } catch (SQLException throwables) {
                         throwables.printStackTrace();
                     }
@@ -459,6 +458,9 @@ public class AirportDetailsFrame extends JFrame {
                 return false;
             } else if (fillCodeL.getText().length() != 4) {
                 JOptionPane.showMessageDialog(new Frame(), "Code must have 4 characters");
+                return false;
+            } else if (fillPostal.getText().contains("_")) {
+                JOptionPane.showMessageDialog(new Frame(), "Postal code must have 5 digits. (__-___)");
                 return false;
             } else {
                 return true;

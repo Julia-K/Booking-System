@@ -18,8 +18,12 @@ public class DateLabelFormatter extends JFormattedTextField.AbstractFormatter {
     @Override
     public String valueToString(Object value) {
         if (value != null) {
-            Calendar cal = (Calendar) value;
-            return dateFormatter.format(cal.getTime());
+            try {
+                Calendar cal = (Calendar) value;
+                return dateFormatter.format(cal.getTime());
+            } catch (ClassCastException x) {
+
+            }
         }
         return "";
     }

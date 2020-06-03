@@ -21,40 +21,30 @@ public class FlightDetailsFrame extends JFrame {
     private LinkedHashMap<Integer,Integer> airportsWithId;
     private LinkedHashMap<Integer,Integer> pilotsWithId;
     private LinkedHashMap<Integer,Integer> planesWithId;
-    private JPanel dialogPane;
+    private JComboBox<String> pilotComboBox;
+    private JComboBox<String> planeComboBox;
+    private JComboBox<String> depComboBox;
+    private JComboBox<String> arrComboBox;
+    private MyOwnDatePicker depPicker;
+    private MyOwnDatePicker arrPicker;
+    private JSpinner depTimeSpinner;
+    private JSpinner arrTimeSpinner;
+    private JTextField fillPrice;
     private JPanel contentPanel;
-    private JLabel fromL;
-    private JLabel toL;
+    private JPanel dialogPane;
+    private JPanel planePanel;
+    private JPanel buttonBar;
+    private JButton okButton;
+    private boolean update;
     private JLabel departureL;
     private JLabel arrivalL;
     private JLabel priceL;
-    private JPanel buttonBar;
-    private JButton okButton;
     private JPanel panel1;
-    private JTextField fillDep;
-    private JTextField fillArr;
-    private JPanel panel3;
-    private JTextField fillPrice;
-    private JPanel panel2;
-    private JLabel depDateL;
-    private JLabel depTimeL;
-    private JSpinner depTimeSpinner;
-    private JLabel arrDateL;
-    private JLabel arrTimeL;
-    private JSpinner arrTimeSpinner;
-    private MyOwnDatePicker depPicker;
-    private MyOwnDatePicker arrPicker;
-    private JComboBox<String> depComboBox;
-    private JComboBox<String> arrComboBox;
     private JLabel pilotL;
     private JLabel planeL;
-    private JComboBox<String> pilotComboBox;
-    private JComboBox<String> planeComboBox;
-    private boolean update;
+    private JLabel fromL;
+    private JLabel toL;
     private int id;
-    private JPanel planePanel;
-    private String depDate;
-    private String arrDate;
 
     public FlightDetailsFrame() throws SQLException, ParseException {
         this.update = false;
@@ -65,15 +55,16 @@ public class FlightDetailsFrame extends JFrame {
         initAddUpdateComponents();
         setVisible(true);
     }
-    public FlightDetailsFrame(Boolean update, int id, int depId, int arrId, int pilotId, int planeId, String depTime, String depDate, String arrTime, String arrDate, float price) throws SQLException, ParseException {
-        this.depDate = depDate;
-        this.arrDate = arrDate;
+
+    public FlightDetailsFrame(Boolean update, int id, int depId, int arrId, int pilotId, int planeId, String depTime,
+                              String depDate, String arrTime, String arrDate, float price) throws SQLException, ParseException {
         this.update = update;
         if(update) {
             this.id = id;
             depPicker = new MyOwnDatePicker(depDate);
             arrPicker = new MyOwnDatePicker(arrDate);
             initAddUpdateComponents();
+
             for (Map.Entry<Integer, Integer> entry : airportsWithId.entrySet()) { //set comboBox
                 Integer key = entry.getKey();
                 Integer value = entry.getValue();
@@ -115,37 +106,6 @@ public class FlightDetailsFrame extends JFrame {
         }
         this.update = update;
         setVisible(true);
-    }
-
-    private String getAirport(int id) throws SQLException {
-        ResultSet rs = Requests.readById(id, "airport");
-        rs.next();
-        String name = rs.getString(2);
-        String code = rs.getString(3);
-        return (name + " ("+code+")");
-    }
-
-    private String getPilot(int id) throws SQLException {
-        ResultSet rs = Requests.readById(id, "pilot");
-        rs.next();
-        String name = rs.getString(2);
-        String last = rs.getString(3);
-        return (name + " " + last);
-    }
-
-    private int getAirlineId(int pilotId) throws SQLException {
-        ResultSet rs = Requests.readById(pilotId, "pilot");
-        rs.next();
-        int airlineId = rs.getInt(5);
-        return airlineId;
-    }
-
-    private String getPlane(int id) throws SQLException {
-        ResultSet rs = Requests.readById(id, "plane");
-        rs.next();
-        String brand = rs.getString(2);
-        String model = rs.getString(3);
-        return (brand + " - " + model);
     }
 
     private void initDetailsComponents() {
@@ -272,7 +232,7 @@ public class FlightDetailsFrame extends JFrame {
         contentPanel = new JPanel();
         fromL = new JLabel();
         toL = new JLabel();
-        panel3 = new JPanel();
+        JPanel panel3 = new JPanel();
         depComboBox = getAirportComboBox();
         arrComboBox = getAirportComboBox();
         pilotL = new JLabel();
@@ -284,12 +244,12 @@ public class FlightDetailsFrame extends JFrame {
         buttonBar = new JPanel();
         okButton = new JButton();
         panel1 = new JPanel();
-        panel2 = new JPanel();
-        depDateL = new JLabel();
-        depTimeL = new JLabel();
+        JPanel panel2 = new JPanel();
+        JLabel depDateL = new JLabel();
+        JLabel depTimeL = new JLabel();
         depTimeSpinner = new JSpinner();
-        arrDateL = new JLabel();
-        arrTimeL = new JLabel();
+        JLabel arrDateL = new JLabel();
+        JLabel arrTimeL = new JLabel();
         arrTimeSpinner = new JSpinner();
 
         setResizable(false);
@@ -349,7 +309,6 @@ public class FlightDetailsFrame extends JFrame {
                 pilotL.setText("Pilot");
                 pilotL.setForeground(Color.black);
                 pilotL.setFont(pilotL.getFont().deriveFont(pilotL.getFont().getStyle() | Font.BOLD, pilotL.getFont().getSize() + 12f));
-                pilotL.setBorder(null);
                 contentPanel.add(pilotL);
                 pilotL.setBounds(35, 185, 195, 40);
 
@@ -388,7 +347,6 @@ public class FlightDetailsFrame extends JFrame {
                                     int planeId = rs.getInt("plane_id");
                                     planeComboBox.addItem(getPlane(planeId));
                                 }
-
                             }
                             planesWithId = Requests.getPlanesByAirlineID(airlineID);
                             planePanel.removeAll();
@@ -430,35 +388,31 @@ public class FlightDetailsFrame extends JFrame {
             }
 
             okButton.addActionListener(e-> {
-                int depId = (Integer)airportsWithId.get(depComboBox.getSelectedIndex());
-                int arrId = (Integer)airportsWithId.get(arrComboBox.getSelectedIndex());
-                int pilotId = (Integer)pilotsWithId.get(pilotComboBox.getSelectedIndex());
-                int planeId = (Integer)planesWithId.get(planeComboBox.getSelectedIndex());
-                SimpleDateFormat formater = new SimpleDateFormat("HH:mm");
-                String arrSpinner = formater.format(arrTimeSpinner.getValue());
-                String depSpinner = formater.format(depTimeSpinner.getValue());
-
-                if(isValidate()) {
-                    if(update) {
-                        try {
+                if (isValidate()) {
+                    try {
+                        int depId = (Integer) airportsWithId.get(depComboBox.getSelectedIndex());
+                        int arrId = (Integer) airportsWithId.get(arrComboBox.getSelectedIndex());
+                        int pilotId = (Integer) pilotsWithId.get(pilotComboBox.getSelectedIndex());
+                        int planeId = (Integer) planesWithId.get(planeComboBox.getSelectedIndex());
+                        SimpleDateFormat formater = new SimpleDateFormat("HH:mm");
+                        String arrSpinner = formater.format(arrTimeSpinner.getValue());
+                        String depSpinner = formater.format(depTimeSpinner.getValue());
+                        if (update) {
                             System.out.println("ID: " + id);
-                            Requests.updateFlight(id,depId,arrId,pilotId,planeId,depSpinner, depPicker.getDate(),arrSpinner,
-                                    arrPicker.getDate(), Float.parseFloat(fillPrice.getText()));
+                            Requests.updateFlight(id, depId, arrId, pilotId, planeId, depSpinner, depPicker.getDate(), arrSpinner,
+                                    arrPicker.getDate(), fillPrice.getText());
                             dispose();
-                        } catch (SQLServerException x) {
-                            JOptionPane.showMessageDialog(new Frame(), "Price must be of the float type in the given formula (max: _ _ _ _ _._ _)");
-                        }
-                        catch (SQLException ex) {
-                            ex.printStackTrace();
-                        }
-                    } else {
-                        try {
-                            Requests.createFlight(depId,arrId,pilotId,planeId,depSpinner,depPicker.getDate(),arrSpinner,
-                                    arrPicker.getDate(), Float.parseFloat(fillPrice.getText()));
+                        } else {
+                            Requests.createFlight(depId, arrId, pilotId, planeId, depSpinner, depPicker.getDate(), arrSpinner,
+                                    arrPicker.getDate(), fillPrice.getText());
                             dispose();
-                        } catch (SQLException ex) {
-                            ex.printStackTrace();
                         }
+                    } catch (NullPointerException x) {
+                        JOptionPane.showMessageDialog(new Frame(), "You must select a pilot who is assigned to some plain");
+                    } catch (SQLServerException x) {
+                        JOptionPane.showMessageDialog(new Frame(), "Price must be of the float type in the given formula (max: _ _ _ _ _._ _)");
+                    } catch (SQLException throwables) {
+                        throwables.printStackTrace();
                     }
                 }
             });
@@ -554,39 +508,6 @@ public class FlightDetailsFrame extends JFrame {
         return comboBox;
     }
 
-    private JComboBox<String> getPlaneComboBox(int airlineId) throws SQLException {
-        JComboBox<String> x = new JComboBox<>();
-        ResultSet rs = Requests.readTableByRequest("select * from plane_airline");
-        while (rs.next()) {
-            int id = rs.getInt("airline_id");
-            if (airlineId == id) {
-               int planeId = rs.getInt("plane_id");
-                x.addItem(getPlane(planeId));
-            }
-        }
-        return x;
-    }
-
-    private void updateContent(int airlineid) throws SQLException {
-        airportsWithId = Requests.getAirportsWithId();
-        pilotsWithId = Requests.getPilotsWithId();
-        planesWithId = Requests.getPlanesByAirlineID(airlineid);
-        depComboBox = getAirportComboBox();
-        arrComboBox = getAirportComboBox();
-        pilotComboBox = getPilotComboBox();
-        planeComboBox = getPlaneComboBox();
-    }
-
-    private JComboBox<String> getPlaneComboBox() throws SQLException {
-        JComboBox<String> x = new JComboBox<>();
-        ResultSet rs = Requests.readTableByRequest("select planeID from plane");
-        while (rs.next()) {
-            int id = rs.getInt("planeID");
-                x.addItem(getPlane(id));
-            }
-        return x;
-    }
-
     private void setSpinner(JSpinner jSpinner) {
         Date date = new Date();
         SpinnerDateModel sm = new SpinnerDateModel(date, null, null, Calendar.HOUR_OF_DAY);
@@ -614,5 +535,36 @@ public class FlightDetailsFrame extends JFrame {
         } else {
             return true;
         }
+    }
+
+    private String getAirport(int id) throws SQLException {
+        ResultSet rs = Requests.readById(id, "airport");
+        rs.next();
+        String name = rs.getString(2);
+        String code = rs.getString(3);
+        return (name + " ("+code+")");
+    }
+
+    private String getPilot(int id) throws SQLException {
+        ResultSet rs = Requests.readById(id, "pilot");
+        rs.next();
+        String name = rs.getString(2);
+        String last = rs.getString(3);
+        return (name + " " + last);
+    }
+
+    private int getAirlineId(int pilotId) throws SQLException {
+        ResultSet rs = Requests.readById(pilotId, "pilot");
+        rs.next();
+        int airlineId = rs.getInt(5);
+        return airlineId;
+    }
+
+    private String getPlane(int id) throws SQLException {
+        ResultSet rs = Requests.readById(id, "plane");
+        rs.next();
+        String brand = rs.getString(2);
+        String model = rs.getString(3);
+        return (brand + " - " + model);
     }
 }

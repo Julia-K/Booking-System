@@ -16,7 +16,6 @@ public class ManageWindow extends JFrame {
     private JPanel topPanel;
     private JLabel manage;
     private JComboBox<String> comboBox;
-    private JPanel bottomPanel;
     private JPanel leftPanel;
     private JPanel filterPanel;
     private JTextField searchField;
@@ -26,6 +25,9 @@ public class ManageWindow extends JFrame {
     private JButton addButton;
     private JPanel rightPanel;
     private JTable table;
+    private JLabel filter;
+    private JPanel dialogPane;
+    private JButton goButton;
 
     public ManageWindow() throws SQLException {
         initComponents();
@@ -35,10 +37,11 @@ public class ManageWindow extends JFrame {
     }
 
     private void initComponents() throws SQLException {
+        dialogPane = new JPanel();
+        goButton = new JButton();
         topPanel = new JPanel();
         manage = new JLabel();
         comboBox = new JComboBox<String>();
-        bottomPanel = new JPanel();
         tableCombobox = new LinkedHashMap<>();
         leftPanel = new JPanel();
         filterPanel = new JPanel();
@@ -48,112 +51,142 @@ public class ManageWindow extends JFrame {
         deleteButton = new JButton();
         addButton = new JButton();
         rightPanel = new JPanel();
+        filter = new JLabel();
+        table = new JTable();
         comboBox.setSelectedItem(0);
 
         setResizable(false);
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-        setMinimumSize(new Dimension(1300, 700));
+        setMinimumSize(new Dimension(900, 600));
+        setBackground(new Color(235, 242, 250));
         var contentPane = getContentPane();
         contentPane.setLayout(new BorderLayout());
 
-        topPanel.setMaximumSize(new Dimension(150, 70));
-        topPanel.setMinimumSize(new Dimension(150, 70));
-        topPanel.setPreferredSize(new Dimension(150, 70));
-        topPanel.setBackground(new Color(66, 122, 161));
+        dialogPane.setBorder(new EmptyBorder(12, 12, 12, 12));
+        dialogPane.setBackground(new Color(235, 242, 250));
+        dialogPane.setMaximumSize(new Dimension(100, 100));
+        dialogPane.setMinimumSize(new Dimension(100, 100));
+        dialogPane.setPreferredSize(new Dimension(100, 100));
+        dialogPane.setLayout(new BorderLayout());
+
+        topPanel.setPreferredSize(new Dimension(870, 80));
+        topPanel.setMinimumSize(new Dimension(870,80));
+        topPanel.setBackground(new Color(4, 72, 98));
         topPanel.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
-        topPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+        topPanel.setLayout(null);
 
         manage.setText("Manage");
         manage.setPreferredSize(new Dimension(150, 50));
         manage.setAlignmentX(0.5F);
-        manage.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 30));
+        manage.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 25));
         manage.setHorizontalAlignment(SwingConstants.CENTER);
         manage.setForeground(Color.white);
         manage.setBorder(new EmptyBorder(5, 10, 5, 5));
         topPanel.add(manage);
+        manage.setBounds(20, 10, 175, 60);
 
         comboBox.setPreferredSize(new Dimension(150, 30));
         comboBox.setBackground(Color.white);
+        comboBox.setBounds(245, 23, 160, 35);
+        // comboBox.setFont(new Font("SA"));
+        ((JLabel)comboBox.getRenderer()).setHorizontalAlignment(SwingConstants.CENTER); //center text in combobox
+
         addToCombobox();
         comboBox.setSelectedIndex(0);
         mainComboBoxAction();
         topPanel.add(comboBox);
-        contentPane.add(topPanel, BorderLayout.PAGE_START);
 
-        {
-            bottomPanel.setMaximumSize(new Dimension(1300, 150));
-            bottomPanel.setMinimumSize(new Dimension(1300, 150));
-            bottomPanel.setPreferredSize(new Dimension(1300, 150));
-            bottomPanel.setBackground(Color.white);
-            bottomPanel.setLayout(new BorderLayout());
+        goButton.setText("Go to statistics \uD83E\uDC46");
+        topPanel.add(goButton);
+        goButton.setBounds(690, 20, 150, 35);
+        goButton.setBackground(new Color(235, 242, 250));
+        goButton.addActionListener(e-> {
+            StatisticsFrame.main(new String[]{});
+            dispose();
+        });
+
+        dialogPane.add(topPanel, BorderLayout.PAGE_START);
+
+            leftPanel.setMaximumSize(new Dimension(160, 150));
+            leftPanel.setPreferredSize(new Dimension(210, 150));
+            leftPanel.setMaximumSize(new Dimension(160, 150));
+            leftPanel.setMinimumSize(new Dimension(160, 200));
+            leftPanel.setBackground(new Color(235, 242, 250));
+            leftPanel.setBorder(BorderFactory.createMatteBorder(10,0,0,0,new Color(235, 242, 250)));
+            leftPanel.setLayout(null);
 
             {
-                leftPanel.setMaximumSize(new Dimension(300, 700));
-                leftPanel.setPreferredSize(new Dimension(300, 700));
-                leftPanel.setMinimumSize(new Dimension(300, 700));
-                leftPanel.setBackground(new Color(66, 122, 161));
-                leftPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
-                leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.PAGE_AXIS));
+                filterPanel.setMaximumSize(new Dimension(400, 100));
+                filterPanel.setBackground(new Color(235, 242, 250));
+                filterPanel.setMinimumSize(null);
+                filterPanel.setBorder(new EmptyBorder(10, 5, 5, 5));
+                filterPanel.setPreferredSize(new Dimension(400, 100));
+                filterPanel.setLayout(null);
 
-                {
-                    filterPanel.setMaximumSize(new Dimension(400, 150));
-                    filterPanel.setBackground(new Color(66, 122, 161));
-                    filterPanel.setMinimumSize(null);
-                    filterPanel.setBorder(new EmptyBorder(10, 5, 5, 5));
-                    filterPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 20, 10));
+                filter.setText("Search: ");
+                filter.setHorizontalAlignment(SwingConstants.LEFT);
+                filter.setBounds(70,10,50,20);
 
-                    searchField.setMaximumSize(new Dimension(100, 40));
-                    searchField.setPreferredSize(new Dimension(250, 40));
-                    searchField.setMinimumSize(new Dimension(100, 40));
-                    searchField.setToolTipText("filter expression");
-                    filterPanel.add(searchField);
+                searchField.setMaximumSize(new Dimension(100, 40));
+                searchField.setPreferredSize(new Dimension(100, 40));
+                searchField.setMinimumSize(new Dimension(100, 40));
+                searchField.setToolTipText("filter expression");
+                filterPanel.add(searchField);
+                searchField.setBounds(25, 30, 120, 30);
 
-                }
-                leftPanel.add(filterPanel);
+                filter.setText("Search:");
+                filterPanel.add(filter);
+                filter.setBounds(25, 0, 55, 25);
 
-                detailsButton.setText("Display details");
-                detailsButton.setAlignmentX(0.5F);
-                detailsButton.setMaximumSize(new Dimension(150, 60));
-                detailsButton.setBackground(new Color(235, 242, 250));
-                leftPanel.add(detailsButton);
-                leftPanel.add(Box.createRigidArea(new Dimension(0, 30)));
+                filterPanel.setMinimumSize(new Dimension(160, 75));
+                filterPanel.setPreferredSize(new Dimension(160, 75));
 
-                updateButton.setText("Update");
-                updateButton.setAlignmentX(0.5F);
-                updateButton.setMaximumSize(new Dimension(150, 60));
-                updateButton.setBackground(new Color(235, 242, 250));
-                leftPanel.add(updateButton);
-                leftPanel.add(Box.createRigidArea(new Dimension(0, 30)));
-
-                deleteButton.setText("Delete");
-                deleteButton.setAlignmentX(0.5F);
-                deleteButton.setMaximumSize(new Dimension(150, 60));
-                leftPanel.add(deleteButton);
-                leftPanel.add(Box.createRigidArea(new Dimension(0, 30)));
-
-                addButton.setText("Add");
-                addButton.setAlignmentX(0.5F);
-                addButton.setMaximumSize(new Dimension(150, 60));
-                leftPanel.add(addButton);
             }
-            bottomPanel.add(leftPanel, BorderLayout.CENTER);
+            leftPanel.add(filterPanel);
+            filterPanel.setBounds(20, 20, 175, 85);
+            dialogPane.add(leftPanel, BorderLayout.WEST);
+
+            detailsButton.setText("Details");
+            detailsButton.setForeground(Color.white);
+            detailsButton.setBackground(new Color(5, 102, 141));
+            detailsButton.setBounds(45, 125, 120, 45);
+            leftPanel.add(detailsButton);
+
+            updateButton.setText("Update");
+            updateButton.setForeground(Color.white);
+            updateButton.setBackground(new Color(5, 102, 141));
+            leftPanel.add(updateButton);
+            updateButton.setBounds(45, 200, 120, 45);
+
+            deleteButton.setText("Delete");
+            deleteButton.setForeground(Color.white);
+            deleteButton.setBackground(new Color(5, 102, 141));
+            leftPanel.add(deleteButton);
+            deleteButton.setBounds(45, 275, 120, 45);
+
+            addButton.setText("Add");
+            addButton.setBackground(new Color(5, 102, 141));
+            addButton.setForeground(Color.white);
+            leftPanel.add(addButton);
+            addButton.setBounds(45, 350, 120, 45);
 
             {
                 rightPanel.setBackground(new Color(235, 242, 250));
-                rightPanel.setPreferredSize(new Dimension(1000, 0));
-                rightPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
+                rightPanel.setPreferredSize(new Dimension(428, 600));
+                rightPanel.setBorder(new EmptyBorder(10, 10, 0, 0));
                 rightPanel.setLayout(new BorderLayout());
-                rightPanel.add(new JScrollPane(table), BorderLayout.CENTER);
+                table.setBackground(new Color(235, 242, 250));
+                table.setForeground(Color.black);
             }
-            bottomPanel.add(rightPanel, BorderLayout.LINE_END);
-        }
-        contentPane.add(bottomPanel, BorderLayout.CENTER);
+            dialogPane.add(rightPanel, BorderLayout.CENTER);
+
+        contentPane.add(dialogPane, BorderLayout.CENTER);
         pack();
         setLocationRelativeTo(getOwner());
     }
 
     public void reloadClients() throws SQLException {
-        table = Requests.showClientsTable();
+        table = Requests.readClientsTable();
         TableRowFilter.create(searchField, table);
         Actions.setDetailOrUpdateClient(false,detailsButton,table,this);
         Actions.setDetailOrUpdateClient(true,updateButton,table,this);
@@ -164,7 +197,7 @@ public class ManageWindow extends JFrame {
     }
 
     public void reloadAddress() throws SQLException {
-        table = Requests.showAddresses();
+        table = Requests.readAddressTable();
         TableRowFilter.create(searchField, table);
         Actions.setDetailOrUpdateAddress(false,detailsButton,table,this);
         Actions.setDetailOrUpdateAddress(true,updateButton,table,this);
@@ -343,9 +376,12 @@ public class ManageWindow extends JFrame {
     }
 
     private void update() {
+        table.setPreferredScrollableViewportSize(new Dimension(500, 350));
         TableRowFilter.create(searchField, table);
         rightPanel.removeAll();
-        rightPanel.add(new JScrollPane(table), BorderLayout.CENTER);
+        JScrollPane x = new JScrollPane(table);
+        x.getViewport().setBackground(new Color(235, 242, 250));
+        rightPanel.add(x, BorderLayout.CENTER);
         rightPanel.revalidate();
         rightPanel.repaint();
     }
@@ -379,11 +415,11 @@ public class ManageWindow extends JFrame {
     }
 
     private void setTableDesign() {
-        table.setFont(new Font("Lucida Sans", Font.PLAIN, 25));
+        table.setFont(new Font("Roboto", Font.PLAIN, 15));
         table.setRowHeight(30);
         table.setBackground(new Color(235, 242, 250));
         JTableHeader tableHeader = table.getTableHeader();
-        tableHeader.setBackground(new Color(66, 122, 161));
+        tableHeader.setBackground(new Color(5, 102, 141));
         tableHeader.setForeground(Color.white);
     }
 }

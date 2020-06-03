@@ -91,7 +91,7 @@ public class AddressDetailsFrame extends JFrame {
                 countryL.setFont(countryL.getFont().deriveFont(countryL.getFont().getStyle() | Font.BOLD, countryL.getFont().getSize() + 17f));
                 countryL.setBorder(null);
                 contentPanel.add(countryL);
-                countryL.setBounds(20, 40, 455, 40);
+                countryL.setBounds(35, 40, 455, 40);
 
                 cityL.setText("City:");
                 cityL.setForeground(Color.black);
@@ -103,7 +103,7 @@ public class AddressDetailsFrame extends JFrame {
                 postalL.setForeground(Color.black);
                 postalL.setFont(postalL.getFont().deriveFont(postalL.getFont().getStyle() | Font.BOLD, postalL.getFont().getSize() + 17f));
                 contentPanel.add(postalL);
-                postalL.setBounds(35, 140, 455, 40);
+                postalL.setBounds(35, 140, 460, 40);
 
                 streetL.setText("Street:");
                 streetL.setForeground(Color.black);
@@ -222,7 +222,7 @@ public class AddressDetailsFrame extends JFrame {
                 postalL.setForeground(Color.black);
                 postalL.setFont(postalL.getFont().deriveFont(postalL.getFont().getStyle() | Font.BOLD, postalL.getFont().getSize() + 17f));
                 contentPanel.add(postalL);
-                postalL.setBounds(35, 240, 165, 40);
+                postalL.setBounds(35, 240, 180, 40);
 
                 fillCity.setBackground(Color.white);
                 StringsFormatter.setTextFieldLength(30, fillCity);

@@ -3,87 +3,13 @@ package allComands;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
+import java.awt.*;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.sql.*;
 import java.util.*;
-import java.util.Date;
 
 public class Requests {
-
-    public static LinkedHashMap loadListOfSeats() throws SQLException {
-        LinkedHashMap<Integer, LinkedList<Integer>> listOfSeats = new LinkedHashMap<>();
-        ResultSet rs = Requests.readTableByRequest("select flightID from flight");
-        while (rs.next()) {
-            LinkedList<Integer> linkedList = new LinkedList<>();
-            for (int i = 1; i <= 50; i++) {
-                linkedList.add(i);
-            }
-            listOfSeats.put(rs.getInt(1), linkedList);
-        }
-
-        ResultSet rs2 = Requests.readTableByRequest("select flight_id, seat_number from booking");
-        while (rs2.next()) {
-            for (int k : listOfSeats.keySet()) {
-                if (rs2.getInt(1) == k) {
-                    LinkedList<Integer> x = listOfSeats.get(k);
-                    x.remove(Integer.valueOf(rs2.getInt(2)));
-                    listOfSeats.put(k, x);
-                }
-            }
-        }
-        return listOfSeats;
-    }
-
-    public static LinkedHashMap loadListOfSeats(int flight, int seat) throws SQLException {
-        LinkedHashMap<Integer, LinkedList<Integer>> listOfSeats = new LinkedHashMap<>();
-        ResultSet rs = Requests.readTableByRequest("select flightID from flight");
-        while (rs.next()) {
-            LinkedList<Integer> linkedList = new LinkedList<>();
-            for (int i = 1; i <= 50; i++) {
-                linkedList.add(i);
-            }
-            listOfSeats.put(rs.getInt(1), linkedList);
-        }
-
-        ResultSet rs2 = Requests.readTableByRequest("select flight_id, seat_number from booking");
-        while (rs2.next()) {
-            for (int k : listOfSeats.keySet()) {
-                if (rs2.getInt(1) == k) {
-                    LinkedList<Integer> x = listOfSeats.get(k);
-                    if(k == flight && seat == rs2.getInt(2)) {
-                        System.out.println("flight: " + flight + ", seat: " + seat);
-
-                    } else {
-                        x.remove(Integer.valueOf(rs2.getInt(2)));
-                    }
-                    listOfSeats.put(k, x);
-                }
-            }
-        }
-        System.out.println(listOfSeats);
-
-        return listOfSeats;
-    }
-
-    public static boolean isAdmin(String login, String pass) throws SQLException, NoSuchAlgorithmException, IOException {
-        String hash = "";
-        System.out.println(login);
-        System.out.println(pass);
-        ResultSet rs = readTableByRequest("select password from admin where login like '" + login + "'");
-        if (rs.next()) {
-            hash = rs.getString(1);
-            System.out.println(hash);
-        }
-        if (hash.equals("")) {
-            return false;
-        } else {
-            System.out.println(pass);
-            System.out.println(hash + " XD");
-            System.out.println(PasswordUtils.hashing(pass));
-            return (hash.equals(PasswordUtils.hashing(pass)));
-        }
-    }
 
     //----------------------------- INSERT -----------------------------
 
@@ -93,14 +19,11 @@ public class Requests {
         PreparedStatement statement = DBConnection.getConnection().prepareStatement(sql);
         statement.setString(1, login);
         statement.setString(2, codedPassword);
-        int rowsInserted = statement.executeUpdate();
-        if (rowsInserted > 0) {
-            System.out.println("A new admin was inserted successfully!");
-        }
     }
 
     public static void createAddress(String country, String city, String postal_code, String street, int number) throws SQLException {
         String sql = "insert into address (country, city, postal_code, street, number) values (?, ?, ?, ?, ?)";
+        System.out.println("insert into address (country, city, postal_code, street, number) values ('"+country+"','"+city+"','"+postal_code+"','"+"','"+street+"',"+number+")");
 
         PreparedStatement statement = DBConnection.getConnection().prepareStatement(sql);
         statement.setString(1, country);
@@ -108,11 +31,6 @@ public class Requests {
         statement.setString(3, postal_code);
         statement.setString(4, street);
         statement.setInt(5, number);
-
-        int rowsInserted = statement.executeUpdate();
-        if (rowsInserted > 0) {
-            System.out.println("A new address was inserted successfully!");
-        }
     }
 
     public static void createClient(String first, String last, String email, String password, String birth_date) throws SQLException {
@@ -124,11 +42,6 @@ public class Requests {
         statement.setString(3, email);
         statement.setString(4, password);
         statement.setString(5, birth_date);
-
-        int rowsInserted = statement.executeUpdate();
-        if (rowsInserted > 0) {
-            System.out.println("A new client was inserted successfully!");
-        }
     }
 
     public static void createAirline(String name, String code) throws SQLException {
@@ -137,11 +50,6 @@ public class Requests {
         PreparedStatement statement = DBConnection.getConnection().prepareStatement(sql);
         statement.setString(1, name);
         statement.setString(2, code);
-
-        int rowsInserted = statement.executeUpdate();
-        if (rowsInserted > 0) {
-            System.out.println("A new airline was inserted successfully!");
-        }
     }
 
     public static void createPlane(String brand, String model) throws SQLException {
@@ -150,11 +58,6 @@ public class Requests {
         PreparedStatement statement = DBConnection.getConnection().prepareStatement(sql);
         statement.setString(1, brand);
         statement.setString(2, model);
-
-        int rowsInserted = statement.executeUpdate();
-        if (rowsInserted > 0) {
-            System.out.println("A new plane was inserted successfully!");
-        }
     }
 
     public static void createAirport(String name, String code, int addressId) throws SQLException {
@@ -164,11 +67,6 @@ public class Requests {
         statement.setString(1, name);
         statement.setString(2, code);
         statement.setInt(3, addressId);
-
-        int rowsInserted = statement.executeUpdate();
-        if (rowsInserted > 0) {
-            System.out.println("A new airport was inserted successfully!");
-        }
     }
 
     public static void createPilot(String first, String last, String date, int airlineId) throws SQLException {
@@ -179,11 +77,6 @@ public class Requests {
         statement.setString(2, last);
         statement.setString(3, date);
         statement.setInt(4, airlineId);
-
-        int rowsInserted = statement.executeUpdate();
-        if (rowsInserted > 0) {
-            System.out.println("A new pilot was inserted successfully!");
-        }
     }
 
     public static void createPlaneAirplane(int planeId, int airlineId, int quantity) throws SQLException {
@@ -193,11 +86,6 @@ public class Requests {
         statement.setInt(1, planeId);
         statement.setInt(2, airlineId);
         statement.setInt(3, quantity);
-
-        int rowsInserted = statement.executeUpdate();
-        if (rowsInserted > 0) {
-            System.out.println("A new plane-airplane connection was inserted successfully!");
-        }
     }
 
     public static void createClass(String name, float price) throws SQLException {
@@ -206,11 +94,6 @@ public class Requests {
         PreparedStatement statement = DBConnection.getConnection().prepareStatement(sql);
         statement.setString(1, name);
         statement.setFloat(2, price);
-
-        int rowsInserted = statement.executeUpdate();
-        if (rowsInserted > 0) {
-            System.out.println("A new class was inserted successfully!");
-        }
     }
 
     public static void createLuggage(String name, String price, String height, String weight) throws SQLException {
@@ -221,14 +104,9 @@ public class Requests {
         statement.setFloat(2, Float.parseFloat(price));
         statement.setInt(3, Integer.parseInt(height));
         statement.setInt(4, Integer.parseInt(weight));
-
-        int rowsInserted = statement.executeUpdate();
-        if (rowsInserted > 0) {
-            System.out.println("A new luggage was inserted successfully!");
-        }
     }
 
-    public static void createFlight(int depA_id, int arrA_id, int pilotId, int planeId, String depTime, String depDate, String arrTime, String arrDate, float price) throws SQLException {
+    public static void createFlight(int depA_id, int arrA_id, int pilotId, int planeId, String depTime, String depDate, String arrTime, String arrDate, String price) throws SQLException {
         String sql = "insert into flight (departureAirport_id, arrivalAirport_id, pilot_id, plane_id, departure_time, departure_date, arrival_time, arrival_date, price) values (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         PreparedStatement statement = DBConnection.getConnection().prepareStatement(sql);
@@ -240,12 +118,7 @@ public class Requests {
         statement.setString(6, depDate);
         statement.setString(7, arrTime);
         statement.setString(8, arrDate);
-        statement.setFloat(9, price);
-
-        int rowsInserted = statement.executeUpdate();
-        if (rowsInserted > 0) {
-            System.out.println("A new flight was inserted successfully!");
-        }
+        statement.setFloat(9, Float.parseFloat(price));
     }
 
     public static void createBooking(int flightId, int clientId, int luggageId, int classId, int seatNum) throws SQLException {
@@ -257,16 +130,11 @@ public class Requests {
         statement.setInt(3, luggageId);
         statement.setInt(4, classId);
         statement.setInt(5, seatNum);
-
-        int rowsInserted = statement.executeUpdate();
-        if (rowsInserted > 0) {
-            System.out.println("A new booking was inserted successfully!");
-        }
     }
 
     //----------------------------- READ -----------------------------
 
-        public static JTable showClientsTable() throws SQLException {
+        public static JTable readClientsTable() throws SQLException {
         JTable jTable = new JTable();
         DefaultTableModel model = new DefaultTableModel();
         ResultSet rs = Requests.readTableByRequest("select clientID, first_name, last_name, email from client");
@@ -283,7 +151,7 @@ public class Requests {
         return jTable;
     }
 
-    public static JTable showAddresses() throws SQLException {
+    public static JTable readAddressTable() throws SQLException {
         JTable jTable = new JTable();
         DefaultTableModel model = new DefaultTableModel();
         ResultSet rs = Requests.readTableByRequest("select addressID, country, city from address");
@@ -533,6 +401,8 @@ public class Requests {
         return jTable;
     }
 
+    /*----------------------------- STRINGS -----------------------------*/
+
     public static String getStringAddress(int id) throws SQLException {
         String address = null;
         ResultSet rs = Requests.readTableByRequest("select * from address where addressID = " + id);
@@ -563,6 +433,8 @@ public class Requests {
         }
         return airline;
     }
+
+    /*----------------------------- STATISTICS -----------------------------*/
 
     public static JTable showClassStatistic() throws SQLException {
         JTable jTable = new JTable();
@@ -627,6 +499,8 @@ public class Requests {
         return jTable;
     }
 
+    /*----------------------------- STATISTICS -----------------------------*/
+
     public static JTable showPlaneAirlineTable() throws SQLException {
         JTable jTable = new JTable();
         DefaultTableModel model = new DefaultTableModel();
@@ -640,7 +514,6 @@ public class Requests {
         TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
         jTable.setRowSorter(sorter);
         jTable.setModel(addRowsForPlaneAirline(rs,model));
-       // jTable.removeColumn(jTable.getColumnModel().getColumn(0));
         return jTable;
     }
 
@@ -659,7 +532,6 @@ public class Requests {
         }
         return model;
     }
-
 
     public static DefaultTableModel addRows(ResultSet rs, DefaultTableModel model) throws SQLException {
         ResultSetMetaData rsmd = rs.getMetaData();
@@ -832,15 +704,6 @@ public class Requests {
         statement.executeUpdate();
     }
 
-    public static void updateAdmin(int id, String login, String password) throws SQLException {
-        String sql = "update admin set login=?, password=? WHERE adminID=?";
-        PreparedStatement statement = DBConnection.getConnection().prepareStatement(sql);
-        statement.setString(1, login);
-        statement.setString(2, password);
-        statement.setInt(3, id);
-        statement.executeUpdate();
-    }
-
     public static void updateAirline(int id, String name, String code) throws SQLException {
         String sql = "update airline set name=?, code=? WHERE airlineID=?";
         PreparedStatement statement = DBConnection.getConnection().prepareStatement(sql);
@@ -909,7 +772,7 @@ public class Requests {
         statement.executeUpdate();
     }
 
-    public static void updateFlight(int id, int dAId, int aAId, int pilotId, int planeId, String dTime, String dDate, String aTime, String aDate, float price) throws SQLException {
+    public static void updateFlight(int id, int dAId, int aAId, int pilotId, int planeId, String dTime, String dDate, String aTime, String aDate, String price) throws SQLException {
         String sql = "update flight set departureAirport_id=?, arrivalAirport_id=?, pilot_id=?, plane_id=?, departure_time=?, departure_date=?, arrival_time=?, arrival_date=?, price=? WHERE flightID=?";
         PreparedStatement statement = DBConnection.getConnection().prepareStatement(sql);
         statement.setInt(1, dAId);
@@ -920,13 +783,8 @@ public class Requests {
         statement.setString(6, dDate);
         statement.setString(7, aTime);
         statement.setString(8, aDate);
-        statement.setFloat(9, price);
+        statement.setFloat(9, Float.parseFloat(price));
         statement.setInt(10, id);
-        int rowsInserted = statement.executeUpdate();
-        if (rowsInserted > 0) {
-            System.out.println("A new flight was updated successfully!");
-        }
-
     }
 
     public static void updateBooking(int id, int flightId, int clientId, int luggageId,int classId, int seat) throws SQLException {
@@ -949,19 +807,74 @@ public class Requests {
             PreparedStatement statement = DBConnection.getConnection().prepareStatement(sql);
             statement.executeUpdate();
         } catch (SQLException e) {
-            System.out.println("Nie można usunąć czegoś połączonego");
-            //e.printStackTrace();
+            JOptionPane.showMessageDialog(new Frame(), "You can not delete this. Delete the combined values first.");
         }
     }
 
-    public static void deleteByCondidion(String table, String condition){
-        try {
-            String sql = "delete from " + table +" WHERE "+condition;
-            PreparedStatement statement = DBConnection.getConnection().prepareStatement(sql);
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            System.out.println("Nie można usunąć czegoś połączonego");
-            //e.printStackTrace();
+    //----------------------------- LOAD/CHECK -----------------------------
+
+
+    public static LinkedHashMap loadListOfSeats() throws SQLException {
+        LinkedHashMap<Integer, LinkedList<Integer>> listOfSeats = new LinkedHashMap<>();
+        ResultSet rs = Requests.readTableByRequest("select flightID from flight");
+        while (rs.next()) {
+            LinkedList<Integer> linkedList = new LinkedList<>();
+            for (int i = 1; i <= 50; i++) {
+                linkedList.add(i);
+            }
+            listOfSeats.put(rs.getInt(1), linkedList);
+        }
+
+        ResultSet rs2 = Requests.readTableByRequest("select flight_id, seat_number from booking");
+        while (rs2.next()) {
+            for (int k : listOfSeats.keySet()) {
+                if (rs2.getInt(1) == k) {
+                    LinkedList<Integer> x = listOfSeats.get(k);
+                    x.remove(Integer.valueOf(rs2.getInt(2)));
+                    listOfSeats.put(k, x);
+                }
+            }
+        }
+        return listOfSeats;
+    }
+
+    public static LinkedHashMap loadListOfSeats(int flight, int seat) throws SQLException {
+        LinkedHashMap<Integer, LinkedList<Integer>> listOfSeats = new LinkedHashMap<>();
+        ResultSet rs = Requests.readTableByRequest("select flightID from flight");
+        while (rs.next()) {
+            LinkedList<Integer> linkedList = new LinkedList<>();
+            for (int i = 1; i <= 50; i++) {
+                linkedList.add(i);
+            }
+            listOfSeats.put(rs.getInt(1), linkedList);
+        }
+
+        ResultSet rs2 = Requests.readTableByRequest("select flight_id, seat_number from booking");
+        while (rs2.next()) {
+            for (int k : listOfSeats.keySet()) {
+                if (rs2.getInt(1) == k) {
+                    LinkedList<Integer> x = listOfSeats.get(k);
+                    if(k == flight && seat == rs2.getInt(2)) {
+                    } else {
+                        x.remove(Integer.valueOf(rs2.getInt(2)));
+                    }
+                    listOfSeats.put(k, x);
+                }
+            }
+        }
+        return listOfSeats;
+    }
+
+    public static boolean isAdmin(String login, String pass) throws SQLException, NoSuchAlgorithmException, IOException {
+        String hash = "";
+        ResultSet rs = readTableByRequest("select password from admin where login like '" + login + "'");
+        if (rs.next()) {
+            hash = rs.getString(1);
+        }
+        if (hash.equals("")) {
+            return false;
+        } else {
+            return (hash.equals(PasswordUtils.hashing(pass)));
         }
     }
 }
