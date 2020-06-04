@@ -131,6 +131,8 @@ public class PlaneAirlineFrame extends JFrame {
                                 dispose();
                             } else {
                                 int planeId = (Integer) planesWithId.get(comboBox.getSelectedIndex());
+                                System.out.println(airlineId);
+                                System.out.println(planeId);
                                 Requests.deleteFromPlaneAirline(airlineId, planeId);
                                 dispose();
                             }

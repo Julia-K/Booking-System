@@ -1,17 +1,12 @@
 package tableFrames;
 
-import allComands.PasswordUtils;
 import allComands.Requests;
 import allComands.StringsFormatter;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.io.IOException;
-import java.security.NoSuchAlgorithmException;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Arrays;
 
 public class LoginFrame extends JFrame {
     private JPasswordField fillPassword;
@@ -114,7 +109,7 @@ public class LoginFrame extends JFrame {
                             } else {
                                 JOptionPane.showMessageDialog(new Frame(), "Incorrect login or password.");
                             }
-                        } catch (SQLException | NoSuchAlgorithmException | IOException throwables) {
+                        } catch (SQLException throwables) {
                             throwables.printStackTrace();
                         }
                     }

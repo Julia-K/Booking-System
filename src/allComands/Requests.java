@@ -837,11 +837,11 @@ public class Requests {
 
     public static void deleteFromPlaneAirline(int airline, int plane) {
         try {
-            String sql = "delete from plane_airplane WHERE plane_id =" + plane + " and airline_id =" + airline;
+            String sql = "delete from plane_airline where plane_id = "+ plane+" and airline_id = "+airline;
             PreparedStatement statement = DBConnection.getConnection().prepareStatement(sql);
             statement.executeUpdate();
         } catch (SQLException e) {
-            JOptionPane.showMessageDialog(new Frame(), "You can not delete this. Delete the combined values first.");
+            JOptionPane.showMessageDialog(new Frame(), "You can not delete this plane. Delete the combined values first.");
         }
     }
 
@@ -899,7 +899,7 @@ public class Requests {
         return listOfSeats;
     }
 
-    public static boolean isAdmin(String login, String pass) throws SQLException, NoSuchAlgorithmException, IOException {
+    public static boolean isAdmin(String login, String pass) throws SQLException {
         String hash = "";
         ResultSet rs = readTableByRequest("select password from admin where login like '" + login + "'");
         if (rs.next()) {

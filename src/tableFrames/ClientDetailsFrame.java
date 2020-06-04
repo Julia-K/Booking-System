@@ -11,6 +11,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 import java.util.Date;
 import javax.swing.*;
 import javax.swing.border.*;
@@ -39,6 +40,8 @@ public class ClientDetailsFrame extends JFrame {
     private JPanel panel2;
     private JTextField fillEmail;
     private JPasswordField fillPassword;
+    private JLabel confirmL;
+    private JPasswordField fillConfirm;
 
     public ClientDetailsFrame(Boolean update, int id, String name, String last, String email, String pass, String date) {
         if(update) {
@@ -49,6 +52,7 @@ public class ClientDetailsFrame extends JFrame {
             fillLast.setText(last);
             fillEmail.setText(email);
             fillPassword.setText(pass);
+            fillConfirm.setText(pass);
         } else {
             initDetailComponents();
             nameL.setText(nameL.getText() + " " + name + " " + last);
@@ -90,6 +94,8 @@ public class ClientDetailsFrame extends JFrame {
         fillEmail = new JTextField();
         passL = new JLabel();
         fillPassword = new JPasswordField();
+        confirmL = new JLabel();
+        fillConfirm = new JPasswordField();
 
         setResizable(false);
         setMinimumSize(new Dimension(670, 430));
@@ -213,6 +219,18 @@ public class ClientDetailsFrame extends JFrame {
                 StringsFormatter.setTextFieldLength(100,fillPassword);
                 panel2.add(fillPassword);
                 fillPassword.setBounds(5, 190, 195, 40);
+
+                confirmL.setText("Confirm password:");
+                confirmL.setForeground(Color.black);
+                confirmL.setFont(new Font("Roboto",Font.BOLD,25));
+                //confirmL.setFont(confirmL.getFont().deriveFont(confirmL.getFont().getStyle() | Font.BOLD, confirmL.getFont().getSize() + 15f));
+                panel2.add(confirmL);
+                confirmL.setBounds(5, 240, 230, 40);
+
+                fillConfirm.setBackground(Color.white);
+                StringsFormatter.setTextFieldLength(100,fillConfirm);
+                panel2.add(fillConfirm);
+                fillConfirm.setBounds(5, 290, 195, 40);
             }
 
             okButton.addActionListener(e -> {
@@ -337,11 +355,15 @@ public class ClientDetailsFrame extends JFrame {
             JOptionPane.showMessageDialog(new Frame(), "Client must be at least 18 years old");
             return false;
         } else if (fillEmail.getText().equals("") || fillFirst.getText().equals("")
-                || fillLast.getText().equals("") || birthDate.getDate().equals("") || fillPassword.getPassword().length == 0) {
+                || fillLast.getText().equals("") || birthDate.getDate().equals("") || fillPassword.getPassword().length == 0 || fillConfirm.getPassword().length == 0) {
             JOptionPane.showMessageDialog(new Frame(), "All fields must be filled!");
+            return false;
+        } else if (!Arrays.equals(fillPassword.getPassword(),fillConfirm.getPassword())) {
+            JOptionPane.showMessageDialog(new Frame(), "Passwords do not match.");
             return false;
         } else {
             return true;
         }
+
     }
 }
