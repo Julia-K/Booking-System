@@ -1,6 +1,6 @@
-package tableFrames;
+package main.java.frame;
 
-import allComands.Requests;
+import main.java.commands.Requests;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -38,6 +38,7 @@ public class StatisticsFrame extends JFrame{
         JLabel chooseYearL = new JLabel();
         JButton goButton = new JButton();
 
+        setResizable(false);
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         setMinimumSize(new Dimension(900, 600));
         var contentPane = getContentPane();
@@ -241,7 +242,7 @@ public class StatisticsFrame extends JFrame{
         }
         contentPane.add(dialogPane, BorderLayout.CENTER);
         pack();
-        setLocationRelativeTo(getOwner());
+        setLocationRelativeTo(null);
     }
 
     public static void main(String[] args) {
@@ -272,6 +273,46 @@ public class StatisticsFrame extends JFrame{
         JTableHeader tableHeader = table.getTableHeader();
         tableHeader.setBackground(new Color(5, 102, 141));
         tableHeader.setForeground(Color.white);
+    }
+
+    public JPanel getRightPanel() {
+        return rightPanel;
+    }
+
+    public void setRightPanel(JPanel rightPanel) {
+        this.rightPanel = rightPanel;
+    }
+
+    public JTable getTable() {
+        return table;
+    }
+
+    public void setTable(JTable table) {
+        this.table = table;
+    }
+
+    public JScrollPane getScrollTable() {
+        return scrollTable;
+    }
+
+    public void setScrollTable(JScrollPane scrollTable) {
+        this.scrollTable = scrollTable;
+    }
+
+    public JLabel getInformation() {
+        return information;
+    }
+
+    public void setInformation(JLabel information) {
+        this.information = information;
+    }
+
+    public static StatisticsFrame getStatisticFrame() {
+        return statisticFrame;
+    }
+
+    public static void setStatisticFrame(StatisticsFrame statisticFrame) {
+        StatisticsFrame.statisticFrame = statisticFrame;
     }
 }
 

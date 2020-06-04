@@ -1,11 +1,9 @@
-package tableFrames;
+package main.java.frame;
 
-import allComands.Requests;
-import allComands.StringsFormatter;
+import main.java.commands.Requests;
+import main.java.utils.StringsFormatter;
 
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.sql.ResultSet;
@@ -16,14 +14,10 @@ import javax.swing.border.*;
 
 public class PlaneDetailsFrame extends JFrame {
     private LinkedHashMap<Integer,Integer> airlinesWithId;
-    private JLabel quantity;
     private JTextField fillQuantity;
     private JComboBox comboBox;
-    private JLabel airlineL;
     private JPanel dialogPane;
     private JPanel contentPanel;
-    private JPanel panel5;
-    private JLabel planeL;
     private JLabel brandL;
     private JLabel modelL;
     private JPanel buttonBar;
@@ -59,7 +53,7 @@ public class PlaneDetailsFrame extends JFrame {
     private void initDetailComponents() {
         dialogPane = new JPanel();
         contentPanel = new JPanel();
-        planeL = new JLabel();
+        JLabel planeL = new JLabel();
         brandL = new JLabel();
         modelL = new JLabel();
         buttonBar = new JPanel();
@@ -145,12 +139,12 @@ public class PlaneDetailsFrame extends JFrame {
 
     private void initAddUpdateComponents() throws SQLException {
         airlinesWithId = new LinkedHashMap<>();
-        quantity = new JLabel();
+        JLabel quantity = new JLabel();
         fillQuantity = new JTextField();
-        airlineL = new JLabel();
+        JLabel airlineL = new JLabel();
         dialogPane = new JPanel();
         contentPanel = new JPanel();
-        panel5 = new JPanel();
+        JPanel panel5 = new JPanel();
         brandL = new JLabel();
         modelL = new JLabel();
         fillBrand = new JTextField();
@@ -284,6 +278,7 @@ public class PlaneDetailsFrame extends JFrame {
                     if (update) {
                         try {
                             Requests.updatePlane(id, fillBrand.getText(), fillModel.getText());
+                            Requests.updatePlaneAirline(id,(Integer)airlinesWithId.get(comboBox.getSelectedIndex()), Integer.parseInt(fillQuantity.getText()));
                             updateContent();
                             dispose();
                         } catch (SQLException throwables) {
@@ -354,5 +349,113 @@ public class PlaneDetailsFrame extends JFrame {
             comboBox.addItem(Requests.getStringAirline(airlineid));
         }
         return comboBox;
+    }
+
+    public LinkedHashMap<Integer, Integer> getAirlinesWithId() {
+        return airlinesWithId;
+    }
+
+    public void setAirlinesWithId(LinkedHashMap<Integer, Integer> airlinesWithId) {
+        this.airlinesWithId = airlinesWithId;
+    }
+
+    public JTextField getFillQuantity() {
+        return fillQuantity;
+    }
+
+    public void setFillQuantity(JTextField fillQuantity) {
+        this.fillQuantity = fillQuantity;
+    }
+
+    public void setComboBox(JComboBox comboBox) {
+        this.comboBox = comboBox;
+    }
+
+    public JPanel getDialogPane() {
+        return dialogPane;
+    }
+
+    public void setDialogPane(JPanel dialogPane) {
+        this.dialogPane = dialogPane;
+    }
+
+    public JPanel getContentPanel() {
+        return contentPanel;
+    }
+
+    public void setContentPanel(JPanel contentPanel) {
+        this.contentPanel = contentPanel;
+    }
+
+    public JLabel getBrandL() {
+        return brandL;
+    }
+
+    public void setBrandL(JLabel brandL) {
+        this.brandL = brandL;
+    }
+
+    public JLabel getModelL() {
+        return modelL;
+    }
+
+    public void setModelL(JLabel modelL) {
+        this.modelL = modelL;
+    }
+
+    public JPanel getButtonBar() {
+        return buttonBar;
+    }
+
+    public void setButtonBar(JPanel buttonBar) {
+        this.buttonBar = buttonBar;
+    }
+
+    public JButton getOkButton() {
+        return okButton;
+    }
+
+    public void setOkButton(JButton okButton) {
+        this.okButton = okButton;
+    }
+
+    public JPanel getPanel1() {
+        return panel1;
+    }
+
+    public void setPanel1(JPanel panel1) {
+        this.panel1 = panel1;
+    }
+
+    public JTextField getFillBrand() {
+        return fillBrand;
+    }
+
+    public void setFillBrand(JTextField fillBrand) {
+        this.fillBrand = fillBrand;
+    }
+
+    public JTextField getFillModel() {
+        return fillModel;
+    }
+
+    public void setFillModel(JTextField fillModel) {
+        this.fillModel = fillModel;
+    }
+
+    public boolean isUpdate() {
+        return update;
+    }
+
+    public void setUpdate(boolean update) {
+        this.update = update;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }

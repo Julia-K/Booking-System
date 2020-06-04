@@ -1,7 +1,8 @@
-package tableFrames;
+package main.java.frame;
 
-import allComands.Requests;
-import allComands.StringsFormatter;
+import main.java.commands.Requests;
+import main.java.utils.StringsFormatter;
+import main.java.utils.MyOwnDatePicker;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -21,7 +22,6 @@ public class PilotDetailsFrame extends JFrame {
     private boolean update;
     private int id;
     private JPanel dialogPane;
-    private JPanel contentPanel;
     private JLabel nameL;
     private JLabel dateL;
     private JLabel airlineL;
@@ -29,15 +29,9 @@ public class PilotDetailsFrame extends JFrame {
     private JLabel fillAirline;
     private JPanel buttonBar;
     private JButton okButton;
-    private JPanel panel1;
-    private JPanel contentPane;
-    private JLabel firstL;
-    private JLabel lastL;
     private JTextField fillFirst;
     private JTextField fillLast;
     private JComboBox comboBox;
-    private JPanel panel5;
-    private JPanel panel;
     private MyOwnDatePicker datePicker;
 
     public PilotDetailsFrame() throws SQLException {
@@ -81,7 +75,7 @@ public class PilotDetailsFrame extends JFrame {
 
     private void initDetailComponents() {
         dialogPane = new JPanel();
-        contentPanel = new JPanel();
+        JPanel contentPanel = new JPanel();
         nameL = new JLabel();
         dateL = new JLabel();
         airlineL = new JLabel();
@@ -89,7 +83,7 @@ public class PilotDetailsFrame extends JFrame {
         fillAirline = new JLabel();
         buttonBar = new JPanel();
         okButton = new JButton();
-        panel1 = new JPanel();
+        JPanel panel1 = new JPanel();
 
         setResizable(false);
         setMinimumSize(new Dimension(670, 430));
@@ -180,18 +174,18 @@ public class PilotDetailsFrame extends JFrame {
 
     private void initAddUpdateComponents() throws SQLException {
         dialogPane = new JPanel();
-        contentPane = new JPanel();
-        firstL = new JLabel();
-        lastL = new JLabel();
+        JPanel contentPane = new JPanel();
+        JLabel firstL = new JLabel();
+        JLabel lastL = new JLabel();
         fillFirst = new JTextField();
         fillLast = new JTextField();
         comboBox = getComboBox();
-        panel5 = new JPanel();
+        JPanel panel5 = new JPanel();
         airlineL = new JLabel();
         dateL = new JLabel();
         buttonBar = new JPanel();
         okButton = new JButton();
-        panel = new JPanel();
+        JPanel panel = new JPanel();
         airlinesWithId = Requests.getAirlinesWithId();
 
         setResizable(false);
@@ -352,5 +346,121 @@ public class PilotDetailsFrame extends JFrame {
         } else {
             return true;
         }
+    }
+
+    public LinkedHashMap<Integer, Integer> getAirlinesWithId() {
+        return airlinesWithId;
+    }
+
+    public void setAirlinesWithId(LinkedHashMap<Integer, Integer> airlinesWithId) {
+        this.airlinesWithId = airlinesWithId;
+    }
+
+    public boolean isUpdate() {
+        return update;
+    }
+
+    public void setUpdate(boolean update) {
+        this.update = update;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public JPanel getDialogPane() {
+        return dialogPane;
+    }
+
+    public void setDialogPane(JPanel dialogPane) {
+        this.dialogPane = dialogPane;
+    }
+
+    public JLabel getNameL() {
+        return nameL;
+    }
+
+    public void setNameL(JLabel nameL) {
+        this.nameL = nameL;
+    }
+
+    public JLabel getDateL() {
+        return dateL;
+    }
+
+    public void setDateL(JLabel dateL) {
+        this.dateL = dateL;
+    }
+
+    public JLabel getAirlineL() {
+        return airlineL;
+    }
+
+    public void setAirlineL(JLabel airlineL) {
+        this.airlineL = airlineL;
+    }
+
+    public JLabel getFillDate() {
+        return fillDate;
+    }
+
+    public void setFillDate(JLabel fillDate) {
+        this.fillDate = fillDate;
+    }
+
+    public JLabel getFillAirline() {
+        return fillAirline;
+    }
+
+    public void setFillAirline(JLabel fillAirline) {
+        this.fillAirline = fillAirline;
+    }
+
+    public JPanel getButtonBar() {
+        return buttonBar;
+    }
+
+    public void setButtonBar(JPanel buttonBar) {
+        this.buttonBar = buttonBar;
+    }
+
+    public JButton getOkButton() {
+        return okButton;
+    }
+
+    public void setOkButton(JButton okButton) {
+        this.okButton = okButton;
+    }
+
+    public JTextField getFillFirst() {
+        return fillFirst;
+    }
+
+    public void setFillFirst(JTextField fillFirst) {
+        this.fillFirst = fillFirst;
+    }
+
+    public JTextField getFillLast() {
+        return fillLast;
+    }
+
+    public void setFillLast(JTextField fillLast) {
+        this.fillLast = fillLast;
+    }
+
+    public void setComboBox(JComboBox comboBox) {
+        this.comboBox = comboBox;
+    }
+
+    public MyOwnDatePicker getDatePicker() {
+        return datePicker;
+    }
+
+    public void setDatePicker(MyOwnDatePicker datePicker) {
+        this.datePicker = datePicker;
     }
 }

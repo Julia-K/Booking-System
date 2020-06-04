@@ -1,7 +1,7 @@
-package tableFrames;
+package main.java.frame;
 
-import allComands.Requests;
-import allComands.StringsFormatter;
+import main.java.commands.Requests;
+import main.java.utils.StringsFormatter;
 
 import java.awt.*;
 import java.sql.SQLException;
@@ -22,11 +22,8 @@ public class AddressDetailsFrame extends JFrame {
     private JPanel panel1;
     private JTextField fillCountry;
     private JTextField fillCity;
-    private JPanel panel3;
     private JTextField fillPostal;
-    private JPanel panel2;
     private JTextField fillStreet;
-    private JLabel numberL;
     private JTextField fillNumber;
     private boolean update;
     private int id;
@@ -166,15 +163,15 @@ public class AddressDetailsFrame extends JFrame {
         fillCountry = new JTextField();
         postalL = new JLabel();
         fillCity = new JTextField();
-        panel3 = new JPanel();
+        JPanel panel3 = new JPanel();
         fillPostal = StringsFormatter.getPostalCodeTextField();
         buttonBar = new JPanel();
         okButton = new JButton();
         panel1 = new JPanel();
-        panel2 = new JPanel();
+        JPanel panel2 = new JPanel();
         streetL = new JLabel();
         fillStreet = new JTextField();
-        numberL = new JLabel();
+        JLabel numberL = new JLabel();
         fillNumber = new JTextField();
 
         setResizable(false);
@@ -341,5 +338,141 @@ public class AddressDetailsFrame extends JFrame {
         } else {
             return true;
         }
+    }
+
+    public JPanel getDialogPane() {
+        return dialogPane;
+    }
+
+    public void setDialogPane(JPanel dialogPane) {
+        this.dialogPane = dialogPane;
+    }
+
+    public JPanel getContentPanel() {
+        return contentPanel;
+    }
+
+    public void setContentPanel(JPanel contentPanel) {
+        this.contentPanel = contentPanel;
+    }
+
+    public JLabel getCountryL() {
+        return countryL;
+    }
+
+    public void setCountryL(JLabel countryL) {
+        this.countryL = countryL;
+    }
+
+    public JLabel getCityL() {
+        return cityL;
+    }
+
+    public void setCityL(JLabel cityL) {
+        this.cityL = cityL;
+    }
+
+    public JLabel getPostalL() {
+        return postalL;
+    }
+
+    public void setPostalL(JLabel postalL) {
+        this.postalL = postalL;
+    }
+
+    public JLabel getStreetL() {
+        return streetL;
+    }
+
+    public void setStreetL(JLabel streetL) {
+        this.streetL = streetL;
+    }
+
+    public JLabel getNumL() {
+        return numL;
+    }
+
+    public void setNumL(JLabel numL) {
+        this.numL = numL;
+    }
+
+    public JPanel getButtonBar() {
+        return buttonBar;
+    }
+
+    public void setButtonBar(JPanel buttonBar) {
+        this.buttonBar = buttonBar;
+    }
+
+    public JButton getOkButton() {
+        return okButton;
+    }
+
+    public void setOkButton(JButton okButton) {
+        this.okButton = okButton;
+    }
+
+    public JPanel getPanel1() {
+        return panel1;
+    }
+
+    public void setPanel1(JPanel panel1) {
+        this.panel1 = panel1;
+    }
+
+    public JTextField getFillCountry() {
+        return fillCountry;
+    }
+
+    public void setFillCountry(JTextField fillCountry) {
+        this.fillCountry = fillCountry;
+    }
+
+    public JTextField getFillCity() {
+        return fillCity;
+    }
+
+    public void setFillCity(JTextField fillCity) {
+        this.fillCity = fillCity;
+    }
+
+    public JTextField getFillPostal() {
+        return fillPostal;
+    }
+
+    public void setFillPostal(JTextField fillPostal) {
+        this.fillPostal = fillPostal;
+    }
+
+    public JTextField getFillStreet() {
+        return fillStreet;
+    }
+
+    public void setFillStreet(JTextField fillStreet) {
+        this.fillStreet = fillStreet;
+    }
+
+    public JTextField getFillNumber() {
+        return fillNumber;
+    }
+
+    public void setFillNumber(JTextField fillNumber) {
+        this.fillNumber = fillNumber;
+    }
+
+    public boolean isUpdate() {
+        return update;
+    }
+
+    public void setUpdate(boolean update) {
+        this.update = update;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }

@@ -1,7 +1,8 @@
-package tableFrames;
+package main.java.controller;
 
-import allComands.Requests;
-import tableFrames.*;
+import main.java.frame.ManageWindow;
+import main.java.commands.Requests;
+import main.java.frame.*;
 
 import javax.swing.*;
 import java.awt.event.ActionListener;
@@ -451,7 +452,7 @@ public class Actions {
                         }
                     }
                 });
-            } catch (SQLException | ParseException throwables) {
+            } catch (SQLException throwables) {
                 throwables.printStackTrace();
             }
         });

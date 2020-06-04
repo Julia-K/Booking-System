@@ -1,7 +1,7 @@
-package tableFrames;
+package main.java.frame;
 
-import allComands.Requests;
-import allComands.StringsFormatter;
+import main.java.commands.Requests;
+import main.java.utils.StringsFormatter;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -131,13 +131,11 @@ public class PlaneAirlineFrame extends JFrame {
                                 dispose();
                             } else {
                                 int planeId = (Integer) planesWithId.get(comboBox.getSelectedIndex());
-                                System.out.println(airlineId);
-                                System.out.println(planeId);
                                 Requests.deleteFromPlaneAirline(airlineId, planeId);
                                 dispose();
                             }
                         } catch (SQLException throwables) {
-                            throwables.printStackTrace();
+                            JOptionPane.showMessageDialog(new Frame(),"This plane is already on this airline");
                         }
 
                     }
@@ -199,6 +197,38 @@ public class PlaneAirlineFrame extends JFrame {
             return false;
         }
         return true;
+    }
+
+    public LinkedHashMap<Integer, Integer> getPlanesWithId() {
+        return planesWithId;
+    }
+
+    public void setPlanesWithId(LinkedHashMap<Integer, Integer> planesWithId) {
+        this.planesWithId = planesWithId;
+    }
+
+    public JComboBox getComboBox() {
+        return comboBox;
+    }
+
+    public void setComboBox(JComboBox comboBox) {
+        this.comboBox = comboBox;
+    }
+
+    public JTextField getFillQuantity() {
+        return fillQuantity;
+    }
+
+    public void setFillQuantity(JTextField fillQuantity) {
+        this.fillQuantity = fillQuantity;
+    }
+
+    public int getOption() {
+        return option;
+    }
+
+    public int getAirlineId() {
+        return airlineId;
     }
 }
 

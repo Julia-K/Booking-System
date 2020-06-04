@@ -1,6 +1,6 @@
-package tableFrames;
+package main.java.frame;
 
-import allComands.Requests;
+import main.java.commands.Requests;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -45,10 +45,6 @@ public class BookingDetailsFrame extends JFrame {
     private boolean update;
     private int id;
     private int seat;
-
-    public int getFlightId() {
-        return flightId;
-    }
 
     public BookingDetailsFrame(int id, int flightId, String email, String luggage, String classP, String seat, String price) {
         this.update = false;
@@ -96,7 +92,7 @@ public class BookingDetailsFrame extends JFrame {
         seatCombo.setSelectedItem(seat);
         selectFlightButton.addActionListener(e-> {
             try {
-                new SelectFlight(true,this).setVisible(true);
+                new SelectFlightFrame(true,this).setVisible(true);
             } catch (SQLException throwables) {
                 throwables.printStackTrace();
             }
@@ -109,7 +105,7 @@ public class BookingDetailsFrame extends JFrame {
         initAddUpdateComponents();
         selectFlightButton.addActionListener(e-> {
             try {
-                new SelectFlight(false,this).setVisible(true);
+                new SelectFlightFrame(false,this).setVisible(true);
             } catch (SQLException throwables) {
                 throwables.printStackTrace();
             }
@@ -121,6 +117,7 @@ public class BookingDetailsFrame extends JFrame {
     }
 
     private void initDetailsComponents() {
+        JButton buttonFlight = new JButton();
         dialogPane = new JPanel();
         contentPanel = new JPanel();
         JLabel email = new JLabel();
@@ -135,7 +132,6 @@ public class BookingDetailsFrame extends JFrame {
         panel1 = new JPanel();
         panel2 = new JPanel();
         seatL = new JLabel();
-        JButton buttonFlight = new JButton();
         displaySeat = new JLabel();
         JLabel priceL = new JLabel();
         displayPrice = new JLabel();
@@ -502,7 +498,7 @@ public class BookingDetailsFrame extends JFrame {
 
                     informationPane.setBackground(new Color(235, 242, 250));
                     informationPane.setForeground(new Color(5, 102, 141));
-                    informationPane.setFont(new Font("Serif", Font.BOLD, 15));
+                    informationPane.setFont(new Font("Roboto", Font.BOLD, 15));
                     informationPane.setText("Select flight for more details.");
                     panelForInformation.add(informationPane);
                     informationPane.setBounds(10, 10, 240, 185);
@@ -555,7 +551,7 @@ public class BookingDetailsFrame extends JFrame {
         String arrTime = rs.getString(6).substring(0,5);
         float price = rs.getFloat(7);
 
-        informationPane.setText("Details:" +"\n"+"Departure Airport:" + "\n" +from + "\n" + "Arrival Airport:" +"\n"+ to + "\n" + "Departure date: " + depDate +
+        informationPane.setText("Details:" +"\n"+"Departure Airport: " +from + "\n" + "Arrival Airport: " + to + "\n" + "Departure date: " + depDate +
                 "\n" + "Arrival date: " + arrDate + "\n" + "Departure time: " + depTime + "\n" + "Arrival time: " + arrTime);
         if(prices[2] != 0) {
             prices[3] -= prices[2];
@@ -633,6 +629,250 @@ public class BookingDetailsFrame extends JFrame {
         panel4.add(seatCombo);
         panel4.revalidate();
         panel4.repaint();
+    }
+
+    public float[] getPrices() {
+        return prices;
+    }
+
+    public void setPrices(float[] prices) {
+        this.prices = prices;
+    }
+
+    public LinkedHashMap<Integer, Integer> getClietsWithId() {
+        return clietsWithId;
+    }
+
+    public void setClietsWithId(LinkedHashMap<Integer, Integer> clietsWithId) {
+        this.clietsWithId = clietsWithId;
+    }
+
+    public LinkedHashMap<Integer, Integer> getLuggageWithId() {
+        return luggageWithId;
+    }
+
+    public void setLuggageWithId(LinkedHashMap<Integer, Integer> luggageWithId) {
+        this.luggageWithId = luggageWithId;
+    }
+
+    public LinkedHashMap<Integer, Integer> getClassWithId() {
+        return classWithId;
+    }
+
+    public void setClassWithId(LinkedHashMap<Integer, Integer> classWithId) {
+        this.classWithId = classWithId;
+    }
+
+    public JPanel getDialogPane() {
+        return dialogPane;
+    }
+
+    public void setDialogPane(JPanel dialogPane) {
+        this.dialogPane = dialogPane;
+    }
+
+    public JPanel getContentPanel() {
+        return contentPanel;
+    }
+
+    public void setContentPanel(JPanel contentPanel) {
+        this.contentPanel = contentPanel;
+    }
+
+    public JLabel getClassL() {
+        return classL;
+    }
+
+    public void setClassL(JLabel classL) {
+        this.classL = classL;
+    }
+
+    public JPanel getPanel3() {
+        return panel3;
+    }
+
+    public void setPanel3(JPanel panel3) {
+        this.panel3 = panel3;
+    }
+
+    public JLabel getDisplayEmail() {
+        return displayEmail;
+    }
+
+    public void setDisplayEmail(JLabel displayEmail) {
+        this.displayEmail = displayEmail;
+    }
+
+    public JLabel getLuggageL() {
+        return luggageL;
+    }
+
+    public void setLuggageL(JLabel luggageL) {
+        this.luggageL = luggageL;
+    }
+
+    public JLabel getDisplayLuggage() {
+        return displayLuggage;
+    }
+
+    public void setDisplayLuggage(JLabel displayLuggage) {
+        this.displayLuggage = displayLuggage;
+    }
+
+    public JLabel getDisplayClass() {
+        return displayClass;
+    }
+
+    public void setDisplayClass(JLabel displayClass) {
+        this.displayClass = displayClass;
+    }
+
+    public JPanel getButtonBar() {
+        return buttonBar;
+    }
+
+    public void setButtonBar(JPanel buttonBar) {
+        this.buttonBar = buttonBar;
+    }
+
+    public JButton getOkButton() {
+        return okButton;
+    }
+
+    public void setOkButton(JButton okButton) {
+        this.okButton = okButton;
+    }
+
+    public JPanel getPanel1() {
+        return panel1;
+    }
+
+    public void setPanel1(JPanel panel1) {
+        this.panel1 = panel1;
+    }
+
+    public JPanel getPanel2() {
+        return panel2;
+    }
+
+    public void setPanel2(JPanel panel2) {
+        this.panel2 = panel2;
+    }
+
+    public JLabel getSeatL() {
+        return seatL;
+    }
+
+    public void setSeatL(JLabel seatL) {
+        this.seatL = seatL;
+    }
+
+    public JLabel getDisplaySeat() {
+        return displaySeat;
+    }
+
+    public void setDisplaySeat(JLabel displaySeat) {
+        this.displaySeat = displaySeat;
+    }
+
+    public JLabel getDisplayPrice() {
+        return displayPrice;
+    }
+
+    public void setDisplayPrice(JLabel displayPrice) {
+        this.displayPrice = displayPrice;
+    }
+
+    public int getFlightId() {
+        return flightId;
+    }
+
+    public JComboBox<String> getClassCombo() {
+        return classCombo;
+    }
+
+    public void setClassCombo(JComboBox<String> classCombo) {
+        this.classCombo = classCombo;
+    }
+
+    public JComboBox<String> getLuggageCombo() {
+        return luggageCombo;
+    }
+
+    public void setLuggageCombo(JComboBox<String> luggageCombo) {
+        this.luggageCombo = luggageCombo;
+    }
+
+    public JComboBox<String> getClientCombo() {
+        return clientCombo;
+    }
+
+    public void setClientCombo(JComboBox<String> clientCombo) {
+        this.clientCombo = clientCombo;
+    }
+
+    public JComboBox<Integer> getSeatCombo() {
+        return seatCombo;
+    }
+
+    public void setSeatCombo(JComboBox<Integer> seatCombo) {
+        this.seatCombo = seatCombo;
+    }
+
+    public JButton getSelectFlightButton() {
+        return selectFlightButton;
+    }
+
+    public void setSelectFlightButton(JButton selectFlightButton) {
+        this.selectFlightButton = selectFlightButton;
+    }
+
+    public JLabel getTotalPrice() {
+        return totalPrice;
+    }
+
+    public void setTotalPrice(JLabel totalPrice) {
+        this.totalPrice = totalPrice;
+    }
+
+    public JTextPane getInformationPane() {
+        return informationPane;
+    }
+
+    public void setInformationPane(JTextPane informationPane) {
+        this.informationPane = informationPane;
+    }
+
+    public JPanel getPanel4() {
+        return panel4;
+    }
+
+    public void setPanel4(JPanel panel4) {
+        this.panel4 = panel4;
+    }
+
+    public boolean isUpdate() {
+        return update;
+    }
+
+    public void setUpdate(boolean update) {
+        this.update = update;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getSeat() {
+        return seat;
+    }
+
+    public void setSeat(int seat) {
+        this.seat = seat;
     }
 }
 

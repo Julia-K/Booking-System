@@ -1,7 +1,7 @@
-package tableFrames;
+package main.java.frame;
 
-import allComands.Requests;
-import allComands.StringsFormatter;
+import main.java.commands.Requests;
+import main.java.utils.StringsFormatter;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -102,7 +102,6 @@ public class LoginFrame extends JFrame {
                         JOptionPane.showMessageDialog(new Frame(),"Fields must be filled.");
                     } else {
                         try {
-                            System.out.println(fillLogin.getText() + " " + haslo);
                             if(Requests.isAdmin(fillLogin.getText(), haslo)) {
                                 dispose();
                                 ManageWindow.main(new String[]{});
@@ -196,5 +195,45 @@ public class LoginFrame extends JFrame {
         contentPane.add(dialogPane, BorderLayout.CENTER);
         pack();
         setLocationRelativeTo(getOwner());
+    }
+
+    public JPasswordField getFillPassword() {
+        return fillPassword;
+    }
+
+    public void setFillPassword(JPasswordField fillPassword) {
+        this.fillPassword = fillPassword;
+    }
+
+    public JTextField getFiillLoginRight() {
+        return fiillLoginRight;
+    }
+
+    public void setFiillLoginRight(JTextField fiillLoginRight) {
+        this.fiillLoginRight = fiillLoginRight;
+    }
+
+    public JPasswordField getFillPasswordRight() {
+        return fillPasswordRight;
+    }
+
+    public void setFillPasswordRight(JPasswordField fillPasswordRight) {
+        this.fillPasswordRight = fillPasswordRight;
+    }
+
+    public JPasswordField getFillPasswordRight2() {
+        return fillPasswordRight2;
+    }
+
+    public void setFillPasswordRight2(JPasswordField fillPasswordRight2) {
+        this.fillPasswordRight2 = fillPasswordRight2;
+    }
+
+    public JTextField getFillLogin() {
+        return fillLogin;
+    }
+
+    public void setFillLogin(JTextField fillLogin) {
+        this.fillLogin = fillLogin;
     }
 }

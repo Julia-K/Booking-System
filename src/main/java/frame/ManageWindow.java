@@ -1,7 +1,8 @@
-package tableFrames;
+package main.java.frame;
 
-import allComands.Requests;
-import allComands.TableRowFilter;
+import main.java.commands.Requests;
+import main.java.utils.TableRowFilter;
+import main.java.controller.Actions;
 
 import java.awt.*;
 import java.sql.SQLException;
@@ -13,11 +14,7 @@ import javax.swing.table.JTableHeader;
 public class ManageWindow extends JFrame {
     private static ManageWindow manageWindow;
     private LinkedHashMap<Integer, String> tableCombobox;
-    private JPanel topPanel;
-    private JLabel manage;
     private JComboBox<String> comboBox;
-    private JPanel leftPanel;
-    private JPanel filterPanel;
     private JTextField searchField;
     private JButton detailsButton;
     private JButton updateButton;
@@ -25,9 +22,6 @@ public class ManageWindow extends JFrame {
     private JButton addButton;
     private JPanel rightPanel;
     private JTable table;
-    private JLabel filter;
-    private JPanel dialogPane;
-    private JButton goButton;
 
     public ManageWindow() throws SQLException {
         initComponents();
@@ -37,21 +31,21 @@ public class ManageWindow extends JFrame {
     }
 
     private void initComponents() throws SQLException {
-        dialogPane = new JPanel();
-        goButton = new JButton();
-        topPanel = new JPanel();
-        manage = new JLabel();
+        JPanel dialogPane = new JPanel();
+        JButton goButton = new JButton();
+        JPanel topPanel = new JPanel();
+        JLabel manage = new JLabel();
         comboBox = new JComboBox<String>();
         tableCombobox = new LinkedHashMap<>();
-        leftPanel = new JPanel();
-        filterPanel = new JPanel();
+        JPanel leftPanel = new JPanel();
+        JPanel filterPanel = new JPanel();
         searchField = new JTextField();
         detailsButton = new JButton();
         updateButton = new JButton();
         deleteButton = new JButton();
         addButton = new JButton();
         rightPanel = new JPanel();
-        filter = new JLabel();
+        JLabel filter = new JLabel();
         table = new JTable();
         comboBox.setSelectedItem(0);
 
@@ -88,7 +82,6 @@ public class ManageWindow extends JFrame {
         comboBox.setPreferredSize(new Dimension(150, 30));
         comboBox.setBackground(Color.white);
         comboBox.setBounds(245, 23, 160, 35);
-        // comboBox.setFont(new Font("SA"));
         ((JLabel)comboBox.getRenderer()).setHorizontalAlignment(SwingConstants.CENTER); //center text in combobox
 
         addToCombobox();
@@ -403,6 +396,15 @@ public class ManageWindow extends JFrame {
         }
     }
 
+    private void setTableDesign() {
+        table.setFont(new Font("Roboto", Font.PLAIN, 15));
+        table.setRowHeight(30);
+        table.setBackground(new Color(235, 242, 250));
+        JTableHeader tableHeader = table.getTableHeader();
+        tableHeader.setBackground(new Color(5, 102, 141));
+        tableHeader.setForeground(Color.white);
+    }
+
     public static void main(String[] args) {
         EventQueue.invokeLater((() -> {
             try {
@@ -414,12 +416,83 @@ public class ManageWindow extends JFrame {
         }));
     }
 
-    private void setTableDesign() {
-        table.setFont(new Font("Roboto", Font.PLAIN, 15));
-        table.setRowHeight(30);
-        table.setBackground(new Color(235, 242, 250));
-        JTableHeader tableHeader = table.getTableHeader();
-        tableHeader.setBackground(new Color(5, 102, 141));
-        tableHeader.setForeground(Color.white);
+    public static ManageWindow getManageWindow() {
+        return manageWindow;
+    }
+
+    public static void setManageWindow(ManageWindow manageWindow) {
+        ManageWindow.manageWindow = manageWindow;
+    }
+
+    public LinkedHashMap<Integer, String> getTableCombobox() {
+        return tableCombobox;
+    }
+
+    public void setTableCombobox(LinkedHashMap<Integer, String> tableCombobox) {
+        this.tableCombobox = tableCombobox;
+    }
+
+    public JComboBox<String> getComboBox() {
+        return comboBox;
+    }
+
+    public void setComboBox(JComboBox<String> comboBox) {
+        this.comboBox = comboBox;
+    }
+
+    public JTextField getSearchField() {
+        return searchField;
+    }
+
+    public void setSearchField(JTextField searchField) {
+        this.searchField = searchField;
+    }
+
+    public JButton getDetailsButton() {
+        return detailsButton;
+    }
+
+    public void setDetailsButton(JButton detailsButton) {
+        this.detailsButton = detailsButton;
+    }
+
+    public JButton getUpdateButton() {
+        return updateButton;
+    }
+
+    public void setUpdateButton(JButton updateButton) {
+        this.updateButton = updateButton;
+    }
+
+    public JButton getDeleteButton() {
+        return deleteButton;
+    }
+
+    public void setDeleteButton(JButton deleteButton) {
+        this.deleteButton = deleteButton;
+    }
+
+    public JButton getAddButton() {
+        return addButton;
+    }
+
+    public void setAddButton(JButton addButton) {
+        this.addButton = addButton;
+    }
+
+    public JPanel getRightPanel() {
+        return rightPanel;
+    }
+
+    public void setRightPanel(JPanel rightPanel) {
+        this.rightPanel = rightPanel;
+    }
+
+    public JTable getTable() {
+        return table;
+    }
+
+    public void setTable(JTable table) {
+        this.table = table;
     }
 }

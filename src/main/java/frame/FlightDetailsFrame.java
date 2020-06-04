@@ -1,8 +1,9 @@
-package tableFrames;
+package main.java.frame;
 
-import allComands.Requests;
-import allComands.StringsFormatter;
+import main.java.commands.Requests;
+import main.java.utils.StringsFormatter;
 import com.microsoft.sqlserver.jdbc.SQLServerException;
+import main.java.utils.MyOwnDatePicker;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -13,8 +14,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class FlightDetailsFrame extends JFrame {
@@ -46,7 +45,7 @@ public class FlightDetailsFrame extends JFrame {
     private JLabel toL;
     private int id;
 
-    public FlightDetailsFrame() throws SQLException, ParseException {
+    public FlightDetailsFrame() throws SQLException {
         this.update = false;
         Date data = java.util.Calendar.getInstance().getTime();
         String s = new SimpleDateFormat("yyyy-MM-dd").format(data);
@@ -398,7 +397,6 @@ public class FlightDetailsFrame extends JFrame {
                         String arrSpinner = formater.format(arrTimeSpinner.getValue());
                         String depSpinner = formater.format(depTimeSpinner.getValue());
                         if (update) {
-                            System.out.println("ID: " + id);
                             Requests.updateFlight(id, depId, arrId, pilotId, planeId, depSpinner, depPicker.getDate(), arrSpinner,
                                     arrPicker.getDate(), fillPrice.getText());
                             dispose();
@@ -566,5 +564,217 @@ public class FlightDetailsFrame extends JFrame {
         String brand = rs.getString(2);
         String model = rs.getString(3);
         return (brand + " - " + model);
+    }
+
+    public LinkedHashMap<Integer, Integer> getAirportsWithId() {
+        return airportsWithId;
+    }
+
+    public void setAirportsWithId(LinkedHashMap<Integer, Integer> airportsWithId) {
+        this.airportsWithId = airportsWithId;
+    }
+
+    public LinkedHashMap<Integer, Integer> getPilotsWithId() {
+        return pilotsWithId;
+    }
+
+    public void setPilotsWithId(LinkedHashMap<Integer, Integer> pilotsWithId) {
+        this.pilotsWithId = pilotsWithId;
+    }
+
+    public LinkedHashMap<Integer, Integer> getPlanesWithId() {
+        return planesWithId;
+    }
+
+    public void setPlanesWithId(LinkedHashMap<Integer, Integer> planesWithId) {
+        this.planesWithId = planesWithId;
+    }
+
+    public void setPilotComboBox(JComboBox<String> pilotComboBox) {
+        this.pilotComboBox = pilotComboBox;
+    }
+
+    public JComboBox<String> getPlaneComboBox() {
+        return planeComboBox;
+    }
+
+    public void setPlaneComboBox(JComboBox<String> planeComboBox) {
+        this.planeComboBox = planeComboBox;
+    }
+
+    public JComboBox<String> getDepComboBox() {
+        return depComboBox;
+    }
+
+    public void setDepComboBox(JComboBox<String> depComboBox) {
+        this.depComboBox = depComboBox;
+    }
+
+    public JComboBox<String> getArrComboBox() {
+        return arrComboBox;
+    }
+
+    public void setArrComboBox(JComboBox<String> arrComboBox) {
+        this.arrComboBox = arrComboBox;
+    }
+
+    public MyOwnDatePicker getDepPicker() {
+        return depPicker;
+    }
+
+    public void setDepPicker(MyOwnDatePicker depPicker) {
+        this.depPicker = depPicker;
+    }
+
+    public MyOwnDatePicker getArrPicker() {
+        return arrPicker;
+    }
+
+    public void setArrPicker(MyOwnDatePicker arrPicker) {
+        this.arrPicker = arrPicker;
+    }
+
+    public JSpinner getDepTimeSpinner() {
+        return depTimeSpinner;
+    }
+
+    public void setDepTimeSpinner(JSpinner depTimeSpinner) {
+        this.depTimeSpinner = depTimeSpinner;
+    }
+
+    public JSpinner getArrTimeSpinner() {
+        return arrTimeSpinner;
+    }
+
+    public void setArrTimeSpinner(JSpinner arrTimeSpinner) {
+        this.arrTimeSpinner = arrTimeSpinner;
+    }
+
+    public JTextField getFillPrice() {
+        return fillPrice;
+    }
+
+    public void setFillPrice(JTextField fillPrice) {
+        this.fillPrice = fillPrice;
+    }
+
+    public JPanel getContentPanel() {
+        return contentPanel;
+    }
+
+    public void setContentPanel(JPanel contentPanel) {
+        this.contentPanel = contentPanel;
+    }
+
+    public JPanel getDialogPane() {
+        return dialogPane;
+    }
+
+    public void setDialogPane(JPanel dialogPane) {
+        this.dialogPane = dialogPane;
+    }
+
+    public JPanel getPlanePanel() {
+        return planePanel;
+    }
+
+    public void setPlanePanel(JPanel planePanel) {
+        this.planePanel = planePanel;
+    }
+
+    public JPanel getButtonBar() {
+        return buttonBar;
+    }
+
+    public void setButtonBar(JPanel buttonBar) {
+        this.buttonBar = buttonBar;
+    }
+
+    public JButton getOkButton() {
+        return okButton;
+    }
+
+    public void setOkButton(JButton okButton) {
+        this.okButton = okButton;
+    }
+
+    public boolean isUpdate() {
+        return update;
+    }
+
+    public void setUpdate(boolean update) {
+        this.update = update;
+    }
+
+    public JLabel getDepartureL() {
+        return departureL;
+    }
+
+    public void setDepartureL(JLabel departureL) {
+        this.departureL = departureL;
+    }
+
+    public JLabel getArrivalL() {
+        return arrivalL;
+    }
+
+    public void setArrivalL(JLabel arrivalL) {
+        this.arrivalL = arrivalL;
+    }
+
+    public JLabel getPriceL() {
+        return priceL;
+    }
+
+    public void setPriceL(JLabel priceL) {
+        this.priceL = priceL;
+    }
+
+    public JPanel getPanel1() {
+        return panel1;
+    }
+
+    public void setPanel1(JPanel panel1) {
+        this.panel1 = panel1;
+    }
+
+    public JLabel getPilotL() {
+        return pilotL;
+    }
+
+    public void setPilotL(JLabel pilotL) {
+        this.pilotL = pilotL;
+    }
+
+    public JLabel getPlaneL() {
+        return planeL;
+    }
+
+    public void setPlaneL(JLabel planeL) {
+        this.planeL = planeL;
+    }
+
+    public JLabel getFromL() {
+        return fromL;
+    }
+
+    public void setFromL(JLabel fromL) {
+        this.fromL = fromL;
+    }
+
+    public JLabel getToL() {
+        return toL;
+    }
+
+    public void setToL(JLabel toL) {
+        this.toL = toL;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }

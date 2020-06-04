@@ -1,5 +1,6 @@
-package tableFrames;
+package main.java.utils;
 
+import main.java.utils.DateLabelFormatter;
 import org.jdatepicker.impl.JDatePanelImpl;
 import org.jdatepicker.impl.JDatePickerImpl;
 import org.jdatepicker.impl.UtilDateModel;

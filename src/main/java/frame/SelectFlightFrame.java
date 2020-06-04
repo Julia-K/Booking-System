@@ -1,13 +1,12 @@
-package tableFrames;
+package main.java.frame;
 
-import allComands.Requests;
-import allComands.StringsFormatter;
+import main.java.commands.Requests;
+import main.java.utils.StringsFormatter;
+import main.java.utils.MyOwnDatePicker;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
-import javax.swing.table.TableRowSorter;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -18,7 +17,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedHashMap;
 
-public class SelectFlight extends JFrame {
+public class SelectFlightFrame extends JFrame {
     private LinkedHashMap airportsWithId;
     private JComboBox fromCombo;
     private JComboBox toCombo;
@@ -33,7 +32,7 @@ public class SelectFlight extends JFrame {
     private int flight;
     private boolean update;
 
-    public SelectFlight(boolean update, BookingDetailsFrame bdf) throws SQLException {
+    public SelectFlightFrame(boolean update, BookingDetailsFrame bdf) throws SQLException {
         this.update = update;
         this.bdf = bdf;
         this.flight = bdf.getFlightId();
@@ -366,4 +365,107 @@ public class SelectFlight extends JFrame {
         tableHeader.setForeground(Color.white);
     }
 
+    public LinkedHashMap getAirportsWithId() {
+        return airportsWithId;
+    }
+
+    public void setAirportsWithId(LinkedHashMap airportsWithId) {
+        this.airportsWithId = airportsWithId;
+    }
+
+    public JComboBox getFromCombo() {
+        return fromCombo;
+    }
+
+    public void setFromCombo(JComboBox fromCombo) {
+        this.fromCombo = fromCombo;
+    }
+
+    public JComboBox getToCombo() {
+        return toCombo;
+    }
+
+    public void setToCombo(JComboBox toCombo) {
+        this.toCombo = toCombo;
+    }
+
+    public MyOwnDatePicker getDateFrom() {
+        return dateFrom;
+    }
+
+    public void setDateFrom(MyOwnDatePicker dateFrom) {
+        this.dateFrom = dateFrom;
+    }
+
+    public MyOwnDatePicker getDateTo() {
+        return dateTo;
+    }
+
+    public void setDateTo(MyOwnDatePicker dateTo) {
+        this.dateTo = dateTo;
+    }
+
+    public JTextField getFillPriceFrom() {
+        return fillPriceFrom;
+    }
+
+    public void setFillPriceFrom(JTextField fillPriceFrom) {
+        this.fillPriceFrom = fillPriceFrom;
+    }
+
+    public JTextField getFillPriceTo() {
+        return fillPriceTo;
+    }
+
+    public void setFillPriceTo(JTextField fillPriceTo) {
+        this.fillPriceTo = fillPriceTo;
+    }
+
+    public JPanel getPanelForTable() {
+        return panelForTable;
+    }
+
+    public void setPanelForTable(JPanel panelForTable) {
+        this.panelForTable = panelForTable;
+    }
+
+    public JScrollPane getScrollPane() {
+        return scrollPane;
+    }
+
+    public void setScrollPane(JScrollPane scrollPane) {
+        this.scrollPane = scrollPane;
+    }
+
+    public JTable getTable() {
+        return table;
+    }
+
+    public void setTable(JTable table) {
+        this.table = table;
+    }
+
+    public BookingDetailsFrame getBdf() {
+        return bdf;
+    }
+
+    public void setBdf(BookingDetailsFrame bdf) {
+        this.bdf = bdf;
+    }
+
+    public int getFlight() {
+        return flight;
+    }
+
+    public void setFlight(int flight) {
+        this.flight = flight;
+    }
+
+    public boolean isUpdate() {
+        return update;
+    }
+
+    public void setUpdate(boolean update) {
+        this.update = update;
+    }
 }

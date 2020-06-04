@@ -1,7 +1,7 @@
-package tableFrames;
+package main.java.frame;
 
-import allComands.Requests;
-import allComands.StringsFormatter;
+import main.java.commands.Requests;
+import main.java.utils.StringsFormatter;
 import com.microsoft.sqlserver.jdbc.SQLServerException;
 
 import java.awt.*;
@@ -30,8 +30,6 @@ public class AirportDetailsFrame extends JFrame {
     private JTextField fillCodeL;
     private JComboBox comboBox;
     private JCheckBox checkBox;
-    private JPanel panel3;
-    private JPanel panel2;
     private JLabel countryL;
     private JTextField fillCountry;
     private JLabel cityL;
@@ -179,11 +177,11 @@ public class AirportDetailsFrame extends JFrame {
         fillCodeL = new JTextField();
         comboBox = getComboBox();
         checkBox = new JCheckBox();
-        panel3 = new JPanel();
+        JPanel panel3 = new JPanel();
         buttonBar = new JPanel();
         okButton = new JButton();
         panel1 = new JPanel();
-        panel2 = new JPanel();
+        JPanel panel2 = new JPanel();
         countryL = new JLabel();
         fillCountry = new JTextField();
         cityL = new JLabel();
@@ -466,5 +464,217 @@ public class AirportDetailsFrame extends JFrame {
                 return true;
             }
         }
+    }
+
+    public LinkedHashMap<Integer, Integer> getAddressesWithId() {
+        return addressesWithId;
+    }
+
+    public void setAddressesWithId(LinkedHashMap<Integer, Integer> addressesWithId) {
+        this.addressesWithId = addressesWithId;
+    }
+
+    public JPanel getDialogPane() {
+        return dialogPane;
+    }
+
+    public void setDialogPane(JPanel dialogPane) {
+        this.dialogPane = dialogPane;
+    }
+
+    public JPanel getContentPanel() {
+        return contentPanel;
+    }
+
+    public void setContentPanel(JPanel contentPanel) {
+        this.contentPanel = contentPanel;
+    }
+
+    public JLabel getNameL() {
+        return nameL;
+    }
+
+    public void setNameL(JLabel nameL) {
+        this.nameL = nameL;
+    }
+
+    public JLabel getFillNameL() {
+        return fillNameL;
+    }
+
+    public void setFillNameL(JLabel fillNameL) {
+        this.fillNameL = fillNameL;
+    }
+
+    public JLabel getAddressL() {
+        return addressL;
+    }
+
+    public void setAddressL(JLabel addressL) {
+        this.addressL = addressL;
+    }
+
+    public JLabel getFillAddressL() {
+        return fillAddressL;
+    }
+
+    public void setFillAddressL(JLabel fillAddressL) {
+        this.fillAddressL = fillAddressL;
+    }
+
+    public JPanel getButtonBar() {
+        return buttonBar;
+    }
+
+    public void setButtonBar(JPanel buttonBar) {
+        this.buttonBar = buttonBar;
+    }
+
+    public JButton getOkButton() {
+        return okButton;
+    }
+
+    public void setOkButton(JButton okButton) {
+        this.okButton = okButton;
+    }
+
+    public JPanel getPanel1() {
+        return panel1;
+    }
+
+    public void setPanel1(JPanel panel1) {
+        this.panel1 = panel1;
+    }
+
+    public JTextField getFillnameL() {
+        return fillnameL;
+    }
+
+    public void setFillnameL(JTextField fillnameL) {
+        this.fillnameL = fillnameL;
+    }
+
+    public JLabel getAddressL3() {
+        return addressL3;
+    }
+
+    public void setAddressL3(JLabel addressL3) {
+        this.addressL3 = addressL3;
+    }
+
+    public JTextField getFillCodeL() {
+        return fillCodeL;
+    }
+
+    public void setFillCodeL(JTextField fillCodeL) {
+        this.fillCodeL = fillCodeL;
+    }
+
+    public void setComboBox(JComboBox comboBox) {
+        this.comboBox = comboBox;
+    }
+
+    public JCheckBox getCheckBox() {
+        return checkBox;
+    }
+
+    public void setCheckBox(JCheckBox checkBox) {
+        this.checkBox = checkBox;
+    }
+
+    public JLabel getCountryL() {
+        return countryL;
+    }
+
+    public void setCountryL(JLabel countryL) {
+        this.countryL = countryL;
+    }
+
+    public JTextField getFillCountry() {
+        return fillCountry;
+    }
+
+    public void setFillCountry(JTextField fillCountry) {
+        this.fillCountry = fillCountry;
+    }
+
+    public JLabel getCityL() {
+        return cityL;
+    }
+
+    public void setCityL(JLabel cityL) {
+        this.cityL = cityL;
+    }
+
+    public JTextField getFillCity() {
+        return fillCity;
+    }
+
+    public void setFillCity(JTextField fillCity) {
+        this.fillCity = fillCity;
+    }
+
+    public JLabel getPostalL() {
+        return postalL;
+    }
+
+    public void setPostalL(JLabel postalL) {
+        this.postalL = postalL;
+    }
+
+    public JTextField getFillPostal() {
+        return fillPostal;
+    }
+
+    public void setFillPostal(JTextField fillPostal) {
+        this.fillPostal = fillPostal;
+    }
+
+    public JLabel getStreetL() {
+        return streetL;
+    }
+
+    public void setStreetL(JLabel streetL) {
+        this.streetL = streetL;
+    }
+
+    public JTextField getFillStreet() {
+        return fillStreet;
+    }
+
+    public void setFillStreet(JTextField fillStreet) {
+        this.fillStreet = fillStreet;
+    }
+
+    public JLabel getNumberL() {
+        return numberL;
+    }
+
+    public void setNumberL(JLabel numberL) {
+        this.numberL = numberL;
+    }
+
+    public JTextField getFillNumber() {
+        return fillNumber;
+    }
+
+    public void setFillNumber(JTextField fillNumber) {
+        this.fillNumber = fillNumber;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public boolean isUpdate() {
+        return update;
+    }
+
+    public void setUpdate(boolean update) {
+        this.update = update;
     }
 }

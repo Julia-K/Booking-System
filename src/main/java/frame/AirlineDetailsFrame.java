@@ -1,14 +1,13 @@
-package tableFrames;
+package main.java.frame;
 
-import allComands.Requests;
-import allComands.StringsFormatter;
+import main.java.commands.Requests;
+import main.java.utils.StringsFormatter;
 import com.microsoft.sqlserver.jdbc.SQLServerException;
 
 import java.awt.*;
 import java.awt.event.ItemEvent;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.LinkedHashMap;
 import javax.swing.*;
 import javax.swing.border.*;
@@ -556,4 +555,175 @@ public class AirlineDetailsFrame extends JFrame {
         }
     }
 
+    public JPanel getDialogPane() {
+        return dialogPane;
+    }
+
+    public void setDialogPane(JPanel dialogPane) {
+        this.dialogPane = dialogPane;
+    }
+
+    public LinkedHashMap<Integer, Integer> getPlanesWithId() {
+        return planesWithId;
+    }
+
+    public void setPlanesWithId(LinkedHashMap<Integer, Integer> planesWithId) {
+        this.planesWithId = planesWithId;
+    }
+
+    public JPanel getContentPanel() {
+        return contentPanel;
+    }
+
+    public void setContentPanel(JPanel contentPanel) {
+        this.contentPanel = contentPanel;
+    }
+
+    public JLabel getAirlineL() {
+        return airlineL;
+    }
+
+    public void setAirlineL(JLabel airlineL) {
+        this.airlineL = airlineL;
+    }
+
+    public JTextField getFillAirline2() {
+        return fillAirline2;
+    }
+
+    public void setFillAirline2(JTextField fillAirline2) {
+        this.fillAirline2 = fillAirline2;
+    }
+
+    public JLabel getFillAirline() {
+        return fillAirline;
+    }
+
+    public void setFillAirline(JLabel fillAirline) {
+        this.fillAirline = fillAirline;
+    }
+
+    public JPanel getButtonBar() {
+        return buttonBar;
+    }
+
+    public void setButtonBar(JPanel buttonBar) {
+        this.buttonBar = buttonBar;
+    }
+
+    public JPanel getPanel5() {
+        return panel5;
+    }
+
+    public void setPanel5(JPanel panel5) {
+        this.panel5 = panel5;
+    }
+
+    public JButton getAddButton() {
+        return addButton;
+    }
+
+    public void setAddButton(JButton addButton) {
+        this.addButton = addButton;
+    }
+
+    public JButton getUpdateButton() {
+        return updateButton;
+    }
+
+    public void setUpdateButton(JButton updateButton) {
+        this.updateButton = updateButton;
+    }
+
+    public JButton getDeleteButton() {
+        return deleteButton;
+    }
+
+    public void setDeleteButton(JButton deleteButton) {
+        this.deleteButton = deleteButton;
+    }
+
+    public JButton getOkButton() {
+        return okButton;
+    }
+
+    public void setOkButton(JButton okButton) {
+        this.okButton = okButton;
+    }
+
+    public JPanel getPanel1() {
+        return panel1;
+    }
+
+    public void setPanel1(JPanel panel1) {
+        this.panel1 = panel1;
+    }
+
+    public DefaultListModel<String> getModel() {
+        return model;
+    }
+
+    public void setModel(DefaultListModel<String> model) {
+        this.model = model;
+    }
+
+    public JLabel getCodeL() {
+        return codeL;
+    }
+
+    public void setCodeL(JLabel codeL) {
+        this.codeL = codeL;
+    }
+
+    public JTextField getFillCode() {
+        return fillCode;
+    }
+
+    public void setFillCode(JTextField fillCode) {
+        this.fillCode = fillCode;
+    }
+
+    public JCheckBox getCheckBox() {
+        return checkBox;
+    }
+
+    public void setCheckBox(JCheckBox checkBox) {
+        this.checkBox = checkBox;
+    }
+
+    public void setComboBox(JComboBox comboBox) {
+        this.comboBox = comboBox;
+    }
+
+    public JTextField getFillQuantity() {
+        return fillQuantity;
+    }
+
+    public void setFillQuantity(JTextField fillQuantity) {
+        this.fillQuantity = fillQuantity;
+    }
+
+    public JLabel getQuantityL() {
+        return quantityL;
+    }
+
+    public void setQuantityL(JLabel quantityL) {
+        this.quantityL = quantityL;
+    }
+
+    public JLabel getPlaneL() {
+        return planeL;
+    }
+
+    public void setPlaneL(JLabel planeL) {
+        this.planeL = planeL;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 }

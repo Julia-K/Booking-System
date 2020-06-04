@@ -1,11 +1,12 @@
-package allComands;
+package main.java.commands;
+
+import main.java.db.DBConnection;
+import main.java.utils.PasswordUtils;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 import java.awt.*;
-import java.io.IOException;
-import java.security.NoSuchAlgorithmException;
 import java.sql.*;
 import java.util.*;
 
@@ -19,11 +20,11 @@ public class Requests {
         PreparedStatement statement = DBConnection.getConnection().prepareStatement(sql);
         statement.setString(1, login);
         statement.setString(2, codedPassword);
+        statement.executeUpdate();
     }
 
     public static void createAddress(String country, String city, String postal_code, String street, int number) throws SQLException {
         String sql = "insert into address (country, city, postal_code, street, number) values (?, ?, ?, ?, ?)";
-        System.out.println("insert into address (country, city, postal_code, street, number) values ('"+country+"','"+city+"','"+postal_code+"','"+"','"+street+"',"+number+")");
 
         PreparedStatement statement = DBConnection.getConnection().prepareStatement(sql);
         statement.setString(1, country);

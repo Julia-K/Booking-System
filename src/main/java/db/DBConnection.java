@@ -1,5 +1,6 @@
-package allComands;
+package main.java.db;
 
+import javax.swing.*;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -19,8 +20,7 @@ public class DBConnection {
             cn = DriverManager.getConnection(url, dbUser, dbPassword);
             Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
         } catch (ClassNotFoundException | SQLException e) {
-            System.out.println("Connection Error");
-            //JOptionPane.showMessageDialog(null, "Connection error");
+            JOptionPane.showMessageDialog(null, "Connection error");
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();

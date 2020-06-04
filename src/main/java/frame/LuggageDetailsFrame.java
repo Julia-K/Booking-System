@@ -1,13 +1,12 @@
-package tableFrames;
+package main.java.frame;
 
-import allComands.Requests;
-import allComands.StringsFormatter;
+import main.java.commands.Requests;
+import main.java.utils.StringsFormatter;
 import com.microsoft.sqlserver.jdbc.SQLServerException;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class LuggageDetailsFrame extends JFrame {
@@ -297,6 +296,134 @@ public class LuggageDetailsFrame extends JFrame {
             return false;
         }
         return true;
+    }
+
+    public JPanel getDialogPane() {
+        return dialogPane;
+    }
+
+    public void setDialogPane(JPanel dialogPane) {
+        this.dialogPane = dialogPane;
+    }
+
+    public JPanel getContentPanel() {
+        return contentPanel;
+    }
+
+    public void setContentPanel(JPanel contentPanel) {
+        this.contentPanel = contentPanel;
+    }
+
+    public JTextField getFillName() {
+        return fillName;
+    }
+
+    public void setFillName(JTextField fillName) {
+        this.fillName = fillName;
+    }
+
+    public JLabel getNameL() {
+        return nameL;
+    }
+
+    public void setNameL(JLabel nameL) {
+        this.nameL = nameL;
+    }
+
+    public JLabel getPriceL() {
+        return priceL;
+    }
+
+    public void setPriceL(JLabel priceL) {
+        this.priceL = priceL;
+    }
+
+    public JLabel getHeightL() {
+        return heightL;
+    }
+
+    public void setHeightL(JLabel heightL) {
+        this.heightL = heightL;
+    }
+
+    public JLabel getWeightL() {
+        return weightL;
+    }
+
+    public void setWeightL(JLabel weightL) {
+        this.weightL = weightL;
+    }
+
+    public JPanel getButtonBar() {
+        return buttonBar;
+    }
+
+    public void setButtonBar(JPanel buttonBar) {
+        this.buttonBar = buttonBar;
+    }
+
+    public JButton getOkButton() {
+        return okButton;
+    }
+
+    public void setOkButton(JButton okButton) {
+        this.okButton = okButton;
+    }
+
+    public JPanel getPanel1() {
+        return panel1;
+    }
+
+    public void setPanel1(JPanel panel1) {
+        this.panel1 = panel1;
+    }
+
+    public JLabel getNameLuggageL() {
+        return nameLuggageL;
+    }
+
+    public void setNameLuggageL(JLabel nameLuggageL) {
+        this.nameLuggageL = nameLuggageL;
+    }
+
+    public JTextField getFillPrice() {
+        return fillPrice;
+    }
+
+    public void setFillPrice(JTextField fillPrice) {
+        this.fillPrice = fillPrice;
+    }
+
+    public JTextField getFillWeight() {
+        return fillWeight;
+    }
+
+    public void setFillWeight(JTextField fillWeight) {
+        this.fillWeight = fillWeight;
+    }
+
+    public JTextField getFillHeight() {
+        return fillHeight;
+    }
+
+    public void setFillHeight(JTextField fillHeight) {
+        this.fillHeight = fillHeight;
+    }
+
+    public boolean isUpdate() {
+        return update;
+    }
+
+    public void setUpdate(boolean update) {
+        this.update = update;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }
 

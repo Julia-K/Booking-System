@@ -1,9 +1,10 @@
-package tableFrames;
+package main.java.frame;
 
-import allComands.PasswordUtils;
-import allComands.Requests;
-import allComands.StringsFormatter;
+import main.java.utils.PasswordUtils;
+import main.java.commands.Requests;
+import main.java.utils.StringsFormatter;
 import com.microsoft.sqlserver.jdbc.SQLServerException;
+import main.java.utils.MyOwnDatePicker;
 
 import java.awt.*;
 import java.sql.SQLException;
@@ -17,8 +18,6 @@ import javax.swing.*;
 import javax.swing.border.*;
 
 public class ClientDetailsFrame extends JFrame {
-    private boolean update;
-    private int id;
     private JPanel dialogPane;
     private JPanel contentPanel;
     private JLabel nameL;
@@ -42,6 +41,8 @@ public class ClientDetailsFrame extends JFrame {
     private JPasswordField fillPassword;
     private JLabel confirmL;
     private JPasswordField fillConfirm;
+    private boolean update;
+    private int id;
 
     public ClientDetailsFrame(Boolean update, int id, String name, String last, String email, String pass, String date) {
         if(update) {
@@ -364,6 +365,205 @@ public class ClientDetailsFrame extends JFrame {
         } else {
             return true;
         }
+    }
 
+    public JPanel getDialogPane() {
+        return dialogPane;
+    }
+
+    public void setDialogPane(JPanel dialogPane) {
+        this.dialogPane = dialogPane;
+    }
+
+    public JPanel getContentPanel() {
+        return contentPanel;
+    }
+
+    public void setContentPanel(JPanel contentPanel) {
+        this.contentPanel = contentPanel;
+    }
+
+    public JLabel getNameL() {
+        return nameL;
+    }
+
+    public void setNameL(JLabel nameL) {
+        this.nameL = nameL;
+    }
+
+    public MyOwnDatePicker getBirthDate() {
+        return birthDate;
+    }
+
+    public void setBirthDate(MyOwnDatePicker birthDate) {
+        this.birthDate = birthDate;
+    }
+
+    public JLabel getEmailL() {
+        return emailL;
+    }
+
+    public void setEmailL(JLabel emailL) {
+        this.emailL = emailL;
+    }
+
+    public JLabel getPassL() {
+        return passL;
+    }
+
+    public void setPassL(JLabel passL) {
+        this.passL = passL;
+    }
+
+    public JLabel getBirthL() {
+        return birthL;
+    }
+
+    public void setBirthL(JLabel birthL) {
+        this.birthL = birthL;
+    }
+
+    public JPanel getButtonBar() {
+        return buttonBar;
+    }
+
+    public void setButtonBar(JPanel buttonBar) {
+        this.buttonBar = buttonBar;
+    }
+
+    public JButton getOkButton() {
+        return okButton;
+    }
+
+    public void setOkButton(JButton okButton) {
+        this.okButton = okButton;
+    }
+
+    public JPanel getPanel1() {
+        return panel1;
+    }
+
+    public void setPanel1(JPanel panel1) {
+        this.panel1 = panel1;
+    }
+
+    public JLabel getFirstL() {
+        return firstL;
+    }
+
+    public void setFirstL(JLabel firstL) {
+        this.firstL = firstL;
+    }
+
+    public JLabel getLastL() {
+        return lastL;
+    }
+
+    public void setLastL(JLabel lastL) {
+        this.lastL = lastL;
+    }
+
+    public JTextField getFillFirst() {
+        return fillFirst;
+    }
+
+    public void setFillFirst(JTextField fillFirst) {
+        this.fillFirst = fillFirst;
+    }
+
+    public JTextField getFillLast() {
+        return fillLast;
+    }
+
+    public void setFillLast(JTextField fillLast) {
+        this.fillLast = fillLast;
+    }
+
+    public JComboBox<String> getDayBox() {
+        return dayBox;
+    }
+
+    public void setDayBox(JComboBox<String> dayBox) {
+        this.dayBox = dayBox;
+    }
+
+    public JComboBox<String> getMonthBox() {
+        return monthBox;
+    }
+
+    public void setMonthBox(JComboBox<String> monthBox) {
+        this.monthBox = monthBox;
+    }
+
+    public JComboBox<String> getYearBox() {
+        return yearBox;
+    }
+
+    public void setYearBox(JComboBox<String> yearBox) {
+        this.yearBox = yearBox;
+    }
+
+    public JPanel getPanel3() {
+        return panel3;
+    }
+
+    public void setPanel3(JPanel panel3) {
+        this.panel3 = panel3;
+    }
+
+    public JPanel getPanel2() {
+        return panel2;
+    }
+
+    public void setPanel2(JPanel panel2) {
+        this.panel2 = panel2;
+    }
+
+    public JTextField getFillEmail() {
+        return fillEmail;
+    }
+
+    public void setFillEmail(JTextField fillEmail) {
+        this.fillEmail = fillEmail;
+    }
+
+    public JPasswordField getFillPassword() {
+        return fillPassword;
+    }
+
+    public void setFillPassword(JPasswordField fillPassword) {
+        this.fillPassword = fillPassword;
+    }
+
+    public JLabel getConfirmL() {
+        return confirmL;
+    }
+
+    public void setConfirmL(JLabel confirmL) {
+        this.confirmL = confirmL;
+    }
+
+    public JPasswordField getFillConfirm() {
+        return fillConfirm;
+    }
+
+    public void setFillConfirm(JPasswordField fillConfirm) {
+        this.fillConfirm = fillConfirm;
+    }
+
+    public boolean isUpdate() {
+        return update;
+    }
+
+    public void setUpdate(boolean update) {
+        this.update = update;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }

@@ -1,4 +1,4 @@
-package allComands;
+package main.java.utils;
 
 import javax.swing.*;
 import javax.swing.text.MaskFormatter;
