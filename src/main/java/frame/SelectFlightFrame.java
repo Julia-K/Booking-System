@@ -225,6 +225,7 @@ public class SelectFlightFrame extends JFrame {
                     } catch (SQLException throwables) {
                         throwables.printStackTrace();
                     }
+                    setTableDesign();
                     scrollPane.setViewportView(table);
                     panelForTable.removeAll();
                     panelForTable.add(scrollPane);

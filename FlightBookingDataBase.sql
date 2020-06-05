@@ -126,26 +126,27 @@ CREATE TABLE booking (
 	FOREIGN KEY(luggage_id) REFERENCES luggage(luggageID) ON DELETE CASCADE
 );
 
-insert into address (country, city, postal_code, street, number) values ('Poland', 'Siedlce', '33-321', 'Mayfield', '2');
-insert into address (country, city, postal_code, street, number) values ('Poland', 'Grojec', '32-615', 'Northland', '92');
-insert into address (country, city, postal_code, street, number) values ('Poland', 'Psary', '42-580', 'Rowland', '94347');
-insert into address ( country, city, postal_code, street, number) values ('Poland', 'Sulechów', '66-101', 'Pine View', '90');
-insert into address ( country, city, postal_code, street, number) values ( 'Poland', 'Czy¿owice', '44-352', 'Holmberg', '48');
-insert into address ( country, city, postal_code, street, number) values ( 'Poland', 'S³ubice', '69-101', 'Lakeland', '5');
-insert into address ( country, city, postal_code, street, number) values ( 'Poland', 'Janowiec', '24-123', 'Mcbride', '3');
-insert into address ( country, city, postal_code, street, number) values ( 'Poland', 'Kamionka', '21-132', 'Fremont', '85');
-insert into address ( country, city, postal_code, street, number) values ( 'Poland', 'S³upsk', '76-280', 'Cascade', '96');
-insert into address ( country, city, postal_code, street, number) values ( 'Poland', 'Kup', '46-082', 'Roth', '29');
-insert into address ( country, city, postal_code, street, number) values ( 'Poland', 'Goworowo', '07-440', 'Center', '82');
-insert into address ( country, city, postal_code, street, number) values ( 'Poland', 'Osieck', '08-445', 'Mcbride', '36');
-insert into address ( country, city, postal_code, street, number) values ( 'Poland', 'Jednoro¿ec', '06-323', 'Vermont', '4');
-insert into address ( country, city, postal_code, street, number) values ( 'Poland', 'Jawornik', '38-112', 'Hermina', '7');
-insert into address ( country, city, postal_code, street, number) values ( 'Poland', 'Godziszów Pierwszy', '23-302', 'Dennis', '33');
-insert into address ( country, city, postal_code, street, number) values ( 'Poland', 'Osiek', '87-340', 'Mayfield', '3');
-insert into address ( country, city, postal_code, street, number) values ( 'Poland', 'Baruchowo', '87-821', 'Sheridan', '8');
-insert into address ( country, city, postal_code, street, number) values ( 'Poland', 'Brzeg Dolny', '56-122', 'Maryland', '23');
-insert into address ( country, city, postal_code, street, number) values ( 'Poland', 'Baranowo', '06-320', 'Nelson', '27');
-insert into address (country, city, postal_code, street, number) values ( 'Poland', '£opuszna', '34-432', 'Redwing', '41');
+insert into address (country, city, postal_code, street, number) values ('Indonesia', 'Rungkam', '44-274', 'Arizona', 93);
+insert into address (country, city, postal_code, street, number) values ('Pakistan', 'Mehrabpur', '79-051', 'Dakota', 82);
+insert into address (country, city, postal_code, street, number) values ('Ukraine', 'Kopychyntsi', '11-234', 'Stone Corner', 13);
+insert into address (country, city, postal_code, street, number) values ('Philippines', 'Alicia', '70-940', 'Bobwhite', 42);
+insert into address (country, city, postal_code, street, number) values ('Russia', 'Dmitriyevka', '45-242', 'Starling', 42);
+insert into address (country, city, postal_code, street, number) values ('Costa Rica', 'Bel
+n', '50-504', 'Lakeland', 43);
+insert into address (country, city, postal_code, street, number) values ('Sweden', 'Stockholm', '11-995', 'Oakridge', 81);
+insert into address (country, city, postal_code, street, number) values ('North Korea', 'Onsng', '23-432', 'Tony', 96);
+insert into address (country, city, postal_code, street, number) values ('China', 'Shaxi', '13-253', 'Pennsylvania', 40);
+insert into address (country, city, postal_code, street, number) values ('Argentina', 'Campo Viera', '33-862', 'East', 17);
+insert into address (country, city, postal_code, street, number) values ('China', 'Junzhuang', '23-244', 'East', 78);
+insert into address (country, city, postal_code, street, number) values ('Brazil', 'Foz do Iguau', '85-000', 'Lerdahl', 78);
+insert into address (country, city, postal_code, street, number) values ('United States', 'Seattle', '98-185', 'Corscot', 46);
+insert into address (country, city, postal_code, street, number) values ('Ecuador', 'Azogues', '32-345', 'Sheridan', 70);
+insert into address (country, city, postal_code, street, number) values ('Philippines', 'San Francisco', '85-501', 'Westridge', 66);
+insert into address (country, city, postal_code, street, number) values ('China', 'Sikeshu', '14-546', 'Canary', 77);
+insert into address (country, city, postal_code, street, number) values ('Peru', 'Vilque', '52-475', 'Ludington', 4);
+insert into address (country, city, postal_code, street, number) values ('China', 'Huyang', '94-342', 'Forest Run', 93);
+insert into address (country, city, postal_code, street, number) values ('Russia', 'Kostrovo', '14-028', 'Kingsford', 39);
+insert into address (country, city, postal_code, street, number) values ('Mexico', 'Las Flores', '87-395', 'Kinsman', 48);
 
 insert into client ( first_name, last_name, email, password, birth_date) values ( 'Lina', 'Ohms', 'lohms0@google.ru', 'Jv4jTUMjVRN', '1958-03-20');
 insert into client ( first_name, last_name, email, password, birth_date) values ( 'Gaspar', 'Manvelle', 'gmanvelle1@aboutads.info', 'UzK4lYlttHx0', '1945-05-14');
@@ -181,9 +182,6 @@ insert into plane (brand, model) values ('Phoenix', 'G-TUIJ');
 insert into plane (brand, model) values ('Phoenix', 'Disney');
 insert into plane (brand, model) values ('NG', 'Transat');
 insert into plane (brand, model) values ('GeminiJets', 'Douglas');
-
-select * from airline
-select * from address
 
 insert into plane_airline (plane_id, airline_id, planes_quantity) values (1, 1, 10);
 insert into plane_airline (plane_id, airline_id, planes_quantity) values (3, 1, 10);
@@ -301,3 +299,5 @@ insert into booking (flight_id, client_id, luggage_id, class_id, seat_number, ap
 insert into booking (flight_id, client_id, luggage_id, class_id, seat_number, approval_date) values (12, 10, 3, 1, 26, '2019-07-30');
 insert into booking (flight_id, client_id, luggage_id, class_id, seat_number, approval_date) values (12, 5, 2, 2, 10, '2019-06-05');
 insert into booking (flight_id, client_id, luggage_id, class_id, seat_number, approval_date) values (1, 6, 2, 1, 33, '2020-01-03');
+
+select * from flight
