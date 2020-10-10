@@ -33,9 +33,9 @@ public class LuggageDetailsFrame extends JFrame {
         setVisible(true);
     }
 
-    public LuggageDetailsFrame(Boolean update, int id,String name, float price, String height, String weight) {
+    public LuggageDetailsFrame(Boolean update, int id, String name, float price, String height, String weight) {
         this.update = update;
-        if(update) {
+        if (update) {
             initAddUpdateComponents();
             this.id = id;
             fillName.setText(name);
@@ -47,7 +47,7 @@ public class LuggageDetailsFrame extends JFrame {
             nameLuggageL.setText(name);
             priceL.setText(priceL.getText() + " " + price);
             heightL.setText(heightL.getText() + " " + height);
-            weightL.setText(weightL.getText() + " "+ weight);
+            weightL.setText(weightL.getText() + " " + weight);
         }
         setVisible(true);
     }
@@ -132,7 +132,7 @@ public class LuggageDetailsFrame extends JFrame {
                 buttonBar.add(okButton, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0,
                         GridBagConstraints.CENTER, GridBagConstraints.BOTH,
                         new Insets(0, 0, 0, 0), 0, 0));
-                okButton.addActionListener(e->{
+                okButton.addActionListener(e -> {
                     dispose();
                 });
             }
@@ -206,7 +206,7 @@ public class LuggageDetailsFrame extends JFrame {
 
                 fillName.setBackground(Color.white);
                 StringsFormatter.setLettersWithSpaces(fillName);
-                StringsFormatter.setTextFieldLength(20,fillName);
+                StringsFormatter.setTextFieldLength(20, fillName);
                 contentPanel.add(fillName);
                 fillName.setBounds(160, 90, 170, 45);
 
@@ -223,7 +223,7 @@ public class LuggageDetailsFrame extends JFrame {
 
                 fillWeight.setBackground(Color.white);
                 StringsFormatter.setOnlyDigits(fillWeight);
-                StringsFormatter.setTextFieldLength(7,fillWeight);
+                StringsFormatter.setTextFieldLength(7, fillWeight);
                 contentPanel.add(fillWeight);
                 fillWeight.setBounds(160, 270, 170, 45);
 
@@ -235,7 +235,7 @@ public class LuggageDetailsFrame extends JFrame {
 
                 fillHeight.setBackground(Color.white);
                 StringsFormatter.setOnlyDigits(fillHeight);
-                StringsFormatter.setTextFieldLength(7,fillHeight);
+                StringsFormatter.setTextFieldLength(7, fillHeight);
                 contentPanel.add(fillHeight);
                 fillHeight.setBounds(160, 210, 170, 45);
             }
@@ -245,23 +245,23 @@ public class LuggageDetailsFrame extends JFrame {
                 buttonBar.setBorder(new EmptyBorder(12, 0, 0, 0));
                 buttonBar.setBackground(new Color(235, 242, 250));
                 buttonBar.setLayout(new GridBagLayout());
-                ((GridBagLayout)buttonBar.getLayout()).columnWidths = new int[] {0, 80};
-                ((GridBagLayout)buttonBar.getLayout()).columnWeights = new double[] {1.0, 0.0};
+                ((GridBagLayout) buttonBar.getLayout()).columnWidths = new int[]{0, 80};
+                ((GridBagLayout) buttonBar.getLayout()).columnWeights = new double[]{1.0, 0.0};
 
                 okButton.setText("OK");
                 okButton.setBackground(new Color(66, 122, 161));
 
-                okButton.addActionListener(e-> {
-                    if(isValidate()) {
+                okButton.addActionListener(e -> {
+                    if (isValidate()) {
                         try {
-                            if(update) {
-                                Requests.updateLuggage(id,fillName.getText(),fillPrice.getText(),fillHeight.getText(),fillWeight.getText());
+                            if (update) {
+                                Requests.updateLuggage(id, fillName.getText(), fillPrice.getText(), fillHeight.getText(), fillWeight.getText());
                             } else {
-                                Requests.createLuggage(fillName.getText(),fillPrice.getText(),fillHeight.getText(),fillWeight.getText());
+                                Requests.createLuggage(fillName.getText(), fillPrice.getText(), fillHeight.getText(), fillWeight.getText());
                             }
                             dispose();
                         } catch (SQLServerException exception) {
-                            JOptionPane.showMessageDialog(new Frame(),"Luggage name must be unique!");
+                            JOptionPane.showMessageDialog(new Frame(), "Luggage name must be unique!");
                         } catch (SQLException throwables) {
                             throwables.printStackTrace();
                         }

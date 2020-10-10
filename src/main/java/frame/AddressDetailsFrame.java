@@ -34,8 +34,8 @@ public class AddressDetailsFrame extends JFrame {
         setVisible(true);
     }
 
-    public AddressDetailsFrame(Boolean update, int id,String country, String city, String postal, String street, String number) throws ParseException {
-        if(update) {
+    public AddressDetailsFrame(Boolean update, int id, String country, String city, String postal, String street, String number) throws ParseException {
+        if (update) {
             initAddUpdateComponents();
             this.id = id;
             fillCountry.setText(country);
@@ -46,10 +46,10 @@ public class AddressDetailsFrame extends JFrame {
         } else {
             initDetailComponents();
             countryL.setText(countryL.getText() + " " + country);
-            cityL.setText(cityL.getText()+ " " + city);
-            postalL.setText(postalL.getText()+ " " + postal);
-            streetL.setText(streetL.getText()+ " " + street);
-            numL.setText(numL.getText()+ " " + number);
+            cityL.setText(cityL.getText() + " " + city);
+            postalL.setText(postalL.getText() + " " + postal);
+            streetL.setText(streetL.getText() + " " + street);
+            numL.setText(numL.getText() + " " + number);
         }
         this.update = update;
         setVisible(true);
@@ -128,13 +128,13 @@ public class AddressDetailsFrame extends JFrame {
                 buttonBar.setBorder(new EmptyBorder(12, 0, 0, 0));
                 buttonBar.setBackground(new Color(235, 242, 250));
                 buttonBar.setLayout(new GridBagLayout());
-                ((GridBagLayout)buttonBar.getLayout()).columnWidths = new int[] {0, 80};
-                ((GridBagLayout)buttonBar.getLayout()).columnWeights = new double[] {1.0, 0.0};
+                ((GridBagLayout) buttonBar.getLayout()).columnWidths = new int[]{0, 80};
+                ((GridBagLayout) buttonBar.getLayout()).columnWeights = new double[]{1.0, 0.0};
 
                 okButton.setText("OK");
                 okButton.setBackground(new Color(66, 122, 161));
                 buttonBar.add(okButton, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0,
-                GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                        GridBagConstraints.CENTER, GridBagConstraints.BOTH,
                         new Insets(0, 0, 0, 0), 0, 0));
                 okButton.addActionListener(e -> this.dispose());
             }
@@ -248,8 +248,8 @@ public class AddressDetailsFrame extends JFrame {
                 buttonBar.setBackground(new Color(235, 242, 250));
                 buttonBar.setMaximumSize(new Dimension(105, 42));
                 buttonBar.setLayout(new GridBagLayout());
-                ((GridBagLayout)buttonBar.getLayout()).columnWidths = new int[] {0, 80};
-                ((GridBagLayout)buttonBar.getLayout()).columnWeights = new double[] {1.0, 0.0};
+                ((GridBagLayout) buttonBar.getLayout()).columnWidths = new int[]{0, 80};
+                ((GridBagLayout) buttonBar.getLayout()).columnWeights = new double[]{1.0, 0.0};
 
                 okButton.setText("OK");
                 okButton.setBackground(new Color(66, 122, 161));
@@ -257,18 +257,18 @@ public class AddressDetailsFrame extends JFrame {
                         GridBagConstraints.CENTER, GridBagConstraints.BOTH,
                         new Insets(0, 0, 0, 0), 0, 0));
 
-                okButton.addActionListener(e-> {
-                    if(isValidate()) {
-                        if(update) {
+                okButton.addActionListener(e -> {
+                    if (isValidate()) {
+                        if (update) {
                             try {
-                                Requests.updateAddress(id,Integer.parseInt(fillNumber.getText()),fillCountry.getText(),fillCity.getText(),fillPostal.getText(),fillStreet.getText());
+                                Requests.updateAddress(id, Integer.parseInt(fillNumber.getText()), fillCountry.getText(), fillCity.getText(), fillPostal.getText(), fillStreet.getText());
                                 dispose();
                             } catch (SQLException ex) {
                                 ex.printStackTrace();
                             }
                         } else {
                             try {
-                                Requests.createAddress(fillCountry.getText(),fillCity.getText(),fillPostal.getText(),fillStreet.getText(),Integer.parseInt(fillNumber.getText()));
+                                Requests.createAddress(fillCountry.getText(), fillCity.getText(), fillPostal.getText(), fillStreet.getText(), Integer.parseInt(fillNumber.getText()));
                                 dispose();
                             } catch (SQLException ex) {
                                 ex.printStackTrace();
@@ -303,7 +303,7 @@ public class AddressDetailsFrame extends JFrame {
                 streetL.setBounds(5, 40, 205, 40);
 
                 fillStreet.setBackground(Color.white);
-                StringsFormatter.setTextFieldLength(30,fillStreet);
+                StringsFormatter.setTextFieldLength(30, fillStreet);
                 StringsFormatter.setLettersWithSpaces(fillStreet);
                 panel2.add(fillStreet);
                 fillStreet.setBounds(5, 90, 195, 40);
@@ -316,7 +316,7 @@ public class AddressDetailsFrame extends JFrame {
 
                 fillNumber.setBackground(Color.white);
                 StringsFormatter.setOnlyDigits(fillNumber);
-                StringsFormatter.setTextFieldLength(7,fillNumber);
+                StringsFormatter.setTextFieldLength(7, fillNumber);
                 panel2.add(fillNumber);
                 fillNumber.setBounds(5, 190, 195, 40);
             }
@@ -328,7 +328,7 @@ public class AddressDetailsFrame extends JFrame {
     }
 
     public boolean isValidate() {
-        if(fillCountry.getText().equals("") || fillCity.getText().equals("")
+        if (fillCountry.getText().equals("") || fillCity.getText().equals("")
                 || fillNumber.getText().equals("") || !StringsFormatter.checkPostalCode(fillPostal.getText()) || fillStreet.getText().equals("")) {
             JOptionPane.showMessageDialog(new Frame(), "All fields must be filled!");
             return false;

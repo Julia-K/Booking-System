@@ -25,10 +25,10 @@ public class TableRowFilter {
 
             private void update(DocumentEvent e) {
                 String expression = jTextField.getText();
-                if(expression.trim().length() == 0) {
-                    ((TableRowSorter)jTable.getRowSorter()).setRowFilter(null);
+                if (expression.trim().length() == 0) {
+                    ((TableRowSorter) jTable.getRowSorter()).setRowFilter(null);
                 } else {
-                    ((TableRowSorter)jTable.getRowSorter()).setRowFilter(RowFilter.regexFilter("(?i)" + expression));
+                    ((TableRowSorter) jTable.getRowSorter()).setRowFilter(RowFilter.regexFilter("(?i)" + expression));
                 }
             }
         });

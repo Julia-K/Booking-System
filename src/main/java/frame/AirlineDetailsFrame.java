@@ -45,7 +45,7 @@ public class AirlineDetailsFrame extends JFrame {
 
     public AirlineDetailsFrame(String name, String code, String[] planes) {
         initDetailComponents();
-        fillAirline.setText(name + " (" + code+")");
+        fillAirline.setText(name + " (" + code + ")");
         for (int i = 0; i < planes.length; i++) {
             model.add(i, planes[i]);
         }
@@ -118,8 +118,8 @@ public class AirlineDetailsFrame extends JFrame {
 
                 {
                     Dimension preferredSize = new Dimension();
-                    preferredSize.width= 490;
-                    preferredSize.height= 305;
+                    preferredSize.width = 490;
+                    preferredSize.height = 305;
                     contentPanel.setMinimumSize(preferredSize);
                     contentPanel.setPreferredSize(preferredSize);
                 }
@@ -130,15 +130,15 @@ public class AirlineDetailsFrame extends JFrame {
                 buttonBar.setBorder(new EmptyBorder(12, 0, 0, 0));
                 buttonBar.setBackground(new Color(235, 242, 250));
                 buttonBar.setLayout(new GridBagLayout());
-                ((GridBagLayout)buttonBar.getLayout()).columnWidths = new int[] {0, 80};
-                ((GridBagLayout)buttonBar.getLayout()).columnWeights = new double[] {1.0, 0.0};
+                ((GridBagLayout) buttonBar.getLayout()).columnWidths = new int[]{0, 80};
+                ((GridBagLayout) buttonBar.getLayout()).columnWeights = new double[]{1.0, 0.0};
 
                 okButton.setText("OK");
                 okButton.setBackground(new Color(66, 122, 161));
                 buttonBar.add(okButton, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0,
                         GridBagConstraints.CENTER, GridBagConstraints.BOTH,
                         new Insets(0, 0, 0, 0), 0, 0));
-                okButton.addActionListener(e-> {
+                okButton.addActionListener(e -> {
                     dispose();
                 });
             }
@@ -206,7 +206,7 @@ public class AirlineDetailsFrame extends JFrame {
                 codeL.setBounds(35, 125, 135, 40);
 
                 fillAirline2.setBackground(Color.white);
-                StringsFormatter.setTextFieldLength(60,fillAirline2);
+                StringsFormatter.setTextFieldLength(60, fillAirline2);
                 contentPane.add(fillAirline2);
                 fillAirline2.setBounds(35, 75, 195, 40);
 
@@ -221,7 +221,7 @@ public class AirlineDetailsFrame extends JFrame {
                 contentPane.add(checkBox);
                 checkBox.setBounds(40, 220, 160, 30);
                 checkBox.addItemListener(e -> {
-                    if(e.getStateChange() == ItemEvent.DESELECTED) {
+                    if (e.getStateChange() == ItemEvent.DESELECTED) {
                         setVisibility(false);
                     } else {
                         setVisibility(true);
@@ -282,8 +282,8 @@ public class AirlineDetailsFrame extends JFrame {
                 buttonBar.setBorder(new EmptyBorder(12, 0, 0, 0));
                 buttonBar.setBackground(new Color(235, 242, 250));
                 buttonBar.setLayout(new GridBagLayout());
-                ((GridBagLayout)buttonBar.getLayout()).columnWidths = new int[] {0, 80};
-                ((GridBagLayout)buttonBar.getLayout()).columnWeights = new double[] {1.0, 0.0};
+                ((GridBagLayout) buttonBar.getLayout()).columnWidths = new int[]{0, 80};
+                ((GridBagLayout) buttonBar.getLayout()).columnWeights = new double[]{1.0, 0.0};
 
                 okButton.setText("OK");
                 okButton.setBackground(new Color(66, 122, 161));
@@ -291,11 +291,11 @@ public class AirlineDetailsFrame extends JFrame {
                         GridBagConstraints.CENTER, GridBagConstraints.BOTH,
                         new Insets(0, 0, 0, 0), 0, 0));
 
-                okButton.addActionListener(e-> {
-                    if(isAddingValidate()) {
-                        if(!checkBox.isSelected()) {
+                okButton.addActionListener(e -> {
+                    if (isAddingValidate()) {
+                        if (!checkBox.isSelected()) {
                             try {
-                                Requests.createAirline(fillAirline2.getText(),fillCode.getText());
+                                Requests.createAirline(fillAirline2.getText(), fillCode.getText());
                                 dispose();
                             } catch (SQLServerException ex) {
                                 JOptionPane.showMessageDialog(new Frame(), "Code and Airline name must be unique!");
@@ -304,11 +304,11 @@ public class AirlineDetailsFrame extends JFrame {
                             }
                         } else {
                             try {
-                                Requests.createAirline(fillAirline2.getText(),fillCode.getText());
+                                Requests.createAirline(fillAirline2.getText(), fillCode.getText());
                                 ResultSet rs = Requests.readTableByRequest("SELECT TOP 1 airlineID FROM airline ORDER BY airlineID DESC");
                                 while (rs.next()) {
                                     int id = rs.getInt(1);
-                                    Requests.createPlaneAirplane((Integer) planesWithId.get(comboBox.getSelectedIndex()),id, Integer.parseInt(fillQuantity.getText()));
+                                    Requests.createPlaneAirplane((Integer) planesWithId.get(comboBox.getSelectedIndex()), id, Integer.parseInt(fillQuantity.getText()));
                                     updateContent();
                                     dispose();
                                 }
@@ -388,7 +388,7 @@ public class AirlineDetailsFrame extends JFrame {
                 fillAirline2.setBounds(35, 90, 195, 40);
 
                 fillCode.setBackground(Color.white);
-                StringsFormatter.setTextFieldLength(2,fillCode);
+                StringsFormatter.setTextFieldLength(2, fillCode);
                 contentPanel.add(fillCode);
                 fillCode.setBounds(35, 190, 195, 40);
 
@@ -399,8 +399,8 @@ public class AirlineDetailsFrame extends JFrame {
                 panel5.setMaximumSize(new Dimension(5, 200));
                 panel5.setLayout(null);
 
-                contentPanel.setMinimumSize(new Dimension(490,230));
-                contentPanel.setPreferredSize(new Dimension(490,230));
+                contentPanel.setMinimumSize(new Dimension(490, 230));
+                contentPanel.setPreferredSize(new Dimension(490, 230));
 
             }
             contentPanel.add(panel5);
@@ -412,7 +412,7 @@ public class AirlineDetailsFrame extends JFrame {
             addButton.setFont(addButton.getFont().deriveFont(addButton.getFont().getStyle() & ~Font.ITALIC));
             contentPanel.add(addButton);
             addButton.setBounds(310, 95, 110, 40);
-            addButton.addActionListener(e-> {
+            addButton.addActionListener(e -> {
                 try {
                     new PlaneAirlineFrame(0, id);
                 } catch (SQLException throwables) {
@@ -425,7 +425,7 @@ public class AirlineDetailsFrame extends JFrame {
             updateButton.setForeground(Color.white);
             contentPanel.add(updateButton);
             updateButton.setBounds(310, 170, 110, 40);
-            updateButton.addActionListener(e-> {
+            updateButton.addActionListener(e -> {
                 try {
                     new PlaneAirlineFrame(1, id);
                 } catch (SQLException throwables) {
@@ -438,7 +438,7 @@ public class AirlineDetailsFrame extends JFrame {
             deleteButton.setForeground(Color.white);
             contentPanel.add(deleteButton);
             deleteButton.setBounds(310, 245, 110, 40);
-            deleteButton.addActionListener(e-> {
+            deleteButton.addActionListener(e -> {
                 try {
                     new PlaneAirlineFrame(2, id);
                 } catch (SQLException throwables) {
@@ -458,8 +458,8 @@ public class AirlineDetailsFrame extends JFrame {
                 buttonBar.setBorder(new EmptyBorder(12, 0, 0, 0));
                 buttonBar.setBackground(new Color(235, 242, 250));
                 buttonBar.setLayout(new GridBagLayout());
-                ((GridBagLayout)buttonBar.getLayout()).columnWidths = new int[] {0, 80};
-                ((GridBagLayout)buttonBar.getLayout()).columnWeights = new double[] {1.0, 0.0};
+                ((GridBagLayout) buttonBar.getLayout()).columnWidths = new int[]{0, 80};
+                ((GridBagLayout) buttonBar.getLayout()).columnWeights = new double[]{1.0, 0.0};
 
                 okButton.setText("OK");
                 okButton.setBackground(new Color(66, 122, 161));
@@ -467,10 +467,10 @@ public class AirlineDetailsFrame extends JFrame {
                         GridBagConstraints.CENTER, GridBagConstraints.BOTH,
                         new Insets(0, 0, 0, 0), 0, 0));
 
-                okButton.addActionListener(e-> {
-                    if(isUpdatingValidate()) {
+                okButton.addActionListener(e -> {
+                    if (isUpdatingValidate()) {
                         try {
-                            Requests.updateAirline(id,fillAirline2.getText(),fillCode.getText());
+                            Requests.updateAirline(id, fillAirline2.getText(), fillCode.getText());
                             dispose();
                         } catch (SQLServerException throwables) {
                             JOptionPane.showMessageDialog(new Frame(), "Code must be unique!");
@@ -532,7 +532,7 @@ public class AirlineDetailsFrame extends JFrame {
     }
 
     public boolean isAddingValidate() {
-        if(checkBox.isSelected()) {
+        if (checkBox.isSelected()) {
             if (fillAirline2.getText().equals("") || fillCode.getText().equals("") || fillQuantity.getText().equals("")) {
                 JOptionPane.showMessageDialog(new Frame(), "All fields must be filled!");
                 return false;

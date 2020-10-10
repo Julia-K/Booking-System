@@ -13,7 +13,7 @@ import javax.swing.*;
 import javax.swing.border.*;
 
 public class PlaneDetailsFrame extends JFrame {
-    private LinkedHashMap<Integer,Integer> airlinesWithId;
+    private LinkedHashMap<Integer, Integer> airlinesWithId;
     private JTextField fillQuantity;
     private JComboBox comboBox;
     private JPanel dialogPane;
@@ -102,7 +102,7 @@ public class PlaneDetailsFrame extends JFrame {
                     contentPanel.setPreferredSize(preferredSize);
                 }
             }
-            dialogPane.add(contentPanel, BorderLayout. EAST);
+            dialogPane.add(contentPanel, BorderLayout.EAST);
 
             {
                 buttonBar.setBorder(new EmptyBorder(12, 0, 0, 0));
@@ -153,13 +153,13 @@ public class PlaneDetailsFrame extends JFrame {
         okButton = new JButton();
         panel1 = new JPanel();
         comboBox = new JComboBox();
-        if(update) {
+        if (update) {
             updateContent();
             comboBox.addItemListener(new ItemListener() {
                 @Override
                 public void itemStateChanged(ItemEvent e) {
                     try {
-                        int airlineid = (Integer)airlinesWithId.get(comboBox.getSelectedIndex());
+                        int airlineid = (Integer) airlinesWithId.get(comboBox.getSelectedIndex());
                         ResultSet rs = Requests.readTableByRequest("select planes_quantity from plane_airline\n" +
                                 "where plane_id = " + id + " and airline_id = " + airlineid);
                         rs.next();
@@ -220,8 +220,8 @@ public class PlaneDetailsFrame extends JFrame {
                 contentPanel.add(panel5);
                 panel5.setBounds(250, 55, 5, 220);
 
-                contentPanel.setMinimumSize(new Dimension(490,250));
-                contentPanel.setPreferredSize(new Dimension(490,250));
+                contentPanel.setMinimumSize(new Dimension(490, 250));
+                contentPanel.setPreferredSize(new Dimension(490, 250));
 
                 comboBox.setBackground(Color.white);
                 contentPanel.add(comboBox);
@@ -252,8 +252,8 @@ public class PlaneDetailsFrame extends JFrame {
                 buttonBar.setBorder(new EmptyBorder(12, 0, 0, 0));
                 buttonBar.setBackground(new Color(235, 242, 250));
                 buttonBar.setLayout(new GridBagLayout());
-                ((GridBagLayout)buttonBar.getLayout()).columnWidths = new int[] {0, 80};
-                ((GridBagLayout)buttonBar.getLayout()).columnWeights = new double[] {1.0, 0.0};
+                ((GridBagLayout) buttonBar.getLayout()).columnWidths = new int[]{0, 80};
+                ((GridBagLayout) buttonBar.getLayout()).columnWeights = new double[]{1.0, 0.0};
 
                 okButton.setText("OK");
                 okButton.setBackground(new Color(66, 122, 161));
@@ -273,12 +273,12 @@ public class PlaneDetailsFrame extends JFrame {
             }
             dialogPane.add(panel1, BorderLayout.WEST);
 
-            okButton.addActionListener(e-> {
+            okButton.addActionListener(e -> {
                 if (isValidate()) {
                     if (update) {
                         try {
                             Requests.updatePlane(id, fillBrand.getText(), fillModel.getText());
-                            Requests.updatePlaneAirline(id,(Integer)airlinesWithId.get(comboBox.getSelectedIndex()), Integer.parseInt(fillQuantity.getText()));
+                            Requests.updatePlaneAirline(id, (Integer) airlinesWithId.get(comboBox.getSelectedIndex()), Integer.parseInt(fillQuantity.getText()));
                             updateContent();
                             dispose();
                         } catch (SQLException throwables) {
@@ -286,11 +286,11 @@ public class PlaneDetailsFrame extends JFrame {
                         }
                     } else {
                         try {
-                            Requests.createPlane(fillBrand.getText(),fillModel.getText());
+                            Requests.createPlane(fillBrand.getText(), fillModel.getText());
                             ResultSet rs = Requests.readTableByRequest("SELECT TOP 1 * FROM plane ORDER BY planeID DESC");
                             rs.next();
                             int planeid = rs.getInt(1);
-                            Requests.createPlaneAirplane(planeid,(Integer)airlinesWithId.get(comboBox.getSelectedIndex()),
+                            Requests.createPlaneAirplane(planeid, (Integer) airlinesWithId.get(comboBox.getSelectedIndex()),
                                     Integer.parseInt(fillQuantity.getText()));
 
                             updateContent();
@@ -308,15 +308,16 @@ public class PlaneDetailsFrame extends JFrame {
     }
 
     public boolean isValidate() {
-        if(fillBrand.getText().equals("") || fillModel.getText().equals("")) {
-            JOptionPane.showMessageDialog(new Frame(),"All fields must be filled!");
+        if (fillBrand.getText().equals("") || fillModel.getText().equals("")) {
+            JOptionPane.showMessageDialog(new Frame(), "All fields must be filled!");
             return false;
         } else {
             return true;
         }
     }
+
     private void updateContent() throws SQLException {
-        if(update) {
+        if (update) {
             airlinesWithId = Requests.getAirlinesWithId(id);
             comboBox = getSelectedComboBox();
         } else {
@@ -339,9 +340,9 @@ public class PlaneDetailsFrame extends JFrame {
         boolean first = true;
         JComboBox x = new JComboBox();
         ResultSet rs = Requests.readTableByRequest("select * from plane_airline\n" +
-                "where plane_id = '"+id+"'");
+                "where plane_id = '" + id + "'");
         while (rs.next()) {
-            if(first) {
+            if (first) {
                 fillQuantity.setText(rs.getString(3));
                 first = false;
             }

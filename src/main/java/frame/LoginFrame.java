@@ -70,7 +70,7 @@ public class LoginFrame extends JFrame {
                 fillPassword.setForeground(Color.black);
                 fillPassword.setBackground(Color.white);
                 panel1.add(fillPassword);
-                StringsFormatter.setTextFieldLength(100,fillPassword);
+                StringsFormatter.setTextFieldLength(100, fillPassword);
                 fillPassword.setBounds(55, 230, 210, 35);
 
                 fillLogin.setForeground(Color.black);
@@ -96,13 +96,13 @@ public class LoginFrame extends JFrame {
                 panel1.add(loginButton);
                 loginButton.setBounds(190, 405, 98, 40);
 
-                loginButton.addActionListener(e-> {
+                loginButton.addActionListener(e -> {
                     String haslo = new String(fillPassword.getPassword());
-                    if(haslo.equals("") || fillLogin.getText().equals("")) {
-                        JOptionPane.showMessageDialog(new Frame(),"Fields must be filled.");
+                    if (haslo.equals("") || fillLogin.getText().equals("")) {
+                        JOptionPane.showMessageDialog(new Frame(), "Fields must be filled.");
                     } else {
                         try {
-                            if(Requests.isAdmin(fillLogin.getText(), haslo)) {
+                            if (Requests.isAdmin(fillLogin.getText(), haslo)) {
                                 dispose();
                                 ManageWindow.main(new String[]{});
                             } else {
@@ -135,12 +135,12 @@ public class LoginFrame extends JFrame {
 
                 fillPasswordRight.setBackground(Color.white);
                 panel2.add(fillPasswordRight);
-                StringsFormatter.setTextFieldLength(100,fillPasswordRight);
+                StringsFormatter.setTextFieldLength(100, fillPasswordRight);
                 fillPasswordRight.setBounds(60, 230, 345, 35);
 
                 fillPasswordRight2.setBackground(Color.white);
                 panel2.add(fillPasswordRight2);
-                StringsFormatter.setTextFieldLength(100,fillPasswordRight2);
+                StringsFormatter.setTextFieldLength(100, fillPasswordRight2);
                 fillPasswordRight2.setBounds(60, 310, 345, 35);
 
                 registerButton.setText("Register");
@@ -148,17 +148,17 @@ public class LoginFrame extends JFrame {
                 registerButton.setBackground(new Color(5, 102, 141));
                 panel2.add(registerButton);
                 registerButton.setBounds(330, 405, 98, 40);
-                registerButton.addActionListener(e-> {
+                registerButton.addActionListener(e -> {
                     String password = new String(fillPasswordRight.getPassword());
                     String passwordcheck = new String(fillPasswordRight2.getPassword());
-                    if(fiillLoginRight.getText().equals("") || password.equals("") || passwordcheck.equals("")) {
+                    if (fiillLoginRight.getText().equals("") || password.equals("") || passwordcheck.equals("")) {
                         JOptionPane.showMessageDialog(new Frame(), "Fields must be filled");
                     } else {
-                        if(!password.equals(passwordcheck)) {
+                        if (!password.equals(passwordcheck)) {
                             JOptionPane.showMessageDialog(new Frame(), "Passwords do not match.");
                         } else {
                             try {
-                                Requests.createAdmin(fiillLoginRight.getText(),password);
+                                Requests.createAdmin(fiillLoginRight.getText(), password);
                                 JOptionPane.showMessageDialog(new Frame(), "You created an account! Now Sign In");
                                 dispose();
                                 new LoginFrame();

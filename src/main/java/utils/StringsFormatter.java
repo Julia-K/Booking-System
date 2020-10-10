@@ -13,28 +13,28 @@ import java.util.regex.Pattern;
 
 public class StringsFormatter {
 
-    public static boolean checkFloat(int i,String price) {
-        if(price.contains(".")) {
-            Pattern pattern = Pattern.compile("[0-9]{0,"+(i-1)+"}\\.?[0-9]{0,1}");
+    public static boolean checkFloat(int i, String price) {
+        if (price.contains(".")) {
+            Pattern pattern = Pattern.compile("[0-9]{0," + (i - 1) + "}\\.?[0-9]{0,1}");
             Matcher matcher = pattern.matcher(price);
             return matcher.matches();
         } else {
-            Pattern pattern = Pattern.compile("[0-9]{0,"+(i-1)+"}");
+            Pattern pattern = Pattern.compile("[0-9]{0," + (i - 1) + "}");
             Matcher matcher = pattern.matcher(price);
             return matcher.matches();
         }
     }
 
-    public static void setFloatPattern(int length,JTextField jTextField) {
+    public static void setFloatPattern(int length, JTextField jTextField) {
         jTextField.addKeyListener(new KeyAdapter() {
             public void keyTyped(KeyEvent e) {
-            String x = "0123456789.";
-            char c = e.getKeyChar();
-            if (x.indexOf(c) == -1) {
-                e.consume();
-            } else if (!checkFloat(length,jTextField.getText())) {
-                e.consume();
-            }
+                String x = "0123456789.";
+                char c = e.getKeyChar();
+                if (x.indexOf(c) == -1) {
+                    e.consume();
+                } else if (!checkFloat(length, jTextField.getText())) {
+                    e.consume();
+                }
             }
         });
     }
@@ -47,14 +47,14 @@ public class StringsFormatter {
 
     public static boolean checkBirthDate(String date) {
         LocalDate birth = LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-        return Period.between(birth,LocalDate.now()).getYears() >= 18;
+        return Period.between(birth, LocalDate.now()).getYears() >= 18;
     }
 
     public static void setTextFieldLength(int length, JTextField jTextField) {
         jTextField.addKeyListener(new KeyAdapter() {
             public void keyTyped(KeyEvent e) {
-                if(jTextField.getText().length() >= length)
-                        e.consume();
+                if (jTextField.getText().length() >= length)
+                    e.consume();
             }
         });
     }
@@ -63,7 +63,7 @@ public class StringsFormatter {
         jTextField.addKeyListener(new KeyAdapter() {
             public void keyTyped(KeyEvent e) {
                 char c = e.getKeyChar();
-                if ( ((c > '0') && (c < '9')) || (c == ' ')) {
+                if (((c > '0') && (c < '9')) || (c == ' ')) {
                     e.consume();
                 }
             }
@@ -74,7 +74,7 @@ public class StringsFormatter {
         jTextField.addKeyListener(new KeyAdapter() {
             public void keyTyped(KeyEvent e) {
                 char c = e.getKeyChar();
-                if ( ((c > '0') && (c < '9'))) {
+                if (((c > '0') && (c < '9'))) {
                     e.consume();
                 }
             }
@@ -96,7 +96,7 @@ public class StringsFormatter {
         jTextField.addKeyListener(new KeyAdapter() {
             public void keyTyped(KeyEvent e) {
                 char c = e.getKeyChar();
-                if ( ((c < '0') || (c > '9'))) {
+                if (((c < '0') || (c > '9'))) {
                     e.consume();
                 }
             }
@@ -107,8 +107,9 @@ public class StringsFormatter {
         Pattern pattern = Pattern.compile("\\d{2}-\\d{3}");
         Matcher matcher = pattern.matcher(postal);
         return matcher.matches();
-    };
+    }
 
+    ;
 
 
     public static JFormattedTextField getPostalCodeTextField() throws ParseException {

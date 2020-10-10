@@ -123,13 +123,13 @@ public class SelectFlightFrame extends JFrame {
 
                 fillPriceFrom.setForeground(Color.black);
                 fillPriceFrom.setBackground(new Color(235, 242, 250));
-                StringsFormatter.setFloatPattern(5,fillPriceFrom);
+                StringsFormatter.setFloatPattern(5, fillPriceFrom);
                 contentPanel.add(fillPriceFrom);
                 fillPriceFrom.setBounds(885, 95, 70, 26);
 
                 fillPriceTo.setForeground(Color.black);
                 fillPriceTo.setBackground(new Color(235, 242, 250));
-                StringsFormatter.setFloatPattern(5,fillPriceTo);
+                StringsFormatter.setFloatPattern(5, fillPriceTo);
                 contentPanel.add(fillPriceTo);
                 fillPriceTo.setBounds(960, 95, 70, 26);
 
@@ -246,7 +246,7 @@ public class SelectFlightFrame extends JFrame {
 
                     {
                         table.setPreferredScrollableViewportSize(new Dimension(450, 180));
-                        if(update) {
+                        if (update) {
                             table = (JTable) Requests.readFligthsById(flight);
                         } else {
                             table = Requests.readFlights();
@@ -273,7 +273,7 @@ public class SelectFlightFrame extends JFrame {
                 okButton.setText("OK");
                 okButton.setBackground(new Color(66, 122, 161));
 
-                okButton.addActionListener(e-> {
+                okButton.addActionListener(e -> {
                     if (table.getSelectedRow() == -1) return;
                     int row = table.getSelectedRow();
                     int id = Integer.parseInt(table.getModel().getValueAt(table.convertRowIndexToModel(row), 0).toString());
@@ -330,7 +330,7 @@ public class SelectFlightFrame extends JFrame {
     private void setDoubleClick() {
         table.addMouseListener(new MouseAdapter() {
             public void mousePressed(MouseEvent mouseEvent) {
-                JTable table =(JTable) mouseEvent.getSource();
+                JTable table = (JTable) mouseEvent.getSource();
                 Point point = mouseEvent.getPoint();
                 int row = table.rowAtPoint(point);
                 if (mouseEvent.getClickCount() == 2 && table.getSelectedRow() != -1) {
@@ -348,7 +348,7 @@ public class SelectFlightFrame extends JFrame {
                         String arrTime = rs.getString(8).split("\\.")[0];
                         String arrDate = rs.getString(9);
                         float price = rs.getInt(10);
-                        new FlightDetailsFrame(false,id,depid,arrid,pilotId,planeId,depTime,depDate,arrTime,arrDate,price);
+                        new FlightDetailsFrame(false, id, depid, arrid, pilotId, planeId, depTime, depDate, arrTime, arrDate, price);
                     } catch (SQLException | ParseException throwables) {
                         throwables.printStackTrace();
                     }

@@ -9,7 +9,7 @@ import java.awt.*;
 import java.sql.SQLException;
 import java.util.Calendar;
 
-public class StatisticsFrame extends JFrame{
+public class StatisticsFrame extends JFrame {
     private JPanel rightPanel;
     private JTable table;
     private JScrollPane scrollTable;
@@ -57,7 +57,7 @@ public class StatisticsFrame extends JFrame{
                 leftPanel.setBackground(new Color(235, 242, 250));
                 leftPanel.setMaximumSize(new Dimension(160, 150));
                 leftPanel.setLayout(null);
-                leftPanel.setBorder(BorderFactory.createMatteBorder(0,10,10,10,new Color(4, 72, 98)));
+                leftPanel.setBorder(BorderFactory.createMatteBorder(0, 10, 10, 10, new Color(4, 72, 98)));
                 //rightPanel.setBorder(BorderFactory.createMatteBorder(0,0,10,10,new Color(4, 72, 98)));
 
                 classButton.setText("Classes");
@@ -65,7 +65,7 @@ public class StatisticsFrame extends JFrame{
                 classButton.setBackground(new Color(5, 102, 141));
                 classButton.setBounds(45, 50, 120, 45);
                 leftPanel.add(classButton);
-                classButton.addActionListener(e-> {
+                classButton.addActionListener(e -> {
                     try {
                         table = Requests.showClassStatistic();
                         yearsSpinner.setVisible(false);
@@ -83,7 +83,7 @@ public class StatisticsFrame extends JFrame{
                 pilotButton.setForeground(Color.white);
                 pilotButton.setBackground(new Color(5, 102, 141));
                 pilotButton.setBounds(45, 125, 120, 45);
-                pilotButton.addActionListener(e-> {
+                pilotButton.addActionListener(e -> {
                     try {
                         table = Requests.showPilotStatistics();
                         yearsSpinner.setVisible(false);
@@ -101,7 +101,7 @@ public class StatisticsFrame extends JFrame{
                 clientButton.setBounds(45, 200, 120, 45);
                 clientButton.setForeground(Color.white);
                 clientButton.setBackground(new Color(5, 102, 141));
-                clientButton.addActionListener(e-> {
+                clientButton.addActionListener(e -> {
                     try {
                         table = Requests.showClientStatistics();
                         yearsSpinner.setVisible(false);
@@ -119,7 +119,7 @@ public class StatisticsFrame extends JFrame{
                 yearsButton.setForeground(Color.white);
                 yearsButton.setBackground(new Color(5, 102, 141));
                 yearsButton.setBounds(45, 275, 120, 45);
-                yearsButton.addActionListener(e-> {
+                yearsButton.addActionListener(e -> {
                     try {
                         table = Requests.showYearsStatistics();
                         information.setText("Number of tickets reserved over the years");
@@ -135,9 +135,9 @@ public class StatisticsFrame extends JFrame{
                 monthsButton.setText("Tickets-Months");
                 monthsButton.setForeground(Color.white);
                 monthsButton.setBackground(new Color(5, 102, 141));
-                monthsButton.addActionListener(e-> {
+                monthsButton.addActionListener(e -> {
                     int currentYear = Calendar.getInstance().get(Calendar.YEAR);
-                    SpinnerModel yearModel = new SpinnerNumberModel(currentYear,currentYear - 100,currentYear + 100,1);
+                    SpinnerModel yearModel = new SpinnerNumberModel(currentYear, currentYear - 100, currentYear + 100, 1);
                     JSpinner.NumberEditor editor = new JSpinner.NumberEditor(yearsSpinner, "#");
                     yearsSpinner.setValue(Integer.valueOf("2020"));
                     yearsSpinner.setEditor(editor);
@@ -145,12 +145,12 @@ public class StatisticsFrame extends JFrame{
                     yearsSpinner.setVisible(true);
                     chooseYearL.setVisible(true);
                     information.setText("The number of reserved tickets in particular months of selected years");
-                    information.setFont(new Font("Roboto",Font.PLAIN,19));
+                    information.setFont(new Font("Roboto", Font.PLAIN, 19));
                     try {
                         table = Requests.showMonthStatistics("2020");
                         setTableDesign();
                         reload();
-                        yearsSpinner.addChangeListener(x-> {
+                        yearsSpinner.addChangeListener(x -> {
                             try {
                                 table = Requests.showMonthStatistics(String.valueOf(yearsSpinner.getValue()));
                                 setTableDesign();
@@ -172,7 +172,7 @@ public class StatisticsFrame extends JFrame{
                 rightPanel.setBackground(new Color(235, 242, 250));
                 rightPanel.setPreferredSize(new Dimension(428, 600));
                 rightPanel.setLayout(new BorderLayout());
-                rightPanel.setBorder(new EmptyBorder(0,12,12,12));
+                rightPanel.setBorder(new EmptyBorder(0, 12, 12, 12));
 
                 {
                     table.setPreferredScrollableViewportSize(new Dimension(500, 350));
@@ -186,7 +186,7 @@ public class StatisticsFrame extends JFrame{
                 reload();
                 setTableDesign();
                 information.setText("Percentage distribution of class selections by customers");
-                information.setFont(new Font("Roboto",Font.PLAIN,20));
+                information.setFont(new Font("Roboto", Font.PLAIN, 20));
                 //information.setFont(information.getFont().deriveFont(information.getFont().getStyle() | Font.BOLD, information.getFont().getSize() + 10f));
                 information.setHorizontalAlignment(SwingConstants.CENTER);
                 information.setForeground(Color.black);
@@ -226,7 +226,7 @@ public class StatisticsFrame extends JFrame{
                 tiopPanel.add(goButton);
                 goButton.setBounds(690, 20, 150, 35);
                 goButton.setBackground(new Color(235, 242, 250));
-                goButton.addActionListener(e-> {
+                goButton.addActionListener(e -> {
                     try {
                         new ManageWindow().setVisible(true);
                     } catch (SQLException throwables) {
@@ -234,8 +234,8 @@ public class StatisticsFrame extends JFrame{
                     }
                     dispose();
                 });
-                tiopPanel.setMinimumSize(new Dimension(870,80));
-                tiopPanel.setPreferredSize(new Dimension(870,80));
+                tiopPanel.setMinimumSize(new Dimension(870, 80));
+                tiopPanel.setPreferredSize(new Dimension(870, 80));
                 tiopPanel.setBackground(new Color(4, 72, 98));
             }
             dialogPane.add(tiopPanel, BorderLayout.NORTH);

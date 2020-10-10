@@ -18,7 +18,7 @@ public class Actions {
 
     /* ------------------------------- SHOW DETAILS OR UPDATE ------------------------------- */
 
-    public static void setDetailOrUpdateClient (Boolean update,JButton jButton, JTable jTable, ManageWindow mw) {
+    public static void setDetailOrUpdateClient(Boolean update, JButton jButton, JTable jTable, ManageWindow mw) {
         removeActions(jButton);
         jButton.addActionListener(e -> {
             if (jTable.getSelectedRow() == -1) return;
@@ -26,14 +26,14 @@ public class Actions {
             int id = Integer.parseInt(jTable.getModel().getValueAt(jTable.convertRowIndexToModel(row), 0).toString());
             ResultSet rs = null;
             try {
-                rs = Requests.readById(id,"client");
+                rs = Requests.readById(id, "client");
                 while (rs.next()) {
                     String name = rs.getString(2);
                     String last = rs.getString(3);
                     String email = rs.getString(4);
                     String password = rs.getString(5);
                     String birthDate = rs.getString(6);
-                    new ClientDetailsFrame(update,id,name,last,email,password,birthDate).addWindowListener(new WindowAdapter() {
+                    new ClientDetailsFrame(update, id, name, last, email, password, birthDate).addWindowListener(new WindowAdapter() {
                         @Override
                         public void windowClosed(WindowEvent e) {
                             try {
@@ -50,7 +50,7 @@ public class Actions {
         });
     }
 
-    public static void setDetailOrUpdateAddress (Boolean update,JButton jButton, JTable jTable, ManageWindow mw) {
+    public static void setDetailOrUpdateAddress(Boolean update, JButton jButton, JTable jTable, ManageWindow mw) {
         removeActions(jButton);
         jButton.addActionListener(e -> {
             if (jTable.getSelectedRow() == -1) return;
@@ -58,14 +58,14 @@ public class Actions {
             int id = Integer.parseInt(jTable.getModel().getValueAt(jTable.convertRowIndexToModel(row), 0).toString());
             ResultSet rs = null;
             try {
-                rs = Requests.readById(id,"address");
+                rs = Requests.readById(id, "address");
                 while (rs.next()) {
                     String name = rs.getString(2);
                     String last = rs.getString(3);
                     String email = rs.getString(4);
                     String password = rs.getString(5);
                     String birthDate = rs.getString(6);
-                    new AddressDetailsFrame(update,id,name,last,email,password,birthDate).addWindowListener(new WindowAdapter() {
+                    new AddressDetailsFrame(update, id, name, last, email, password, birthDate).addWindowListener(new WindowAdapter() {
                         @Override
                         public void windowClosed(WindowEvent e) {
                             try {
@@ -82,7 +82,7 @@ public class Actions {
         });
     }
 
-    public static void setDetailOrUpdatePlane (boolean update, JButton jButton, JTable jTable, ManageWindow mw) {
+    public static void setDetailOrUpdatePlane(boolean update, JButton jButton, JTable jTable, ManageWindow mw) {
         removeActions(jButton);
         jButton.addActionListener(e -> {
             if (jTable.getSelectedRow() == -1) return;
@@ -107,7 +107,7 @@ public class Actions {
         });
     }
 
-    public static void setDetailOrUpdateAirport (Boolean update,JButton jButton, JTable jTable, ManageWindow mw) {
+    public static void setDetailOrUpdateAirport(Boolean update, JButton jButton, JTable jTable, ManageWindow mw) {
         removeActions(jButton);
         jButton.addActionListener(e -> {
             if (jTable.getSelectedRow() == -1) return;
@@ -115,12 +115,12 @@ public class Actions {
             int id = Integer.parseInt(jTable.getModel().getValueAt(jTable.convertRowIndexToModel(row), 0).toString());
             ResultSet rs = null;
             try {
-                rs = Requests.readById(id,"airport");
+                rs = Requests.readById(id, "airport");
                 rs.next();
                 String name = rs.getString(2);
                 String code = rs.getString(3);
                 String address = Requests.getStringAddress(rs.getInt(4));
-                new AirportDetailsFrame(update, id,name,code,address).addWindowListener(new WindowAdapter() {
+                new AirportDetailsFrame(update, id, name, code, address).addWindowListener(new WindowAdapter() {
                     @Override
                     public void windowClosed(WindowEvent e) {
                         try {
@@ -136,7 +136,7 @@ public class Actions {
         });
     }
 
-    public static void setDetailAirline (JButton jButton, JTable jTable) {
+    public static void setDetailAirline(JButton jButton, JTable jTable) {
         removeActions(jButton);
         jButton.addActionListener(e -> {
             if (jTable.getSelectedRow() == -1) return;
@@ -151,7 +151,7 @@ public class Actions {
                         "where airline_id=" + id);
                 List<String> x = getPlanesList(rs);
                 String[] list = x.toArray(new String[0]);
-                new AirlineDetailsFrame(name,code,list);
+                new AirlineDetailsFrame(name, code, list);
             } catch (SQLException ex) {
                 ex.printStackTrace();
             }
@@ -167,7 +167,7 @@ public class Actions {
             int id = Integer.parseInt(jTable.getModel().getValueAt(jTable.convertRowIndexToModel(row), 0).toString());
             String name = jTable.getValueAt(row, 0).toString();
             String code = jTable.getValueAt(row, 1).toString();
-            new AirlineDetailsFrame(id,name,code).addWindowListener(new WindowAdapter() {
+            new AirlineDetailsFrame(id, name, code).addWindowListener(new WindowAdapter() {
                 @Override
                 public void windowClosed(WindowEvent e) {
                     try {
@@ -180,7 +180,7 @@ public class Actions {
         });
     }
 
-    public static void setDetailOrUpdatePilot (Boolean update,JButton jButton, JTable jTable, ManageWindow mw) {
+    public static void setDetailOrUpdatePilot(Boolean update, JButton jButton, JTable jTable, ManageWindow mw) {
         removeActions(jButton);
         jButton.addActionListener(e -> {
             if (jTable.getSelectedRow() == -1) return;
@@ -188,13 +188,13 @@ public class Actions {
             int id = Integer.parseInt(jTable.getModel().getValueAt(jTable.convertRowIndexToModel(row), 0).toString());
             ResultSet rs = null;
             try {
-                rs = Requests.readById(id,"pilot");
+                rs = Requests.readById(id, "pilot");
                 rs.next();
                 String first = rs.getString(2);
                 String last = rs.getString(3);
                 String date = rs.getString(4);
                 int airlineId = rs.getInt(5);
-                new PilotDetailsFrame(update,id,first,last,date,airlineId).addWindowListener(new WindowAdapter() {
+                new PilotDetailsFrame(update, id, first, last, date, airlineId).addWindowListener(new WindowAdapter() {
                     @Override
                     public void windowClosed(WindowEvent e) {
                         try {
@@ -210,7 +210,7 @@ public class Actions {
         });
     }
 
-    public static void setDetailOrUpdateFlight (Boolean update,JButton jButton, JTable jTable, ManageWindow mw) {
+    public static void setDetailOrUpdateFlight(Boolean update, JButton jButton, JTable jTable, ManageWindow mw) {
         removeActions(jButton);
         jButton.addActionListener(e -> {
             if (jTable.getSelectedRow() == -1) return;
@@ -218,7 +218,7 @@ public class Actions {
             int id = Integer.parseInt(jTable.getModel().getValueAt(jTable.convertRowIndexToModel(row), 0).toString());
             ResultSet rs = null;
             try {
-                rs = Requests.readById(id,"flight");
+                rs = Requests.readById(id, "flight");
                 rs.next();
                 int depid = rs.getInt(2);
                 int arrid = rs.getInt(3);
@@ -261,7 +261,7 @@ public class Actions {
                     int classId = rs.getInt(5);
                     int seat = rs.getInt(6);
 
-                    new BookingDetailsFrame(id,flightId,clientId,luggageId,classId,seat).addWindowListener(new WindowAdapter() {
+                    new BookingDetailsFrame(id, flightId, clientId, luggageId, classId, seat).addWindowListener(new WindowAdapter() {
                         @Override
                         public void windowClosed(WindowEvent e) {
                             try {
@@ -291,7 +291,7 @@ public class Actions {
                         "\tinner join luggage on luggage.luggageID = luggage_id\n" +
                         "\tinner join class on class.classID = class_id\n" +
                         "\tinner join flight on flight.flightID = flight_id\n" +
-                        "\twhere bookingID="+id);
+                        "\twhere bookingID=" + id);
                 while (rs.next()) {
                     int flightId = rs.getInt(1);
                     String email = rs.getString(2);
@@ -299,7 +299,7 @@ public class Actions {
                     String classP = rs.getString(4);
                     String seat = rs.getString(5);
                     String price = rs.getString(6);
-                    new BookingDetailsFrame(id,flightId,email,luggage,classP,seat,price).addWindowListener(new WindowAdapter() {
+                    new BookingDetailsFrame(id, flightId, email, luggage, classP, seat, price).addWindowListener(new WindowAdapter() {
                         @Override
                         public void windowClosed(WindowEvent e) {
                             try {
@@ -316,7 +316,7 @@ public class Actions {
         });
     }
 
-    public static void setDetailOrUpdateClass(Boolean update,JButton jButton, JTable jTable, ManageWindow mw) {
+    public static void setDetailOrUpdateClass(Boolean update, JButton jButton, JTable jTable, ManageWindow mw) {
         removeActions(jButton);
         jButton.addActionListener(e -> {
             if (jTable.getSelectedRow() == -1) return;
@@ -324,11 +324,11 @@ public class Actions {
             int id = Integer.parseInt(jTable.getModel().getValueAt(jTable.convertRowIndexToModel(row), 0).toString());
             ResultSet rs = null;
             try {
-                rs = Requests.readById(id,"class");
+                rs = Requests.readById(id, "class");
                 while (rs.next()) {
                     String name = rs.getString(2);
                     String price = rs.getString(3);
-                    new ClassDetailsFrame(update,id,name,price).addWindowListener(new WindowAdapter() {
+                    new ClassDetailsFrame(update, id, name, price).addWindowListener(new WindowAdapter() {
                         @Override
                         public void windowClosed(WindowEvent e) {
                             try {
@@ -345,7 +345,7 @@ public class Actions {
         });
     }
 
-    public static void setDetailOrUpdateLuggage(Boolean update,JButton jButton, JTable jTable, ManageWindow mw) {
+    public static void setDetailOrUpdateLuggage(Boolean update, JButton jButton, JTable jTable, ManageWindow mw) {
         removeActions(jButton);
         jButton.addActionListener(e -> {
             if (jTable.getSelectedRow() == -1) return;
@@ -353,13 +353,13 @@ public class Actions {
             int id = Integer.parseInt(jTable.getModel().getValueAt(jTable.convertRowIndexToModel(row), 0).toString());
             ResultSet rs = null;
             try {
-                rs = Requests.readById(id,"luggage");
+                rs = Requests.readById(id, "luggage");
                 while (rs.next()) {
                     String name = rs.getString(2);
                     float price = rs.getFloat(3);
                     String height = rs.getString(4);
                     String weight = rs.getString(5);
-                    new LuggageDetailsFrame(update,id,name,price,height,weight).addWindowListener(new WindowAdapter() {
+                    new LuggageDetailsFrame(update, id, name, price, height, weight).addWindowListener(new WindowAdapter() {
                         @Override
                         public void windowClosed(WindowEvent e) {
                             try {
@@ -514,7 +514,7 @@ public class Actions {
 
     public static void addClientAction(JButton jButton, ManageWindow mw) {
         removeActions(jButton);
-        jButton.addActionListener(e-> new ClientDetailsFrame().addWindowListener(new WindowAdapter() {
+        jButton.addActionListener(e -> new ClientDetailsFrame().addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosed(WindowEvent e) {
                 try {
@@ -542,7 +542,7 @@ public class Actions {
         });
     }
 
-    public static void addAirportAction (JButton jButton, ManageWindow mw) {
+    public static void addAirportAction(JButton jButton, ManageWindow mw) {
         removeActions(jButton);
         jButton.addActionListener(e -> {
             try {
@@ -566,7 +566,7 @@ public class Actions {
 
     public static void setDeleteButtonAction(JButton jButton, String name, JTable jTable, ManageWindow mw) {
         removeActions(jButton);
-        jButton.addActionListener(e-> {
+        jButton.addActionListener(e -> {
             if (jTable.getSelectedRow() == -1) return;
             int row = jTable.getSelectedRow();
             int id = Integer.parseInt(jTable.getModel().getValueAt(jTable.convertRowIndexToModel(row), 0).toString());
@@ -584,7 +584,8 @@ public class Actions {
                         mw.reloadAddress();
                     } catch (SQLException ex) {
                         ex.printStackTrace();
-                    } break;
+                    }
+                    break;
                 case "airport":
                     try {
                         mw.reloadAirport();
@@ -597,43 +598,50 @@ public class Actions {
                         mw.reloadPlane();
                     } catch (SQLException ex) {
                         ex.printStackTrace();
-                    } break;
+                    }
+                    break;
                 case "airline":
                     try {
                         mw.reloadAirline();
                     } catch (SQLException throwables) {
                         throwables.printStackTrace();
-                    } break;
+                    }
+                    break;
                 case "pilot":
                     try {
                         mw.reloadPilot();
                     } catch (SQLException throwables) {
                         throwables.printStackTrace();
-                    } break;
+                    }
+                    break;
                 case "flight":
                     try {
                         mw.reloadFlight();
                     } catch (SQLException throwables) {
                         throwables.printStackTrace();
-                    } break;
+                    }
+                    break;
                 case "class":
                     try {
                         mw.reloadClass();
                     } catch (SQLException throwables) {
                         throwables.printStackTrace();
-                    } break;
+                    }
+                    break;
                 case "luggage":
                     try {
                         mw.reloadLuggage();
                     } catch (SQLException throwables) {
                         throwables.printStackTrace();
-                    } break;
+                    }
+                    break;
                 case "booking":
                     try {
                         mw.reloadBooking();
                     } catch (SQLException throwables) {
                         throwables.printStackTrace();
-                    } break;
+                    }
+                    break;
                 default:
             }
         });
@@ -647,7 +655,6 @@ public class Actions {
         }
         return list;
     }
-
 
 
     public static JButton removeActions(JButton jButton) {

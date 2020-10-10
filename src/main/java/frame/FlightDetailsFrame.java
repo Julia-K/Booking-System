@@ -17,9 +17,9 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class FlightDetailsFrame extends JFrame {
-    private LinkedHashMap<Integer,Integer> airportsWithId;
-    private LinkedHashMap<Integer,Integer> pilotsWithId;
-    private LinkedHashMap<Integer,Integer> planesWithId;
+    private LinkedHashMap<Integer, Integer> airportsWithId;
+    private LinkedHashMap<Integer, Integer> pilotsWithId;
+    private LinkedHashMap<Integer, Integer> planesWithId;
     private JComboBox<String> pilotComboBox;
     private JComboBox<String> planeComboBox;
     private JComboBox<String> depComboBox;
@@ -58,7 +58,7 @@ public class FlightDetailsFrame extends JFrame {
     public FlightDetailsFrame(Boolean update, int id, int depId, int arrId, int pilotId, int planeId, String depTime,
                               String depDate, String arrTime, String arrDate, float price) throws SQLException, ParseException {
         this.update = update;
-        if(update) {
+        if (update) {
             this.id = id;
             depPicker = new MyOwnDatePicker(depDate);
             arrPicker = new MyOwnDatePicker(arrDate);
@@ -98,7 +98,7 @@ public class FlightDetailsFrame extends JFrame {
             fromL.setText(fromL.getText() + " " + getAirport(depId));
             toL.setText(toL.getText() + " " + getAirport(arrId));
             pilotL.setText(pilotL.getText() + " " + getPilot(pilotId));
-            planeL.setText(planeL.getText() + " "+ getPlane(planeId));
+            planeL.setText(planeL.getText() + " " + getPlane(planeId));
             departureL.setText(departureL.getText() + " " + depDate + "  " + depTime);
             arrivalL.setText(arrivalL.getText() + " " + arrDate + "  " + arrTime);
             priceL.setText(priceL.getText() + " " + price);
@@ -181,8 +181,8 @@ public class FlightDetailsFrame extends JFrame {
 
                 {
                     Dimension preferredSize = new Dimension();
-                    preferredSize.width =490;
-                    preferredSize.height =320;
+                    preferredSize.width = 490;
+                    preferredSize.height = 320;
                     contentPanel.setMinimumSize(preferredSize);
                     contentPanel.setPreferredSize(preferredSize);
                 }
@@ -193,12 +193,12 @@ public class FlightDetailsFrame extends JFrame {
                 buttonBar.setBorder(new EmptyBorder(12, 0, 0, 0));
                 buttonBar.setBackground(new Color(235, 242, 250));
                 buttonBar.setLayout(new GridBagLayout());
-                ((GridBagLayout)buttonBar.getLayout()).columnWidths = new int[] {0, 80};
-                ((GridBagLayout)buttonBar.getLayout()).columnWeights = new double[] {1.0, 0.0};
+                ((GridBagLayout) buttonBar.getLayout()).columnWidths = new int[]{0, 80};
+                ((GridBagLayout) buttonBar.getLayout()).columnWeights = new double[]{1.0, 0.0};
 
                 okButton.setText("OK");
                 okButton.setBackground(new Color(66, 122, 161));
-                okButton.addActionListener(e-> {
+                okButton.addActionListener(e -> {
                     dispose();
                 });
                 buttonBar.add(okButton, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0,
@@ -325,7 +325,7 @@ public class FlightDetailsFrame extends JFrame {
 
                 fillPrice.setBackground(Color.white);
                 fillPrice.setForeground(Color.black);
-                StringsFormatter.setFloatPattern(5,fillPrice);
+                StringsFormatter.setFloatPattern(5, fillPrice);
                 contentPanel.add(fillPrice);
                 fillPrice.setBounds(155, 360, 75, 40);
 
@@ -375,8 +375,8 @@ public class FlightDetailsFrame extends JFrame {
                 buttonBar.setBackground(new Color(235, 242, 250));
                 buttonBar.setMaximumSize(new Dimension(105, 42));
                 buttonBar.setLayout(new GridBagLayout());
-                ((GridBagLayout)buttonBar.getLayout()).columnWidths = new int[] {0, 80};
-                ((GridBagLayout)buttonBar.getLayout()).columnWeights = new double[] {1.0, 0.0};
+                ((GridBagLayout) buttonBar.getLayout()).columnWidths = new int[]{0, 80};
+                ((GridBagLayout) buttonBar.getLayout()).columnWeights = new double[]{1.0, 0.0};
 
                 okButton.setText("OK");
                 okButton.setBackground(new Color(66, 122, 161));
@@ -386,7 +386,7 @@ public class FlightDetailsFrame extends JFrame {
                         new Insets(0, 0, 0, 0), 0, 0));
             }
 
-            okButton.addActionListener(e-> {
+            okButton.addActionListener(e -> {
                 if (isValidate()) {
                     try {
                         int depId = (Integer) airportsWithId.get(depComboBox.getSelectedIndex());
@@ -518,14 +518,14 @@ public class FlightDetailsFrame extends JFrame {
         SimpleDateFormat formater = new SimpleDateFormat("HH:mm");
         String arrSpinner = formater.format(arrTimeSpinner.getValue());
         String depSpinner = formater.format(depTimeSpinner.getValue());
-        if(fillPrice.getText().equals("")) {
+        if (fillPrice.getText().equals("")) {
             JOptionPane.showMessageDialog(new Frame(), "All fields must be filled!");
             return false;
-        } else if (!StringsFormatter.isFlightDateValid(depPicker.getDate(),arrPicker.getDate())) {
+        } else if (!StringsFormatter.isFlightDateValid(depPicker.getDate(), arrPicker.getDate())) {
             JOptionPane.showMessageDialog(new Frame(), "Dates must be from the future and departure date cannot be later than the date of arrival");
             return false;
-        } else if (StringsFormatter.isDatesAreEqual(depPicker.getDate(),arrPicker.getDate())) {
-            if(!StringsFormatter.isDepTimeIsBefore(depSpinner,arrSpinner)) {
+        } else if (StringsFormatter.isDatesAreEqual(depPicker.getDate(), arrPicker.getDate())) {
+            if (!StringsFormatter.isDepTimeIsBefore(depSpinner, arrSpinner)) {
                 JOptionPane.showMessageDialog(new Frame(), "If dates are the same, the arrival time must be later than the departure time");
                 return false;
             }
@@ -540,7 +540,7 @@ public class FlightDetailsFrame extends JFrame {
         rs.next();
         String name = rs.getString(2);
         String code = rs.getString(3);
-        return (name + " ("+code+")");
+        return (name + " (" + code + ")");
     }
 
     private String getPilot(int id) throws SQLException {

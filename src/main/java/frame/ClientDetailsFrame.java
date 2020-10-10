@@ -45,7 +45,7 @@ public class ClientDetailsFrame extends JFrame {
     private int id;
 
     public ClientDetailsFrame(Boolean update, int id, String name, String last, String email, String pass, String date) {
-        if(update) {
+        if (update) {
             this.id = id;
             birthDate = new MyOwnDatePicker(date);
             initAddUpdateComponents();
@@ -59,8 +59,8 @@ public class ClientDetailsFrame extends JFrame {
             nameL.setText(nameL.getText() + " " + name + " " + last);
             emailL.setText(emailL.getText() + " " + email);
             LocalDate birth = LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-            int age = Period.between(birth,LocalDate.now()).getYears();
-            birthL.setText(birthL.getText() + " " + date + " (Age: " + age +")");
+            int age = Period.between(birth, LocalDate.now()).getYears();
+            birthL.setText(birthL.getText() + " " + date + " (Age: " + age + ")");
         }
         this.update = update;
         setVisible(true);
@@ -133,7 +133,7 @@ public class ClientDetailsFrame extends JFrame {
                 lastL.setBounds(35, 140, 185, 40);
 
                 fillFirst.setBackground(Color.white);
-                StringsFormatter.setTextFieldLength(30,fillFirst);
+                StringsFormatter.setTextFieldLength(30, fillFirst);
                 StringsFormatter.setOnlyLetters(fillFirst);
                 contentPanel.add(fillFirst);
                 fillFirst.setBounds(35, 90, 195, 40);
@@ -145,7 +145,7 @@ public class ClientDetailsFrame extends JFrame {
                 birthL.setBounds(35, 240, 165, 40);
 
                 fillLast.setBackground(Color.white);
-                StringsFormatter.setTextFieldLength(30,fillLast);
+                StringsFormatter.setTextFieldLength(30, fillLast);
                 StringsFormatter.setOnlyLetters(fillLast);
 
                 contentPanel.add(fillLast);
@@ -205,7 +205,7 @@ public class ClientDetailsFrame extends JFrame {
                 emailL.setBounds(5, 40, 205, 40);
 
                 fillEmail.setBackground(Color.white);
-                StringsFormatter.setTextFieldLength(45,fillEmail);
+                StringsFormatter.setTextFieldLength(45, fillEmail);
 
                 panel2.add(fillEmail);
                 fillEmail.setBounds(5, 90, 195, 40);
@@ -217,19 +217,19 @@ public class ClientDetailsFrame extends JFrame {
                 passL.setBounds(5, 140, 185, 40);
 
                 fillPassword.setBackground(Color.white);
-                StringsFormatter.setTextFieldLength(100,fillPassword);
+                StringsFormatter.setTextFieldLength(100, fillPassword);
                 panel2.add(fillPassword);
                 fillPassword.setBounds(5, 190, 195, 40);
 
                 confirmL.setText("Confirm password:");
                 confirmL.setForeground(Color.black);
-                confirmL.setFont(new Font("Roboto",Font.BOLD,25));
+                confirmL.setFont(new Font("Roboto", Font.BOLD, 25));
                 //confirmL.setFont(confirmL.getFont().deriveFont(confirmL.getFont().getStyle() | Font.BOLD, confirmL.getFont().getSize() + 15f));
                 panel2.add(confirmL);
                 confirmL.setBounds(5, 240, 230, 40);
 
                 fillConfirm.setBackground(Color.white);
-                StringsFormatter.setTextFieldLength(100,fillConfirm);
+                StringsFormatter.setTextFieldLength(100, fillConfirm);
                 panel2.add(fillConfirm);
                 fillConfirm.setBounds(5, 290, 195, 40);
             }
@@ -237,10 +237,10 @@ public class ClientDetailsFrame extends JFrame {
             okButton.addActionListener(e -> {
                 String date = birthDate.getDate();
                 String codedPassword = PasswordUtils.hashing(new String(fillPassword.getPassword()));
-                if(isValidate()) {
-                    if(update) {
+                if (isValidate()) {
+                    if (update) {
                         try {
-                            Requests.updateClient(id,fillFirst.getText(),fillLast.getText(),fillEmail.getText(), codedPassword,date);
+                            Requests.updateClient(id, fillFirst.getText(), fillLast.getText(), fillEmail.getText(), codedPassword, date);
                             dispose();
                         } catch (SQLServerException exception) {
                             JOptionPane.showMessageDialog(new Frame(), "An account with this email already exists");
@@ -250,7 +250,7 @@ public class ClientDetailsFrame extends JFrame {
 
                     } else {
                         try {
-                            Requests.createClient(fillFirst.getText(),fillLast.getText(),fillEmail.getText(),codedPassword,date);
+                            Requests.createClient(fillFirst.getText(), fillLast.getText(), fillEmail.getText(), codedPassword, date);
                             dispose();
                         } catch (SQLException ex) {
                             JOptionPane.showMessageDialog(new Frame(), "An account with this email already exists");
@@ -349,17 +349,17 @@ public class ClientDetailsFrame extends JFrame {
     }
 
     public boolean isValidate() {
-        if(!StringsFormatter.checkEmail(fillEmail.getText())) {
+        if (!StringsFormatter.checkEmail(fillEmail.getText())) {
             JOptionPane.showMessageDialog(new Frame(), "Wrong e-mail format.");
             return false;
-        } else if(!StringsFormatter.checkBirthDate( birthDate.getDate())) {
+        } else if (!StringsFormatter.checkBirthDate(birthDate.getDate())) {
             JOptionPane.showMessageDialog(new Frame(), "Client must be at least 18 years old");
             return false;
         } else if (fillEmail.getText().equals("") || fillFirst.getText().equals("")
                 || fillLast.getText().equals("") || birthDate.getDate().equals("") || fillPassword.getPassword().length == 0 || fillConfirm.getPassword().length == 0) {
             JOptionPane.showMessageDialog(new Frame(), "All fields must be filled!");
             return false;
-        } else if (!Arrays.equals(fillPassword.getPassword(),fillConfirm.getPassword())) {
+        } else if (!Arrays.equals(fillPassword.getPassword(), fillConfirm.getPassword())) {
             JOptionPane.showMessageDialog(new Frame(), "Passwords do not match.");
             return false;
         } else {

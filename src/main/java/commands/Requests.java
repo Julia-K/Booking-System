@@ -146,7 +146,7 @@ public class Requests {
 
     //----------------------------- READ -----------------------------
 
-        public static JTable readClientsTable() throws SQLException {
+    public static JTable readClientsTable() throws SQLException {
         JTable jTable = new JTable();
         DefaultTableModel model = new DefaultTableModel();
         ResultSet rs = Requests.readTableByRequest("select clientID, first_name, last_name, email from client");
@@ -158,7 +158,7 @@ public class Requests {
 
         TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
         jTable.setRowSorter(sorter);
-        jTable.setModel(addRows(rs,model));
+        jTable.setModel(addRows(rs, model));
         jTable.removeColumn(jTable.getColumnModel().getColumn(0));
         return jTable;
     }
@@ -173,7 +173,7 @@ public class Requests {
 
         TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
         jTable.setRowSorter(sorter);
-        jTable.setModel(addRows(rs,model));
+        jTable.setModel(addRows(rs, model));
         jTable.removeColumn(jTable.getColumnModel().getColumn(0));
         return jTable;
     }
@@ -187,7 +187,7 @@ public class Requests {
 
         TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
         jTable.setRowSorter(sorter);
-        jTable.setModel(addRows(rs,model));
+        jTable.setModel(addRows(rs, model));
         jTable.removeColumn(jTable.getColumnModel().getColumn(0));
         return jTable;
     }
@@ -202,7 +202,7 @@ public class Requests {
 
         TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
         jTable.setRowSorter(sorter);
-        jTable.setModel(addRows(rs,model));
+        jTable.setModel(addRows(rs, model));
         jTable.removeColumn(jTable.getColumnModel().getColumn(0));
         return jTable;
     }
@@ -258,9 +258,9 @@ public class Requests {
         return jTable;
     }
 
-    public static JTable readTableAfterSearchingWithOnePrice(boolean isFrom, String dateFrom, String dateTo, float price,int depId, int arrId) throws SQLException {
+    public static JTable readTableAfterSearchingWithOnePrice(boolean isFrom, String dateFrom, String dateTo, float price, int depId, int arrId) throws SQLException {
         String sql;
-        if(isFrom) {
+        if (isFrom) {
             sql = "select flightID, dep.name as dname, arr.name as aname, departure_date, arrival_date from flight\n" +
                     "inner join airport as dep on dep.airportID = flight.departureAirport_id\n" +
                     "inner join airport as arr on arr.airportID = flight.arrivalAirport_id\n" +
@@ -306,7 +306,7 @@ public class Requests {
 
         TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
         jTable.setRowSorter(sorter);
-        jTable.setModel(addRows(rs,model));
+        jTable.setModel(addRows(rs, model));
         jTable.removeColumn(jTable.getColumnModel().getColumn(0));
         return jTable;
     }
@@ -320,7 +320,7 @@ public class Requests {
 
         TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
         jTable.setRowSorter(sorter);
-        jTable.setModel(addRows(rs,model));
+        jTable.setModel(addRows(rs, model));
         jTable.removeColumn(jTable.getColumnModel().getColumn(0));
         return jTable;
     }
@@ -335,7 +335,7 @@ public class Requests {
 
         TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
         jTable.setRowSorter(sorter);
-        jTable.setModel(addRows(rs,model));
+        jTable.setModel(addRows(rs, model));
         jTable.removeColumn(jTable.getColumnModel().getColumn(0));
         return jTable;
     }
@@ -352,7 +352,7 @@ public class Requests {
 
         TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
         jTable.setRowSorter(sorter);
-        jTable.setModel(addRows(rs,model));
+        jTable.setModel(addRows(rs, model));
         jTable.removeColumn(jTable.getColumnModel().getColumn(0));
         return jTable;
     }
@@ -368,7 +368,7 @@ public class Requests {
         model.addColumn("Luggage name");
         TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
         jTable.setRowSorter(sorter);
-        jTable.setModel(addRows(rs,model));
+        jTable.setModel(addRows(rs, model));
         jTable.removeColumn(jTable.getColumnModel().getColumn(0));
         return jTable;
     }
@@ -388,7 +388,7 @@ public class Requests {
 
         TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
         jTable.setRowSorter(sorter);
-        jTable.setModel(addRows(rs,model));
+        jTable.setModel(addRows(rs, model));
         jTable.removeColumn(jTable.getColumnModel().getColumn(0));
         return jTable;
     }
@@ -408,7 +408,7 @@ public class Requests {
 
         TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
         jTable.setRowSorter(sorter);
-        jTable.setModel(addRows(rs,model));
+        jTable.setModel(addRows(rs, model));
         jTable.removeColumn(jTable.getColumnModel().getColumn(0));
         return jTable;
     }
@@ -419,10 +419,10 @@ public class Requests {
         String address = null;
         ResultSet rs = Requests.readTableByRequest("select * from address where addressID = " + id);
         while (rs.next()) {
-            if(rs.getObject(5)==null) {
+            if (rs.getObject(5) == null) {
                 address = rs.getString(2) + ", " + rs.getString(4) + " " + rs.getString(3) + ", " + rs.getString(6);
             } else {
-                address = rs.getString(2) + ", " + rs.getString(4) + " " + rs.getString(3) + ", " + rs.getString(5) +" " + rs.getString(6);
+                address = rs.getString(2) + ", " + rs.getString(4) + " " + rs.getString(3) + ", " + rs.getString(5) + " " + rs.getString(6);
             }
         }
         return address;
@@ -457,7 +457,7 @@ public class Requests {
                 "order by procent desc");
         model.addColumn("Class name");
         model.addColumn("%");
-        jTable.setModel(addRows(rs,model));
+        jTable.setModel(addRows(rs, model));
         return jTable;
     }
 
@@ -469,7 +469,7 @@ public class Requests {
                 "order by ilosc desc");
         model.addColumn("Pilot name");
         model.addColumn("Number of years");
-        jTable.setModel(addRows(rs,model));
+        jTable.setModel(addRows(rs, model));
         return jTable;
     }
 
@@ -482,7 +482,7 @@ public class Requests {
                 "order by liczba desc");
         model.addColumn("Customer E-mail");
         model.addColumn("Number of reservations");
-        jTable.setModel(addRows(rs,model));
+        jTable.setModel(addRows(rs, model));
         return jTable;
     }
 
@@ -494,7 +494,7 @@ public class Requests {
                 "order by liczba desc");
         model.addColumn("Year");
         model.addColumn("Number of reservations");
-        jTable.setModel(addRows(rs,model));
+        jTable.setModel(addRows(rs, model));
         return jTable;
     }
 
@@ -502,12 +502,12 @@ public class Requests {
         JTable jTable = new JTable();
         DefaultTableModel model = new DefaultTableModel();
         ResultSet rs = Requests.readTableByRequest("select DATENAME(month,booking.approval_date) as miesiac, count (*) as liczba from booking\n" +
-                "where YEAR(booking.approval_date)='"+year+"'\n" +
+                "where YEAR(booking.approval_date)='" + year + "'\n" +
                 "group by DATENAME(month,booking.approval_date)\n" +
                 "order by miesiac desc");
         model.addColumn("Year");
         model.addColumn("Number of reservations");
-        jTable.setModel(addRows(rs,model));
+        jTable.setModel(addRows(rs, model));
         return jTable;
     }
 
@@ -525,7 +525,7 @@ public class Requests {
 
         TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
         jTable.setRowSorter(sorter);
-        jTable.setModel(addRowsForPlaneAirline(rs,model));
+        jTable.setModel(addRowsForPlaneAirline(rs, model));
         return jTable;
     }
 
@@ -540,7 +540,7 @@ public class Requests {
                 cells[i - 1] = (rs.getString(rsmd.getColumnName(i)));
             }
             model.addRow(cells);
-            Arrays.fill(cells,null);
+            Arrays.fill(cells, null);
         }
         return model;
     }
@@ -553,7 +553,7 @@ public class Requests {
                 cells[i - 1] = (rs.getString(rsmd.getColumnName(i)));
             }
             model.addRow(cells);
-            Arrays.fill(cells,null);
+            Arrays.fill(cells, null);
         }
         return model;
     }
@@ -564,7 +564,7 @@ public class Requests {
         ResultSet rs = readTableByRequest("select addressID from address");
         while (rs.next()) {
             int id = rs.getInt("addressID");
-            addressesWithId.put(i,id);
+            addressesWithId.put(i, id);
             i++;
         }
         return addressesWithId;
@@ -576,7 +576,7 @@ public class Requests {
         ResultSet rs = readTableByRequest("select airportID from airport");
         while (rs.next()) {
             int id = rs.getInt("airportID");
-            airportsWithID.put(i,id);
+            airportsWithID.put(i, id);
             i++;
         }
         return airportsWithID;
@@ -588,7 +588,7 @@ public class Requests {
         ResultSet rs = readTableByRequest("select clientID from client");
         while (rs.next()) {
             int id = rs.getInt("clientID");
-            clientsWithId.put(i,id);
+            clientsWithId.put(i, id);
             i++;
         }
         return clientsWithId;
@@ -600,7 +600,7 @@ public class Requests {
         ResultSet rs = readTableByRequest("select luggageID from luggage");
         while (rs.next()) {
             int id = rs.getInt("luggageID");
-            luggageWithId.put(i,id);
+            luggageWithId.put(i, id);
             i++;
         }
         return luggageWithId;
@@ -612,7 +612,7 @@ public class Requests {
         ResultSet rs = readTableByRequest("select classID from class");
         while (rs.next()) {
             int id = rs.getInt("classID");
-            classesWithId.put(i,id);
+            classesWithId.put(i, id);
             i++;
         }
         return classesWithId;
@@ -624,7 +624,7 @@ public class Requests {
         ResultSet rs = readTableByRequest("select pilotID from pilot");
         while (rs.next()) {
             int id = rs.getInt("pilotID");
-            pilotsWithId.put(i,id);
+            pilotsWithId.put(i, id);
             i++;
         }
         return pilotsWithId;
@@ -636,7 +636,7 @@ public class Requests {
         ResultSet rs = readTableByRequest("select planeID from plane");
         while (rs.next()) {
             int id = rs.getInt("planeID");
-            planesWithId.put(i,id);
+            planesWithId.put(i, id);
             i++;
         }
         return planesWithId;
@@ -645,10 +645,10 @@ public class Requests {
     public static LinkedHashMap getPlanesByAirlineID(int airlineId) throws SQLException {
         int i = 0;
         LinkedHashMap<Integer, Integer> planesWithId = new LinkedHashMap<>();
-        ResultSet rs = readTableByRequest("select plane_id from plane_airline where airline_id="+airlineId);
+        ResultSet rs = readTableByRequest("select plane_id from plane_airline where airline_id=" + airlineId);
         while (rs.next()) {
             int id = rs.getInt("plane_id");
-            planesWithId.put(i,id);
+            planesWithId.put(i, id);
             i++;
         }
         return planesWithId;
@@ -669,7 +669,7 @@ public class Requests {
     public static LinkedHashMap getAirlinesWithId(int id) throws SQLException {
         int i = 0;
         LinkedHashMap<Integer, Integer> airlinesWithId = new LinkedHashMap<>();
-        ResultSet rs = readTableByRequest("select airline_id from plane_airline where plane_id='"+id+"'");
+        ResultSet rs = readTableByRequest("select airline_id from plane_airline where plane_id='" + id + "'");
         while (rs.next()) {
             int airlineid = rs.getInt(1);
             airlinesWithId.put(i, airlineid);
@@ -691,7 +691,7 @@ public class Requests {
 
     public static ResultSet readById(int id, String table) throws SQLException {
         Statement st = DBConnection.getConnection().createStatement();
-        return st.executeQuery("select * from " + table +" where "+table+"ID = " + id);
+        return st.executeQuery("select * from " + table + " where " + table + "ID = " + id);
     }
 
     //----------------------------- UPDATE -----------------------------
@@ -699,11 +699,11 @@ public class Requests {
     public static void updateClient(int id, String... a) throws SQLException {
         ResultSet rs = Requests.readById(id, "client");
         rs.next();
-        if(!a[2].equals(rs.getString(3))) {
+        if (!a[2].equals(rs.getString(3))) {
             String sql = "update client set email=? WHERE clientID=?";
             PreparedStatement statement = DBConnection.getConnection().prepareStatement(sql);
             statement.setString(1, a[2]);
-            statement.setInt(2,id);
+            statement.setInt(2, id);
             statement.executeUpdate();
         }
         String sql = "update client set first_name=?, last_name=?, password=?, birth_date=? WHERE clientID=?";
@@ -716,7 +716,7 @@ public class Requests {
         statement.executeUpdate();
     }
 
-    public static void updateAddress(int id,int i, String... a) throws SQLException {
+    public static void updateAddress(int id, int i, String... a) throws SQLException {
         String sql = "update address set country=?, city=?, postal_code=?,street=?, number=? WHERE addressID=?";
         PreparedStatement statement = DBConnection.getConnection().prepareStatement(sql);
         statement.setString(1, a[0]);
@@ -724,7 +724,7 @@ public class Requests {
         statement.setString(3, a[2]);
         statement.setString(4, a[3]);
         statement.setInt(5, i);
-        statement.setInt(6,id);
+        statement.setInt(6, id);
         statement.executeUpdate();
     }
 
@@ -792,7 +792,7 @@ public class Requests {
         statement.setFloat(2, Float.parseFloat(price));
         statement.setInt(3, Integer.parseInt(height));
         statement.setInt(4, Integer.parseInt(weight));
-        statement.setInt(5,id);
+        statement.setInt(5, id);
         statement.executeUpdate();
     }
 
@@ -812,7 +812,7 @@ public class Requests {
         statement.executeUpdate();
     }
 
-    public static void updateBooking(int id, int flightId, int clientId, int luggageId,int classId, int seat) throws SQLException {
+    public static void updateBooking(int id, int flightId, int clientId, int luggageId, int classId, int seat) throws SQLException {
         String sql = "update booking set flight_id=?, client_id=?, luggage_id=?, class_id=?, seat_number=? WHERE bookingID=?";
         PreparedStatement statement = DBConnection.getConnection().prepareStatement(sql);
         statement.setInt(1, flightId);
@@ -820,15 +820,15 @@ public class Requests {
         statement.setInt(3, luggageId);
         statement.setInt(4, classId);
         statement.setInt(5, seat);
-        statement.setInt(6,id);
+        statement.setInt(6, id);
         statement.executeUpdate();
     }
 
     //----------------------------- DELETE -----------------------------
 
-    public static void deleteRow(int id, String table){
+    public static void deleteRow(int id, String table) {
         try {
-            String sql = "delete from " + table +" WHERE "+table+"ID=" + id;
+            String sql = "delete from " + table + " WHERE " + table + "ID=" + id;
             PreparedStatement statement = DBConnection.getConnection().prepareStatement(sql);
             statement.executeUpdate();
         } catch (SQLException e) {
@@ -838,7 +838,7 @@ public class Requests {
 
     public static void deleteFromPlaneAirline(int airline, int plane) {
         try {
-            String sql = "delete from plane_airline where plane_id = "+ plane+" and airline_id = "+airline;
+            String sql = "delete from plane_airline where plane_id = " + plane + " and airline_id = " + airline;
             PreparedStatement statement = DBConnection.getConnection().prepareStatement(sql);
             statement.executeUpdate();
         } catch (SQLException e) {
@@ -889,7 +889,7 @@ public class Requests {
             for (int k : listOfSeats.keySet()) {
                 if (rs2.getInt(1) == k) {
                     LinkedList<Integer> x = listOfSeats.get(k);
-                    if(k == flight && seat == rs2.getInt(2)) {
+                    if (k == flight && seat == rs2.getInt(2)) {
                     } else {
                         x.remove(Integer.valueOf(rs2.getInt(2)));
                     }

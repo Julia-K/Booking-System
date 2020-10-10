@@ -15,7 +15,7 @@ import javax.swing.*;
 import javax.swing.border.*;
 
 public class AirportDetailsFrame extends JFrame {
-    private LinkedHashMap<Integer,Integer> addressesWithId;
+    private LinkedHashMap<Integer, Integer> addressesWithId;
     private JPanel dialogPane;
     private JPanel contentPanel;
     private JLabel nameL;
@@ -50,13 +50,13 @@ public class AirportDetailsFrame extends JFrame {
     }
 
     public AirportDetailsFrame(Boolean update, int id, String name, String code, String address) throws SQLException, ParseException {
-        if(update) {
+        if (update) {
             this.id = id;
             initAddUpdateComponents();
             checkBox.setVisible(false);
             fillnameL.setText(name);
             fillCodeL.setText(code);
-            ResultSet rs = Requests.readById(id,"airport");
+            ResultSet rs = Requests.readById(id, "airport");
             rs.next();
             int addressId = rs.getInt(4);
             for (Map.Entry<Integer, Integer> entry : addressesWithId.entrySet()) {
@@ -69,8 +69,8 @@ public class AirportDetailsFrame extends JFrame {
         } else {
             initDetailComponents();
             String[] all = address.split(",", 2);
-            fillNameL.setText(name +" ("+code+")");
-            fillAddressL.setText("<html>"+all[0]+"<br/>"+all[1]+"</html>");
+            fillNameL.setText(name + " (" + code + ")");
+            fillAddressL.setText("<html>" + all[0] + "<br/>" + all[1] + "</html>");
         }
         this.update = update;
         setVisible(true);
@@ -139,8 +139,8 @@ public class AirportDetailsFrame extends JFrame {
                 buttonBar.setBorder(new EmptyBorder(12, 0, 0, 0));
                 buttonBar.setBackground(new Color(235, 242, 250));
                 buttonBar.setLayout(new GridBagLayout());
-                ((GridBagLayout)buttonBar.getLayout()).columnWidths = new int[] {0, 80};
-                ((GridBagLayout)buttonBar.getLayout()).columnWeights = new double[] {1.0, 0.0};
+                ((GridBagLayout) buttonBar.getLayout()).columnWidths = new int[]{0, 80};
+                ((GridBagLayout) buttonBar.getLayout()).columnWeights = new double[]{1.0, 0.0};
 
                 okButton.setText("OK");
                 okButton.setBackground(new Color(66, 122, 161));
@@ -250,14 +250,14 @@ public class AirportDetailsFrame extends JFrame {
                 comboBox.setBounds(35, 290, 250, 40);
                 setVisibility(false);
 
-                if(checkBox.isVisible()) {
+                if (checkBox.isVisible()) {
                     checkBox.setText("create your own");
                     checkBox.setBackground(new Color(235, 242, 250));
                     checkBox.setForeground(Color.black);
                     contentPanel.add(checkBox);
                     checkBox.setBounds(35, 335, 120, 30);
                     checkBox.addItemListener(e -> {
-                        if(e.getStateChange() == ItemEvent.DESELECTED) {
+                        if (e.getStateChange() == ItemEvent.DESELECTED) {
                             setVisibility(false);
                         } else {
                             setVisibility(true);
@@ -283,8 +283,8 @@ public class AirportDetailsFrame extends JFrame {
                 buttonBar.setBackground(new Color(235, 242, 250));
                 buttonBar.setMaximumSize(new Dimension(105, 42));
                 buttonBar.setLayout(new GridBagLayout());
-                ((GridBagLayout)buttonBar.getLayout()).columnWidths = new int[] {0, 80};
-                ((GridBagLayout)buttonBar.getLayout()).columnWeights = new double[] {1.0, 0.0};
+                ((GridBagLayout) buttonBar.getLayout()).columnWidths = new int[]{0, 80};
+                ((GridBagLayout) buttonBar.getLayout()).columnWeights = new double[]{1.0, 0.0};
 
                 okButton.setText("OK");
                 okButton.setBackground(new Color(66, 122, 161));
@@ -374,22 +374,22 @@ public class AirportDetailsFrame extends JFrame {
             }
             dialogPane.add(panel2, BorderLayout.EAST);
             okButton.addActionListener(e -> {
-                if(isValidate()) {
+                if (isValidate()) {
                     try {
-                        if(update) {
-                            Requests.updateAirport(id,fillnameL.getText(),fillCodeL.getText(),(Integer) addressesWithId.get(comboBox.getSelectedIndex()));
+                        if (update) {
+                            Requests.updateAirport(id, fillnameL.getText(), fillCodeL.getText(), (Integer) addressesWithId.get(comboBox.getSelectedIndex()));
                             dispose();
                         } else {
-                            if(!checkBox.isSelected()) {
-                                Requests.createAirport(fillnameL.getText(),fillCodeL.getText(), (Integer) addressesWithId.get(comboBox.getSelectedIndex()));
+                            if (!checkBox.isSelected()) {
+                                Requests.createAirport(fillnameL.getText(), fillCodeL.getText(), (Integer) addressesWithId.get(comboBox.getSelectedIndex()));
                                 dispose();
                                 updateContent();
                             } else {
-                                Requests.createAddress(fillCountry.getText(), fillCity.getText(),fillPostal.getText(),fillStreet.getText(), Integer.parseInt(fillNumber.getText()));
+                                Requests.createAddress(fillCountry.getText(), fillCity.getText(), fillPostal.getText(), fillStreet.getText(), Integer.parseInt(fillNumber.getText()));
                                 ResultSet rs = Requests.readTableByRequest("SELECT TOP 1 addressID FROM address ORDER BY addressID DESC");
                                 rs.next();
                                 int id = rs.getInt(1);
-                                Requests.createAirport(fillnameL.getText(),fillCodeL.getText(),id);
+                                Requests.createAirport(fillnameL.getText(), fillCodeL.getText(), id);
                                 updateContent();
                                 dispose();
                             }
@@ -439,8 +439,8 @@ public class AirportDetailsFrame extends JFrame {
     }
 
     public boolean isValidate() {
-        if(!fillNumber.isVisible()) {
-            if(fillnameL.getText().equals("") || fillCodeL.getText().equals("")) {
+        if (!fillNumber.isVisible()) {
+            if (fillnameL.getText().equals("") || fillCodeL.getText().equals("")) {
                 JOptionPane.showMessageDialog(new Frame(), "All fields must be filled!");
                 return false;
             } else if (fillCodeL.getText().length() != 4) {
@@ -450,7 +450,7 @@ public class AirportDetailsFrame extends JFrame {
                 return true;
             }
         } else {
-            if(fillnameL.getText().equals("") || fillCodeL.getText().equals("") || fillCountry.getText().equals("") || fillCity.getText().equals("")
+            if (fillnameL.getText().equals("") || fillCodeL.getText().equals("") || fillCountry.getText().equals("") || fillCity.getText().equals("")
                     || fillNumber.getText().equals("") || fillPostal.getText().equals("") || fillStreet.getText().equals("")) {
                 JOptionPane.showMessageDialog(new Frame(), "All fields must be filled!");
                 return false;

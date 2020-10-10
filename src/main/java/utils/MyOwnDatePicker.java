@@ -17,7 +17,7 @@ public class MyOwnDatePicker {
         this.date = date;
         UtilDateModel model = new UtilDateModel();
         String[] x = date.split("-");
-        model.setDate(Integer.parseInt(x[0]),Integer.parseInt(x[1]),Integer.parseInt(x[2]));
+        model.setDate(Integer.parseInt(x[0]), Integer.parseInt(x[1]), Integer.parseInt(x[2]));
         Properties p = new Properties();
         p.put("text.today", "Today");
         p.put("text.month", "Month");
@@ -40,9 +40,10 @@ public class MyOwnDatePicker {
     }
 
     public void setBounds(int x, int y, int w, int h) {
-        datePicker.setBounds(x,y,w,h);
+        datePicker.setBounds(x, y, w, h);
     }
 
     public void addTo(JPanel panel) {
-        panel.add(datePicker); }
+        panel.add(datePicker);
+    }
 }

@@ -18,7 +18,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class PilotDetailsFrame extends JFrame {
-    private LinkedHashMap<Integer,Integer> airlinesWithId;
+    private LinkedHashMap<Integer, Integer> airlinesWithId;
     private boolean update;
     private int id;
     private JPanel dialogPane;
@@ -60,10 +60,10 @@ public class PilotDetailsFrame extends JFrame {
 
         } else {
             initDetailComponents();
-            nameL.setText(nameL.getText() + " "+first+ " "+last);
+            nameL.setText(nameL.getText() + " " + first + " " + last);
             LocalDate birth = LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-            int years = Period.between(birth,LocalDate.now()).getYears();
-            fillDate.setText(date + " (Years of work: " + years +")");
+            int years = Period.between(birth, LocalDate.now()).getYears();
+            fillDate.setText(date + " (Years of work: " + years + ")");
             ResultSet rs = Requests.readTableByRequest("select name, code from airline where airlineID=" + airlineid);
             rs.next();
             String airline = rs.getString(1) + " (" + rs.getString(2) + ")";
@@ -143,15 +143,15 @@ public class PilotDetailsFrame extends JFrame {
                 buttonBar.setBorder(new EmptyBorder(12, 0, 0, 0));
                 buttonBar.setBackground(new Color(235, 242, 250));
                 buttonBar.setLayout(new GridBagLayout());
-                ((GridBagLayout)buttonBar.getLayout()).columnWidths = new int[] {0, 80};
-                ((GridBagLayout)buttonBar.getLayout()).columnWeights = new double[] {1.0, 0.0};
+                ((GridBagLayout) buttonBar.getLayout()).columnWidths = new int[]{0, 80};
+                ((GridBagLayout) buttonBar.getLayout()).columnWeights = new double[]{1.0, 0.0};
 
                 okButton.setText("OK");
                 okButton.setBackground(new Color(66, 122, 161));
                 buttonBar.add(okButton, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0,
                         GridBagConstraints.CENTER, GridBagConstraints.BOTH,
                         new Insets(0, 0, 0, 0), 0, 0));
-                okButton.addActionListener(e-> {
+                okButton.addActionListener(e -> {
                     dispose();
                 });
             }
@@ -217,13 +217,13 @@ public class PilotDetailsFrame extends JFrame {
                 lastL.setBounds(35, 125, 190, 40);
 
                 fillFirst.setBackground(Color.white);
-                StringsFormatter.setTextFieldLength(30,fillFirst);
+                StringsFormatter.setTextFieldLength(30, fillFirst);
                 StringsFormatter.setOnlyLetters(fillFirst);
                 contentPane.add(fillFirst);
                 fillFirst.setBounds(35, 75, 195, 40);
 
                 fillLast.setBackground(Color.white);
-                StringsFormatter.setTextFieldLength(30,fillLast);
+                StringsFormatter.setTextFieldLength(30, fillLast);
                 StringsFormatter.setOnlyLetters(fillLast);
                 contentPane.add(fillLast);
                 fillLast.setBounds(35, 175, 195, 40);
@@ -259,8 +259,8 @@ public class PilotDetailsFrame extends JFrame {
                 datePicker.setBounds(35, 275, 190, 26);
                 {
                     Dimension preferredSize = new Dimension();
-                    preferredSize.width =510;
-                    preferredSize.height =305;
+                    preferredSize.width = 510;
+                    preferredSize.height = 305;
                     contentPane.setMinimumSize(preferredSize);
                     contentPane.setPreferredSize(preferredSize);
                 }
@@ -271,8 +271,8 @@ public class PilotDetailsFrame extends JFrame {
                 buttonBar.setBorder(new EmptyBorder(12, 0, 0, 0));
                 buttonBar.setBackground(new Color(235, 242, 250));
                 buttonBar.setLayout(new GridBagLayout());
-                ((GridBagLayout)buttonBar.getLayout()).columnWidths = new int[] {0, 80};
-                ((GridBagLayout)buttonBar.getLayout()).columnWeights = new double[] {1.0, 0.0};
+                ((GridBagLayout) buttonBar.getLayout()).columnWidths = new int[]{0, 80};
+                ((GridBagLayout) buttonBar.getLayout()).columnWeights = new double[]{1.0, 0.0};
 
                 okButton.setText("OK");
                 okButton.setBackground(new Color(66, 122, 161));
@@ -296,7 +296,7 @@ public class PilotDetailsFrame extends JFrame {
                 if (isValidate()) {
                     if (update) {
                         try {
-                            Requests.updatePilot(id,fillFirst.getText(),fillLast.getText(),date,(Integer)airlinesWithId.get(comboBox.getSelectedIndex()));
+                            Requests.updatePilot(id, fillFirst.getText(), fillLast.getText(), date, (Integer) airlinesWithId.get(comboBox.getSelectedIndex()));
                             updateContent();
                             dispose();
                         } catch (SQLException throwables) {
@@ -304,7 +304,7 @@ public class PilotDetailsFrame extends JFrame {
                         }
                     } else {
                         try {
-                            Requests.createPilot(fillFirst.getText(),fillLast.getText(),date,(Integer)airlinesWithId.get(comboBox.getSelectedIndex()));
+                            Requests.createPilot(fillFirst.getText(), fillLast.getText(), date, (Integer) airlinesWithId.get(comboBox.getSelectedIndex()));
                             updateContent();
                             dispose();
                         } catch (SQLException throwables) {
@@ -337,7 +337,7 @@ public class PilotDetailsFrame extends JFrame {
     }
 
     public boolean isValidate() {
-        if(!StringsFormatter.isDateValid(datePicker.getDate())) {
+        if (!StringsFormatter.isDateValid(datePicker.getDate())) {
             JOptionPane.showMessageDialog(new Frame(), "Date cannot be in the future");
             return false;
         } else if (fillFirst.getText().equals("") || fillLast.getText().equals("")) {

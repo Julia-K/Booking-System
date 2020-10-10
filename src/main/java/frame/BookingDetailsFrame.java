@@ -15,9 +15,9 @@ import java.util.Map;
 
 public class BookingDetailsFrame extends JFrame {
     private float[] prices;
-    private LinkedHashMap<Integer,Integer> clietsWithId;
-    private LinkedHashMap<Integer,Integer> luggageWithId;
-    private LinkedHashMap<Integer,Integer> classWithId;
+    private LinkedHashMap<Integer, Integer> clietsWithId;
+    private LinkedHashMap<Integer, Integer> luggageWithId;
+    private LinkedHashMap<Integer, Integer> classWithId;
     private JPanel dialogPane;
     private JPanel contentPanel;
     private JLabel classL;
@@ -90,9 +90,9 @@ public class BookingDetailsFrame extends JFrame {
         setFlightId(flightId);
         setSeatComboBox();
         seatCombo.setSelectedItem(seat);
-        selectFlightButton.addActionListener(e-> {
+        selectFlightButton.addActionListener(e -> {
             try {
-                new SelectFlightFrame(true,this).setVisible(true);
+                new SelectFlightFrame(true, this).setVisible(true);
             } catch (SQLException throwables) {
                 throwables.printStackTrace();
             }
@@ -103,15 +103,15 @@ public class BookingDetailsFrame extends JFrame {
     public BookingDetailsFrame() throws SQLException {
         this.update = false;
         initAddUpdateComponents();
-        selectFlightButton.addActionListener(e-> {
+        selectFlightButton.addActionListener(e -> {
             try {
-                new SelectFlightFrame(false,this).setVisible(true);
+                new SelectFlightFrame(false, this).setVisible(true);
             } catch (SQLException throwables) {
                 throwables.printStackTrace();
             }
         });
         setVisible(true);
-        Arrays.fill(prices,0);
+        Arrays.fill(prices, 0);
         luggageCombo.setSelectedIndex(0);
         classCombo.setSelectedIndex(0);
     }
@@ -207,12 +207,12 @@ public class BookingDetailsFrame extends JFrame {
                 buttonBar.setBackground(new Color(235, 242, 250));
                 buttonBar.setMaximumSize(new Dimension(105, 42));
                 buttonBar.setLayout(new GridBagLayout());
-                ((GridBagLayout)buttonBar.getLayout()).columnWidths = new int[] {0, 80};
-                ((GridBagLayout)buttonBar.getLayout()).columnWeights = new double[] {1.0, 0.0};
+                ((GridBagLayout) buttonBar.getLayout()).columnWidths = new int[]{0, 80};
+                ((GridBagLayout) buttonBar.getLayout()).columnWeights = new double[]{1.0, 0.0};
 
                 okButton.setText("OK");
                 okButton.setBackground(new Color(66, 122, 161));
-                okButton.addActionListener(e-> {
+                okButton.addActionListener(e -> {
                     dispose();
                 });
                 buttonBar.add(okButton, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0,
@@ -249,7 +249,7 @@ public class BookingDetailsFrame extends JFrame {
                 buttonFlight.setForeground(Color.white);
                 panel2.add(buttonFlight);
                 buttonFlight.setBounds(5, 280, 190, 40);
-                buttonFlight.addActionListener(e-> {
+                buttonFlight.addActionListener(e -> {
                     ResultSet rs = null;
                     try {
                         rs = Requests.readById(flightId, "flight");
@@ -297,7 +297,7 @@ public class BookingDetailsFrame extends JFrame {
     private void initAddUpdateComponents() throws SQLException {
         prices = new float[4];
         panel4 = new JPanel();
-        clietsWithId= Requests.getClientsWithId();
+        clietsWithId = Requests.getClientsWithId();
         luggageWithId = Requests.getLuggageWithId();
         classWithId = Requests.getClassesWithId();
         dialogPane = new JPanel();
@@ -363,14 +363,14 @@ public class BookingDetailsFrame extends JFrame {
                 classCombo.setBackground(Color.white);
                 contentPanel.add(classCombo);
                 classCombo.setBounds(35, 265, 195, 40);
-                classCombo.addActionListener(e-> {
+                classCombo.addActionListener(e -> {
                     int classID = classWithId.get(classCombo.getSelectedIndex());
                     ResultSet rs = null;
                     try {
                         rs = Requests.readById(classID, "class");
                         rs.next();
                         float price = rs.getFloat(3);
-                        if(prices[1] != 0) {
+                        if (prices[1] != 0) {
                             prices[3] -= prices[1];
                             prices[1] = price;
                             prices[3] += prices[1];
@@ -399,14 +399,14 @@ public class BookingDetailsFrame extends JFrame {
                 contentPanel.add(luggageCombo);
                 luggageCombo.setBounds(35, 165, 195, 40);
 
-                luggageCombo.addActionListener(e-> {
+                luggageCombo.addActionListener(e -> {
                     int luggageID = luggageWithId.get(luggageCombo.getSelectedIndex());
                     ResultSet rs = null;
                     try {
                         rs = Requests.readById(luggageID, "luggage");
                         rs.next();
                         float price = rs.getFloat(3);
-                        if(prices[0] != 0) {
+                        if (prices[0] != 0) {
                             prices[3] -= prices[0];
                             prices[0] = price;
                             prices[3] += prices[0];
@@ -438,28 +438,28 @@ public class BookingDetailsFrame extends JFrame {
                 buttonBar.setBackground(new Color(235, 242, 250));
                 buttonBar.setMaximumSize(new Dimension(105, 42));
                 buttonBar.setLayout(new GridBagLayout());
-                ((GridBagLayout)buttonBar.getLayout()).columnWidths = new int[] {0, 80};
-                ((GridBagLayout)buttonBar.getLayout()).columnWeights = new double[] {1.0, 0.0};
+                ((GridBagLayout) buttonBar.getLayout()).columnWidths = new int[]{0, 80};
+                ((GridBagLayout) buttonBar.getLayout()).columnWeights = new double[]{1.0, 0.0};
 
                 okButton.setText("OK");
                 okButton.setBackground(new Color(66, 122, 161));
-                okButton.addActionListener(e-> {
+                okButton.addActionListener(e -> {
                     int clientId = clietsWithId.get(clientCombo.getSelectedIndex());
                     int luggId = luggageWithId.get(luggageCombo.getSelectedIndex());
                     int classId = classWithId.get(classCombo.getSelectedIndex());
                     int seatNum;
                     try {
                         seatNum = (int) seatCombo.getItemAt(seatCombo.getSelectedIndex());
-                        if(update) {
+                        if (update) {
                             try {
-                                Requests.updateBooking(id,flightId,clientId,luggId,classId,seatNum);
+                                Requests.updateBooking(id, flightId, clientId, luggId, classId, seatNum);
                                 dispose();
                             } catch (SQLException throwables) {
                                 throwables.printStackTrace();
                             }
                         } else {
                             try {
-                                Requests.createBooking(flightId,clientId,luggId,classId,seatNum);
+                                Requests.createBooking(flightId, clientId, luggId, classId, seatNum);
                                 dispose();
                             } catch (SQLException throwables) {
                                 throwables.printStackTrace();
@@ -541,19 +541,19 @@ public class BookingDetailsFrame extends JFrame {
         ResultSet rs = Requests.readTableByRequest("select dep.name as dname, arr.name as aname, departure_date, arrival_date, departure_time, arrival_time, price from flight\n" +
                 "inner join airport as dep on dep.airportID = flight.departureAirport_id\n" +
                 "inner join airport as arr on arr.airportID = flight.arrivalAirport_id\n" +
-                "where flightID="+id);
+                "where flightID=" + id);
         rs.next();
         String from = rs.getString(1);
         String to = rs.getString(2);
         String depDate = rs.getString(3);
         String arrDate = rs.getString(4);
-        String depTime = rs.getString(5).substring(0,5);
-        String arrTime = rs.getString(6).substring(0,5);
+        String depTime = rs.getString(5).substring(0, 5);
+        String arrTime = rs.getString(6).substring(0, 5);
         float price = rs.getFloat(7);
 
-        informationPane.setText("Details:" +"\n"+"Departure Airport: " +from + "\n" + "Arrival Airport: " + to + "\n" + "Departure date: " + depDate +
+        informationPane.setText("Details:" + "\n" + "Departure Airport: " + from + "\n" + "Arrival Airport: " + to + "\n" + "Departure date: " + depDate +
                 "\n" + "Arrival date: " + arrDate + "\n" + "Departure time: " + depTime + "\n" + "Arrival time: " + arrTime);
-        if(prices[2] != 0) {
+        if (prices[2] != 0) {
             prices[3] -= prices[2];
             prices[2] = price;
             prices[3] += prices[2];
@@ -605,15 +605,16 @@ public class BookingDetailsFrame extends JFrame {
         rs.next();
         return rs.getString(2);
     }
+
     private String getEmail(int id) throws SQLException {
         ResultSet rs = Requests.readById(id, "client");
         rs.next();
-       return rs.getString(4);
+        return rs.getString(4);
     }
 
     public void setSeatComboBox() throws SQLException {
         LinkedHashMap linkedHashMap;
-        if(update) {
+        if (update) {
             linkedHashMap = Requests.loadListOfSeats(flightId, seat);
         } else {
             linkedHashMap = Requests.loadListOfSeats();

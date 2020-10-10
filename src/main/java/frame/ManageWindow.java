@@ -64,7 +64,7 @@ public class ManageWindow extends JFrame {
         dialogPane.setLayout(new BorderLayout());
 
         topPanel.setPreferredSize(new Dimension(870, 80));
-        topPanel.setMinimumSize(new Dimension(870,80));
+        topPanel.setMinimumSize(new Dimension(870, 80));
         topPanel.setBackground(new Color(4, 72, 98));
         topPanel.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
         topPanel.setLayout(null);
@@ -82,7 +82,7 @@ public class ManageWindow extends JFrame {
         comboBox.setPreferredSize(new Dimension(150, 30));
         comboBox.setBackground(Color.white);
         comboBox.setBounds(245, 23, 160, 35);
-        ((JLabel)comboBox.getRenderer()).setHorizontalAlignment(SwingConstants.CENTER); //center text in combobox
+        ((JLabel) comboBox.getRenderer()).setHorizontalAlignment(SwingConstants.CENTER); //center text in combobox
 
         addToCombobox();
         comboBox.setSelectedIndex(0);
@@ -93,85 +93,85 @@ public class ManageWindow extends JFrame {
         topPanel.add(goButton);
         goButton.setBounds(690, 20, 150, 35);
         goButton.setBackground(new Color(235, 242, 250));
-        goButton.addActionListener(e-> {
+        goButton.addActionListener(e -> {
             StatisticsFrame.main(new String[]{});
             dispose();
         });
 
         dialogPane.add(topPanel, BorderLayout.PAGE_START);
 
-            leftPanel.setMaximumSize(new Dimension(160, 150));
-            leftPanel.setPreferredSize(new Dimension(210, 150));
-            leftPanel.setMaximumSize(new Dimension(160, 150));
-            leftPanel.setMinimumSize(new Dimension(160, 200));
-            leftPanel.setBackground(new Color(235, 242, 250));
-            leftPanel.setBorder(BorderFactory.createMatteBorder(10,0,0,0,new Color(235, 242, 250)));
-            leftPanel.setLayout(null);
+        leftPanel.setMaximumSize(new Dimension(160, 150));
+        leftPanel.setPreferredSize(new Dimension(210, 150));
+        leftPanel.setMaximumSize(new Dimension(160, 150));
+        leftPanel.setMinimumSize(new Dimension(160, 200));
+        leftPanel.setBackground(new Color(235, 242, 250));
+        leftPanel.setBorder(BorderFactory.createMatteBorder(10, 0, 0, 0, new Color(235, 242, 250)));
+        leftPanel.setLayout(null);
 
-            {
-                filterPanel.setMaximumSize(new Dimension(400, 100));
-                filterPanel.setBackground(new Color(235, 242, 250));
-                filterPanel.setMinimumSize(null);
-                filterPanel.setBorder(new EmptyBorder(10, 5, 5, 5));
-                filterPanel.setPreferredSize(new Dimension(400, 100));
-                filterPanel.setLayout(null);
+        {
+            filterPanel.setMaximumSize(new Dimension(400, 100));
+            filterPanel.setBackground(new Color(235, 242, 250));
+            filterPanel.setMinimumSize(null);
+            filterPanel.setBorder(new EmptyBorder(10, 5, 5, 5));
+            filterPanel.setPreferredSize(new Dimension(400, 100));
+            filterPanel.setLayout(null);
 
-                filter.setText("Search: ");
-                filter.setHorizontalAlignment(SwingConstants.LEFT);
-                filter.setBounds(70,10,50,20);
+            filter.setText("Search: ");
+            filter.setHorizontalAlignment(SwingConstants.LEFT);
+            filter.setBounds(70, 10, 50, 20);
 
-                searchField.setMaximumSize(new Dimension(100, 40));
-                searchField.setPreferredSize(new Dimension(100, 40));
-                searchField.setMinimumSize(new Dimension(100, 40));
-                searchField.setToolTipText("filter expression");
-                filterPanel.add(searchField);
-                searchField.setBounds(25, 30, 120, 30);
+            searchField.setMaximumSize(new Dimension(100, 40));
+            searchField.setPreferredSize(new Dimension(100, 40));
+            searchField.setMinimumSize(new Dimension(100, 40));
+            searchField.setToolTipText("filter expression");
+            filterPanel.add(searchField);
+            searchField.setBounds(25, 30, 120, 30);
 
-                filter.setText("Search:");
-                filterPanel.add(filter);
-                filter.setBounds(25, 0, 55, 25);
+            filter.setText("Search:");
+            filterPanel.add(filter);
+            filter.setBounds(25, 0, 55, 25);
 
-                filterPanel.setMinimumSize(new Dimension(160, 75));
-                filterPanel.setPreferredSize(new Dimension(160, 75));
+            filterPanel.setMinimumSize(new Dimension(160, 75));
+            filterPanel.setPreferredSize(new Dimension(160, 75));
 
-            }
-            leftPanel.add(filterPanel);
-            filterPanel.setBounds(20, 20, 175, 85);
-            dialogPane.add(leftPanel, BorderLayout.WEST);
+        }
+        leftPanel.add(filterPanel);
+        filterPanel.setBounds(20, 20, 175, 85);
+        dialogPane.add(leftPanel, BorderLayout.WEST);
 
-            detailsButton.setText("Details");
-            detailsButton.setForeground(Color.white);
-            detailsButton.setBackground(new Color(5, 102, 141));
-            detailsButton.setBounds(45, 125, 120, 45);
-            leftPanel.add(detailsButton);
+        detailsButton.setText("Details");
+        detailsButton.setForeground(Color.white);
+        detailsButton.setBackground(new Color(5, 102, 141));
+        detailsButton.setBounds(45, 125, 120, 45);
+        leftPanel.add(detailsButton);
 
-            updateButton.setText("Update");
-            updateButton.setForeground(Color.white);
-            updateButton.setBackground(new Color(5, 102, 141));
-            leftPanel.add(updateButton);
-            updateButton.setBounds(45, 200, 120, 45);
+        updateButton.setText("Update");
+        updateButton.setForeground(Color.white);
+        updateButton.setBackground(new Color(5, 102, 141));
+        leftPanel.add(updateButton);
+        updateButton.setBounds(45, 200, 120, 45);
 
-            deleteButton.setText("Delete");
-            deleteButton.setForeground(Color.white);
-            deleteButton.setBackground(new Color(5, 102, 141));
-            leftPanel.add(deleteButton);
-            deleteButton.setBounds(45, 275, 120, 45);
+        deleteButton.setText("Delete");
+        deleteButton.setForeground(Color.white);
+        deleteButton.setBackground(new Color(5, 102, 141));
+        leftPanel.add(deleteButton);
+        deleteButton.setBounds(45, 275, 120, 45);
 
-            addButton.setText("Add");
-            addButton.setBackground(new Color(5, 102, 141));
-            addButton.setForeground(Color.white);
-            leftPanel.add(addButton);
-            addButton.setBounds(45, 350, 120, 45);
+        addButton.setText("Add");
+        addButton.setBackground(new Color(5, 102, 141));
+        addButton.setForeground(Color.white);
+        leftPanel.add(addButton);
+        addButton.setBounds(45, 350, 120, 45);
 
-            {
-                rightPanel.setBackground(new Color(235, 242, 250));
-                rightPanel.setPreferredSize(new Dimension(428, 600));
-                rightPanel.setBorder(new EmptyBorder(10, 10, 0, 0));
-                rightPanel.setLayout(new BorderLayout());
-                table.setBackground(new Color(235, 242, 250));
-                table.setForeground(Color.black);
-            }
-            dialogPane.add(rightPanel, BorderLayout.CENTER);
+        {
+            rightPanel.setBackground(new Color(235, 242, 250));
+            rightPanel.setPreferredSize(new Dimension(428, 600));
+            rightPanel.setBorder(new EmptyBorder(10, 10, 0, 0));
+            rightPanel.setLayout(new BorderLayout());
+            table.setBackground(new Color(235, 242, 250));
+            table.setForeground(Color.black);
+        }
+        dialogPane.add(rightPanel, BorderLayout.CENTER);
 
         contentPane.add(dialogPane, BorderLayout.CENTER);
         pack();
@@ -181,10 +181,10 @@ public class ManageWindow extends JFrame {
     public void reloadClients() throws SQLException {
         table = Requests.readClientsTable();
         TableRowFilter.create(searchField, table);
-        Actions.setDetailOrUpdateClient(false,detailsButton,table,this);
-        Actions.setDetailOrUpdateClient(true,updateButton,table,this);
-        Actions.setDeleteButtonAction(deleteButton,"client",table,this);
-        Actions.addClientAction(addButton,this);
+        Actions.setDetailOrUpdateClient(false, detailsButton, table, this);
+        Actions.setDetailOrUpdateClient(true, updateButton, table, this);
+        Actions.setDeleteButtonAction(deleteButton, "client", table, this);
+        Actions.addClientAction(addButton, this);
         setTableDesign();
         update();
     }
@@ -192,10 +192,10 @@ public class ManageWindow extends JFrame {
     public void reloadAddress() throws SQLException {
         table = Requests.readAddressTable();
         TableRowFilter.create(searchField, table);
-        Actions.setDetailOrUpdateAddress(false,detailsButton,table,this);
-        Actions.setDetailOrUpdateAddress(true,updateButton,table,this);
+        Actions.setDetailOrUpdateAddress(false, detailsButton, table, this);
+        Actions.setDetailOrUpdateAddress(true, updateButton, table, this);
         Actions.setDeleteButtonAction(deleteButton, "address", table, this);
-        Actions.addAddressAction(addButton,this);
+        Actions.addAddressAction(addButton, this);
         setTableDesign();
         update();
     }
@@ -203,10 +203,10 @@ public class ManageWindow extends JFrame {
     public void reloadAirport() throws SQLException {
         table = Requests.readAirports();
         TableRowFilter.create(searchField, table);
-        Actions.setDetailOrUpdateAirport(false, detailsButton, table,this);
-        Actions.setDetailOrUpdateAirport(true, updateButton, table,this);
+        Actions.setDetailOrUpdateAirport(false, detailsButton, table, this);
+        Actions.setDetailOrUpdateAirport(true, updateButton, table, this);
         Actions.addAirportAction(addButton, this);
-        Actions.setDeleteButtonAction(deleteButton,"airport",table,this);
+        Actions.setDeleteButtonAction(deleteButton, "airport", table, this);
         setTableDesign();
         update();
     }
@@ -214,10 +214,10 @@ public class ManageWindow extends JFrame {
     public void reloadPlane() throws SQLException {
         table = Requests.readPlaneTable();
         TableRowFilter.create(searchField, table);
-        Actions.setDetailOrUpdatePlane(false,detailsButton, table, this);
-        Actions.setDetailOrUpdatePlane(true,updateButton, table, this);
+        Actions.setDetailOrUpdatePlane(false, detailsButton, table, this);
+        Actions.setDetailOrUpdatePlane(true, updateButton, table, this);
         Actions.addPlaneAction(addButton, this);
-        Actions.setDeleteButtonAction(deleteButton,"plane",table,this);
+        Actions.setDeleteButtonAction(deleteButton, "plane", table, this);
         setTableDesign();
         update();
     }
@@ -225,10 +225,10 @@ public class ManageWindow extends JFrame {
     public void reloadAirline() throws SQLException {
         table = Requests.readAirlineTable();
         TableRowFilter.create(searchField, table);
-        Actions.addAirlineAction(addButton,this);
-        Actions.setDetailAirline(detailsButton,table);
-        Actions.setUpdateAirline(updateButton,table,this);
-        Actions.setDeleteButtonAction(deleteButton,"airline",table,this);
+        Actions.addAirlineAction(addButton, this);
+        Actions.setDetailAirline(detailsButton, table);
+        Actions.setUpdateAirline(updateButton, table, this);
+        Actions.setDeleteButtonAction(deleteButton, "airline", table, this);
         setTableDesign();
         update();
     }
@@ -236,10 +236,10 @@ public class ManageWindow extends JFrame {
     public void reloadPilot() throws SQLException {
         table = Requests.readPilots();
         TableRowFilter.create(searchField, table);
-        Actions.setDetailOrUpdatePilot(false,detailsButton, table, this);
-        Actions.setDetailOrUpdatePilot(true,updateButton, table, this);
+        Actions.setDetailOrUpdatePilot(false, detailsButton, table, this);
+        Actions.setDetailOrUpdatePilot(true, updateButton, table, this);
         Actions.addPilotAction(addButton, this);
-        Actions.setDeleteButtonAction(deleteButton,"pilot",table,this);
+        Actions.setDeleteButtonAction(deleteButton, "pilot", table, this);
         setTableDesign();
         update();
     }
@@ -248,9 +248,9 @@ public class ManageWindow extends JFrame {
         table = Requests.readFlights();
         TableRowFilter.create(searchField, table);
         Actions.setDetailOrUpdateFlight(false, detailsButton, table, this);
-        Actions.setDetailOrUpdateFlight(true,updateButton, table, this);
+        Actions.setDetailOrUpdateFlight(true, updateButton, table, this);
         Actions.addFlightAction(addButton, this);
-        Actions.setDeleteButtonAction(deleteButton,"flight",table,this);
+        Actions.setDeleteButtonAction(deleteButton, "flight", table, this);
         setTableDesign();
         update();
     }
@@ -259,8 +259,8 @@ public class ManageWindow extends JFrame {
         table = Requests.readBookings();
         TableRowFilter.create(searchField, table);
         Actions.setDetailBooking(detailsButton, table, this);
-        Actions.setUpdateBooking(updateButton,table,this);
-        Actions.setDeleteButtonAction(deleteButton,"booking",table, this);
+        Actions.setUpdateBooking(updateButton, table, this);
+        Actions.setDeleteButtonAction(deleteButton, "booking", table, this);
         Actions.addBookingAction(addButton, this);
         setTableDesign();
         update();
@@ -272,7 +272,7 @@ public class ManageWindow extends JFrame {
         Actions.setDetailOrUpdateClass(false, detailsButton, table, this);
         Actions.setDetailOrUpdateClass(true, updateButton, table, this);
         Actions.addClassAction(addButton, this);
-        Actions.setDeleteButtonAction(deleteButton,"class",table,this);
+        Actions.setDeleteButtonAction(deleteButton, "class", table, this);
         setTableDesign();
         update();
     }
@@ -283,13 +283,13 @@ public class ManageWindow extends JFrame {
         Actions.setDetailOrUpdateLuggage(false, detailsButton, table, this);
         Actions.setDetailOrUpdateLuggage(true, updateButton, table, this);
         Actions.addLuggageAction(addButton, this);
-        Actions.setDeleteButtonAction(deleteButton,"luggage",table,this);
+        Actions.setDeleteButtonAction(deleteButton, "luggage", table, this);
         setTableDesign();
         update();
     }
 
     public void mainComboBoxAction() {
-        comboBox.addActionListener(e-> {
+        comboBox.addActionListener(e -> {
             switch (comboBox.getSelectedIndex()) {
                 case 0:
                     try {

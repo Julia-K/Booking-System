@@ -30,7 +30,7 @@ public class ClassDetailsFrame extends JFrame {
 
     public ClassDetailsFrame(Boolean update, int id, String name, String price) {
         this.update = update;
-        if(update) {
+        if (update) {
             initAddUpdateComponents();
             this.id = id;
             fillName.setText(name);
@@ -38,7 +38,7 @@ public class ClassDetailsFrame extends JFrame {
         } else {
             initDetailComponents();
             classL.setText(classL.getText() + " " + name);
-            priceL.setText(priceL.getText() + " " +price);
+            priceL.setText(priceL.getText() + " " + price);
         }
         setVisible(true);
     }
@@ -95,15 +95,15 @@ public class ClassDetailsFrame extends JFrame {
                 buttonBar.setBorder(new EmptyBorder(12, 0, 0, 0));
                 buttonBar.setBackground(new Color(235, 242, 250));
                 buttonBar.setLayout(new GridBagLayout());
-                ((GridBagLayout)buttonBar.getLayout()).columnWidths = new int[] {0, 80};
-                ((GridBagLayout)buttonBar.getLayout()).columnWeights = new double[] {1.0, 0.0};
+                ((GridBagLayout) buttonBar.getLayout()).columnWidths = new int[]{0, 80};
+                ((GridBagLayout) buttonBar.getLayout()).columnWeights = new double[]{1.0, 0.0};
 
                 okButton.setText("OK");
                 okButton.setBackground(new Color(66, 122, 161));
                 buttonBar.add(okButton, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0,
                         GridBagConstraints.CENTER, GridBagConstraints.BOTH,
                         new Insets(0, 0, 0, 0), 0, 0));
-                okButton.addActionListener(e-> {
+                okButton.addActionListener(e -> {
                     dispose();
                 });
             }
@@ -195,24 +195,24 @@ public class ClassDetailsFrame extends JFrame {
                 buttonBar.setBorder(new EmptyBorder(12, 0, 0, 0));
                 buttonBar.setBackground(new Color(235, 242, 250));
                 buttonBar.setLayout(new GridBagLayout());
-                ((GridBagLayout)buttonBar.getLayout()).columnWidths = new int[] {0, 80};
-                ((GridBagLayout)buttonBar.getLayout()).columnWeights = new double[] {1.0, 0.0};
+                ((GridBagLayout) buttonBar.getLayout()).columnWidths = new int[]{0, 80};
+                ((GridBagLayout) buttonBar.getLayout()).columnWeights = new double[]{1.0, 0.0};
 
                 okButton.setText("OK");
                 okButton.setBackground(new Color(66, 122, 161));
 
-                okButton.addActionListener(e-> {
-                    if(isValidate()) {
+                okButton.addActionListener(e -> {
+                    if (isValidate()) {
                         try {
-                            if(update) {
-                                Requests.updateClass(id,fillName.getText(), Float.parseFloat(fillPrice.getText()));
+                            if (update) {
+                                Requests.updateClass(id, fillName.getText(), Float.parseFloat(fillPrice.getText()));
                                 dispose();
                             } else {
                                 Requests.createClass(fillName.getText(), Float.parseFloat(fillPrice.getText()));
                                 dispose();
                             }
-                        } catch(SQLServerException exception) {
-                            JOptionPane.showMessageDialog(new Frame(),"Class name must be unique!");
+                        } catch (SQLServerException exception) {
+                            JOptionPane.showMessageDialog(new Frame(), "Class name must be unique!");
                         } catch (SQLException throwables) {
                             throwables.printStackTrace();
                         }
@@ -241,7 +241,7 @@ public class ClassDetailsFrame extends JFrame {
     }
 
     private boolean isValidate() {
-        if(fillPrice.getText().equals("") || fillName.getText().equals("")) {
+        if (fillPrice.getText().equals("") || fillName.getText().equals("")) {
             JOptionPane.showMessageDialog(new Frame(), "All fields must be filled");
             return false;
         }
